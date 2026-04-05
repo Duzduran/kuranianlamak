@@ -1,0 +1,83 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Sade, Açık, Konu Merkezli Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Sade, Açık, Konu Merkezli
+          - generic [ref=e7]: Kur'an'da Yapısal İnceleme
+        - button "Bölümler" [ref=e9]
+    - dialog [ref=e60]:
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - paragraph [ref=e65]: Yönler
+            - heading "Nereden devam etmek istersin?" [level=2] [ref=e66]
+          - button "Menüyü kapat" [active] [ref=e67]: Kapat
+        - navigation "Site bölümleri" [ref=e68]:
+          - link "Ana Sayfa" [ref=e69] [cursor=pointer]:
+            - /url: /
+            - generic [ref=e70]: Ana Sayfa
+            - generic [ref=e71]: →
+          - link "Nereden Başlamalı?" [ref=e72] [cursor=pointer]:
+            - /url: /basla
+            - generic [ref=e73]: Nereden Başlamalı?
+            - generic [ref=e74]: →
+          - link "Yöntem" [ref=e75] [cursor=pointer]:
+            - /url: /metot
+            - generic [ref=e76]: Yöntem
+            - generic [ref=e77]: →
+          - link "Örnek Bulgular" [ref=e78] [cursor=pointer]:
+            - /url: /bulgular
+            - generic [ref=e79]: Örnek Bulgular
+            - generic [ref=e80]: →
+          - link "Sorular" [ref=e81] [cursor=pointer]:
+            - /url: /sorular
+            - generic [ref=e82]: Sorular
+            - generic [ref=e83]: →
+          - link "Derin Okuma" [ref=e84] [cursor=pointer]:
+            - /url: /derin-okuma
+            - generic [ref=e85]: Derin Okuma
+            - generic [ref=e86]: →
+          - link "Amaç" [ref=e87] [cursor=pointer]:
+            - /url: /hakkinda
+            - generic [ref=e88]: Amaç
+            - generic [ref=e89]: →
+    - main [ref=e10]:
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: Sakin bir başlangıç
+        - heading "Kur'an'ı anlamak." [level=1] [ref=e15]
+        - paragraph [ref=e16]: Anlamaya yaklaşmak için önce sakinlik gerekir.
+        - link "İçeri Gir" [ref=e18] [cursor=pointer]:
+          - /url: "#ilk-esik"
+      - region "Derinleşen akış" [ref=e19]:
+        - article [ref=e20]:
+          - generic [ref=e21]:
+            - paragraph [ref=e22]: İlk eşik
+            - heading "Her şey bilgiyle değil, dikkatle başlar." [level=2] [ref=e23]
+            - paragraph [ref=e24]: Bu sayfa önce zihni yormamayı seçer. Çünkü bazı konular, acele bilgiyle değil, yavaş yaklaşınca açılır.
+        - article [ref=e25]:
+          - generic [ref=e26]:
+            - paragraph [ref=e27]: Biraz daha derin
+            - heading "Metne bakarken sadece kelimeler değil, düzen de görülmek istenir." [level=2] [ref=e28]
+            - paragraph [ref=e29]: Buradaki arayış, yalnızca anlam cümleleri değil; sıra, oran, yapı ve tekrar gibi katmanları da fark etmeye yöneliktir.
+        - article [ref=e30]:
+          - generic [ref=e31]:
+            - paragraph [ref=e32]: Daha içeride
+            - heading "Derinlik, bir anda açıklanmaz. Kademeli olarak görünür hale gelir." [level=2] [ref=e33]
+            - paragraph [ref=e34]: Bu yüzden devamında iddia, yöntem ve örnekler bir arşiv duvarı gibi değil; adım adım açılan bir okuma yolu gibi sunulur.
+            - link "Sakin Bir Girişe Devam Et" [ref=e36] [cursor=pointer]:
+              - /url: /basla
+  - generic [ref=e39]:
+    - button "Menu" [ref=e40]:
+      - img [ref=e42]
+      - generic: Menu
+    - button "Inspect" [ref=e46]:
+      - img [ref=e48]
+      - generic: Inspect
+    - button "Audit" [ref=e50]:
+      - img [ref=e52]
+      - generic: Audit
+    - button "Settings" [ref=e55]:
+      - img [ref=e57]
+      - generic: Settings

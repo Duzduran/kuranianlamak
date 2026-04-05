@@ -1,0 +1,46 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Kur'an'da Yapısal İnceleme
+        - button "Bölümler" [ref=e8]
+    - main [ref=e9]:
+      - generic [ref=e12]:
+        - paragraph [ref=e13]: Sakin bir başlangıç
+        - heading "Kur'an'ı anlamak." [level=1] [ref=e14]
+        - paragraph [ref=e15]: Anlamaya yaklaşmak için önce sakinlik gerekir.
+        - link "İçeri Gir" [ref=e17] [cursor=pointer]:
+          - /url: "#ilk-esik"
+      - region "Derinleşen akış" [ref=e18]:
+        - article [ref=e19]:
+          - generic [ref=e20]:
+            - paragraph [ref=e21]: İlk eşik
+            - heading "Her şey bilgiyle değil, dikkatle başlar." [level=2] [ref=e22]
+            - paragraph [ref=e23]: Bu sayfa önce zihni yormamayı seçer. Çünkü bazı konular, acele bilgiyle değil, yavaş yaklaşınca açılır.
+        - article [ref=e24]:
+          - generic [ref=e25]:
+            - paragraph [ref=e26]: Biraz daha derin
+            - heading "Metne bakarken sadece kelimeler değil, düzen de görülmek istenir." [level=2] [ref=e27]
+            - paragraph [ref=e28]: Buradaki arayış, yalnızca anlam cümleleri değil; sıra, oran, yapı ve tekrar gibi katmanları da fark etmeye yöneliktir.
+        - article [ref=e29]:
+          - generic [ref=e30]:
+            - paragraph [ref=e31]: Daha içeride
+            - heading "Derinlik, bir anda açıklanmaz. Kademeli olarak görünür hale gelir." [level=2] [ref=e32]
+            - paragraph [ref=e33]: Bu yüzden devamında iddia, yöntem ve örnekler bir arşiv duvarı gibi değil; adım adım açılan bir okuma yolu gibi sunulur.
+            - link "Sakin Bir Girişe Devam Et" [ref=e35] [cursor=pointer]:
+              - /url: /basla
+  - generic [ref=e38]:
+    - button "Menu" [ref=e39]:
+      - img [ref=e41]
+      - generic: Menu
+    - button "Inspect" [ref=e45]:
+      - img [ref=e47]
+      - generic: Inspect
+    - button "Audit" [ref=e49]:
+      - img [ref=e51]
+      - generic: Audit
+    - button "Settings" [ref=e54]:
+      - img [ref=e56]
+      - generic: Settings

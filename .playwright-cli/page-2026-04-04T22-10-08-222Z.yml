@@ -1,0 +1,162 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Sade, Açık, Konu Merkezli Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Sade, Açık, Konu Merkezli
+          - generic [ref=e7]: Kur'an'da Yapısal İnceleme
+        - navigation "Ana menü" [ref=e8]:
+          - link "Ana Sayfa" [ref=e9] [cursor=pointer]:
+            - /url: /
+          - link "Nereden Başlamalı?" [ref=e10] [cursor=pointer]:
+            - /url: /basla
+          - link "Yöntem" [ref=e11] [cursor=pointer]:
+            - /url: /metot
+          - link "Örnek Bulgular" [ref=e12] [cursor=pointer]:
+            - /url: /bulgular
+          - link "Sorular" [ref=e13] [cursor=pointer]:
+            - /url: /sorular
+          - link "Derin Okuma" [ref=e14] [cursor=pointer]:
+            - /url: /derin-okuma
+          - link "Amaç" [ref=e15] [cursor=pointer]:
+            - /url: /hakkinda
+    - main [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]:
+          - generic [ref=e19]: Kur'an Mucizeleri İçin Yeni Bir Giriş
+          - generic [ref=e20]:
+            - heading "Kur'an'daki yapısal düzen iddialarını daha sade, daha anlaşılır ve daha temiz bir akışla okumak mümkün." [level=1] [ref=e21]
+            - paragraph [ref=e22]: Bu taslak site, derin ve yoğun bir arşivi ilk kez gelen biri için daha açık hale getirmek üzere hazırlanıyor. Amaç bir şey dayatmak değil; okura sakin, dürüst ve anlaşılır bir okuma alanı açmak.
+          - generic [ref=e23]:
+            - link "İlk Kez Okuyorum" [ref=e24] [cursor=pointer]:
+              - /url: /basla
+            - link "Yöntemi Gör" [ref=e25] [cursor=pointer]:
+              - /url: /metot
+        - complementary [ref=e26]:
+          - generic [ref=e27]:
+            - paragraph [ref=e28]: Merkez Sorular
+            - heading "Okuyucu ilk dakikada neyi anlamalı?" [level=2] [ref=e29]
+          - list [ref=e30]:
+            - listitem [ref=e31]:
+              - strong [ref=e32]: "1."
+              - text: Bu çalışma tam olarak hangi iddiayı tartışıyor?
+            - listitem [ref=e33]:
+              - strong [ref=e34]: "2."
+              - text: Neyi numeroloji saymıyor, neyi yöntem olarak kabul ediyor?
+            - listitem [ref=e35]:
+              - strong [ref=e36]: "3."
+              - text: Konuya yabancı biri okumaya nereden başlamalı?
+          - paragraph [ref=e37]: Yeni site bu üç soruyu ilk temasın merkezine koyar. Önce açıklık gelir; yoğunluk sonra.
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: Neden Bu Yapı?
+          - heading "Bu proje bir vitrin değil, sakin bir okuma yolu olmalı." [level=2] [ref=e41]
+        - generic [ref=e42]:
+          - article [ref=e43]:
+            - heading "Kişi değil konu merkezde" [level=3] [ref=e44]
+            - paragraph [ref=e45]: Bu site bir isim etrafında değil, anlaşılması zor bir iddiayı sade ve dürüst biçimde açmak için tasarlandı.
+          - article [ref=e46]:
+            - heading "Gereksiz gürültü azaltılır" [level=3] [ref=e47]
+            - paragraph [ref=e48]: Okuyucu doğrudan arşive düşmez. Önce iddianın çerçevesi, sonra yöntem, sonra derin malzeme gelir.
+          - article [ref=e49]:
+            - heading "Boşluk da tasarımın parçası" [level=3] [ref=e50]
+            - paragraph [ref=e51]: Mümkün olan yerde teknik ifadeler sadeleştirilir; gereksiz yoğunluk çıkarılır, fakat mesele de yüzeyselleştirilmez.
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]: Okuma Yolları
+          - heading "Herkes aynı yerden başlamaz. Site bunu kabul etmeli." [level=2] [ref=e55]
+        - generic [ref=e56]:
+          - link "İlk kez okuyorum İlk kez okuyorum Konuyu hiç bilmiyorsanız temel iddiayı, ana ayrımları ve yanlış anlaşılmaları kısa adımlarla görün. Sayfaya git →" [ref=e57] [cursor=pointer]:
+            - /url: /basla
+            - paragraph [ref=e58]: İlk kez okuyorum
+            - heading "İlk kez okuyorum" [level=3] [ref=e59]
+            - paragraph [ref=e60]: Konuyu hiç bilmiyorsanız temel iddiayı, ana ayrımları ve yanlış anlaşılmaları kısa adımlarla görün.
+            - generic [ref=e61]:
+              - text: Sayfaya git
+              - generic [ref=e62]: →
+          - link "Yöntemi anlamak istiyorum Yöntemi anlamak istiyorum Bu yaklaşımın neyi incelediğini, neyi incelemediğini ve hangi ölçütlerle konuştuğunu görün. Sayfaya git →" [ref=e63] [cursor=pointer]:
+            - /url: /metot
+            - paragraph [ref=e64]: Yöntemi anlamak istiyorum
+            - heading "Yöntemi anlamak istiyorum" [level=3] [ref=e65]
+            - paragraph [ref=e66]: Bu yaklaşımın neyi incelediğini, neyi incelemediğini ve hangi ölçütlerle konuştuğunu görün.
+            - generic [ref=e67]:
+              - text: Sayfaya git
+              - generic [ref=e68]: →
+          - link "Örnek bulgulara geçmek istiyorum Örnek bulgulara geçmek istiyorum Bulguların tamamına değil, önce anlaşılır ve temsil gücü yüksek örneklere bakın. Sayfaya git →" [ref=e69] [cursor=pointer]:
+            - /url: /bulgular
+            - paragraph [ref=e70]: Örnek bulgulara geçmek istiyorum
+            - heading "Örnek bulgulara geçmek istiyorum" [level=3] [ref=e71]
+            - paragraph [ref=e72]: Bulguların tamamına değil, önce anlaşılır ve temsil gücü yüksek örneklere bakın.
+            - generic [ref=e73]:
+              - text: Sayfaya git
+              - generic [ref=e74]: →
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - generic [ref=e77]: Temel Yaklaşım
+          - heading "“Mucize” kelimesiyle başlamadan önce “hangi iddia nasıl inceleniyor?” sorusu açıklığa kavuşmalı." [level=2] [ref=e78]
+          - paragraph [ref=e79]: V1'de amaç, tartışmanın bütününü bir ekrana sığdırmak değil. Önce çerçeveyi kurmak, sonra örnek göstermek, ardından derin arşive geçmek.
+        - generic [ref=e80]:
+          - article [ref=e81]:
+            - heading "Besmele üzerine odaklanan örnekler" [level=3] [ref=e82]
+            - paragraph [ref=e83]: Tek cümle üzerinden kurulan bazı örnekler, yöntemin nasıl çalıştığını daha küçük ölçekte görmeyi kolaylaştırır.
+          - article [ref=e84]:
+            - heading "Çift / tek sayısal simetri tartışmaları" [level=3] [ref=e85]
+            - paragraph [ref=e86]: Sayısal düzen iddialarının nasıl tanımlandığı ve nasıl okunması gerektiği için iyi bir giriş sağlar.
+          - article [ref=e87]:
+            - heading "Sure, ayet ve veri grubu ilişkileri" [level=3] [ref=e88]
+            - paragraph [ref=e89]: Daha kapsamlı yapılar, tekil örneklerin ötesinde bütünsel bir model iddiasına işaret eder.
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - generic [ref=e92]: Sık Sorular
+          - heading "Yeni site, itirazları dipnotta değil görünür yerde karşılamalı." [level=2] [ref=e93]
+        - generic [ref=e94]:
+          - generic [ref=e95]: Bu çalışma numeroloji ile aynı şey mi?
+          - generic [ref=e96]: Seçmeci veri kullanımı riski nasıl önleniyor?
+          - generic [ref=e97]: Bir metnin benzerliğini ölçmek tam olarak ne demek?
+          - generic [ref=e98]: Bu site kesin sonuç ilan mı ediyor, yoksa inceleme zemini mi kuruyor?
+        - link "Sorular sayfasını aç" [ref=e100] [cursor=pointer]:
+          - /url: /sorular
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]: Derinlik Kaybolmuyor
+          - heading "Yeni arayüzün amacı dikkat çekmek değil, düşünmek için alan açmak." [level=2] [ref=e105]
+          - paragraph [ref=e106]: Bu ilk sürüm; sade ana sayfa, temel rota yapısı ve konu merkezli anlatım tonunu kurar. Sonraki adımda derin okumalar, seçilmiş makale akışları ve içerik koleksiyonları eklenecek.
+        - generic [ref=e107]:
+          - link "Derin okumaları gör" [ref=e108] [cursor=pointer]:
+            - /url: /derin-okuma
+          - link "Bu sitenin amacı" [ref=e109] [cursor=pointer]:
+            - /url: /hakkinda
+    - contentinfo [ref=e110]:
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - paragraph [ref=e113]: Açık Amaç
+          - paragraph [ref=e114]: Bu taslak, kurucu merkezli bir vitrin değil; konuyu ilk kez duyan biri için sade bir giriş, düzenli bir yöntem ve dikkat tüketmeyen bir okuma alanı sunmak amacıyla hazırlanmıştır.
+        - generic [ref=e115]:
+          - link "Ana Sayfa" [ref=e116] [cursor=pointer]:
+            - /url: /
+          - link "Nereden Başlamalı?" [ref=e117] [cursor=pointer]:
+            - /url: /basla
+          - link "Yöntem" [ref=e118] [cursor=pointer]:
+            - /url: /metot
+          - link "Örnek Bulgular" [ref=e119] [cursor=pointer]:
+            - /url: /bulgular
+          - link "Sorular" [ref=e120] [cursor=pointer]:
+            - /url: /sorular
+          - link "Derin Okuma" [ref=e121] [cursor=pointer]:
+            - /url: /derin-okuma
+          - link "Amaç" [ref=e122] [cursor=pointer]:
+            - /url: /hakkinda
+  - generic [ref=e125]:
+    - button "Menu" [ref=e126]:
+      - img [ref=e128]
+      - generic: Menu
+    - button "Inspect" [ref=e132]:
+      - img [ref=e134]
+      - generic: Inspect
+    - button "Audit" [ref=e136]:
+      - img [ref=e138]
+      - generic: Audit
+    - button "Settings" [ref=e141]:
+      - img [ref=e143]
+      - generic: Settings

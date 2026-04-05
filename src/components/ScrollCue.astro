@@ -1,0 +1,17 @@
+---
+interface Props {
+  href: string;
+  label?: string;
+}
+
+const { href, label = "Aşağı in" } = Astro.props;
+---
+
+<a class="scroll-cue" href={href} aria-label={label}>
+  <span class="scroll-cue__arrow" aria-hidden="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5.5v12" />
+      <path d="M7.5 13 12 17.5 16.5 13" />
+    </svg>
+  </span>
+</a>

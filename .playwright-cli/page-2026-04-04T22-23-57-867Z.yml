@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Sade, Açık, Konu Merkezli Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Sade, Açık, Konu Merkezli
+          - generic [ref=e7]: Kur'an'da Yapısal İnceleme
+        - generic [ref=e8]:
+          - link "Ana Sayfa" [ref=e9] [cursor=pointer]:
+            - /url: /
+          - button "Bölümler" [ref=e10]
+    - main [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]: İlk Giriş
+        - heading "Konuya ilk kez giren biri için en doğru başlangıç, iddiayı küçültmeden ama sadeleştirerek anlatmaktır." [level=1] [ref=e14]
+        - paragraph [ref=e15]: Bu sayfa, yoğun makalelere geçmeden önce okura temel yön duygusu vermek için hazırlandı. Amaç her ayrıntıyı burada bitirmek değil; neyin tartışıldığını anlaşılır hale getirmek.
+      - generic [ref=e17]:
+        - article [ref=e18]:
+          - paragraph [ref=e19]: Adım 1
+          - heading "Önce iddiayı duy" [level=2] [ref=e20]
+          - paragraph [ref=e21]: Bu yaklaşım, Kur'an metninde insanların benzerini üretmekte zorlanacağı yapısal bir düzen bulunduğunu savunur.
+        - article [ref=e22]:
+          - paragraph [ref=e23]: Adım 2
+          - heading "Sonra yöntemi ayır" [level=2] [ref=e24]
+          - paragraph [ref=e25]: Buradaki soru sadece bazı sayılar görmek değildir. Hangi verinin neden seçildiği ve nasıl anlamlı hale getirildiği daha önemlidir.
+        - article [ref=e26]:
+          - paragraph [ref=e27]: Adım 3
+          - heading "Daha sonra örnek bak" [level=2] [ref=e28]
+          - paragraph [ref=e29]: Küçük ve anlaşılır örneklerle başlamak, bütün arşive dağılmadan önce okuma zemini kurar.
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: Üç Temel Kavram
+          - heading "Okumayı kolaylaştıran küçük bir sözlük" [level=2] [ref=e33]
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - heading "Yapısal düzen" [level=3] [ref=e36]
+            - paragraph [ref=e37]: Metindeki sayı, sıra, grup ve karşılık ilişkilerinin bütün olarak ele alınması.
+          - generic [ref=e38]:
+            - heading "Ölçüt" [level=3] [ref=e39]
+            - paragraph [ref=e40]: Bir örneğin anlamlı sayılması için önceden tanımlanmış kural veya sınır.
+          - generic [ref=e41]:
+            - heading "Benzerlik sorusu" [level=3] [ref=e42]
+            - paragraph [ref=e43]: Bir metnin 'Kur'an gibi' olup olmadığını ölçmenin mümkün olup olmadığı sorusu.
+    - contentinfo [ref=e44]:
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - paragraph [ref=e47]: Açık Amaç
+          - paragraph [ref=e48]: Bu taslak, kurucu merkezli bir vitrin değil; konuyu ilk kez duyan biri için sade bir giriş, düzenli bir yöntem ve dikkat tüketmeyen bir okuma alanı sunmak amacıyla hazırlanmıştır.
+        - generic [ref=e49]:
+          - link "Ana Sayfa" [ref=e50] [cursor=pointer]:
+            - /url: /
+          - link "Nereden Başlamalı?" [ref=e51] [cursor=pointer]:
+            - /url: /basla
+          - link "Yöntem" [ref=e52] [cursor=pointer]:
+            - /url: /metot
+          - link "Örnek Bulgular" [ref=e53] [cursor=pointer]:
+            - /url: /bulgular
+          - link "Sorular" [ref=e54] [cursor=pointer]:
+            - /url: /sorular
+          - link "Derin Okuma" [ref=e55] [cursor=pointer]:
+            - /url: /derin-okuma
+          - link "Amaç" [ref=e56] [cursor=pointer]:
+            - /url: /hakkinda
+  - generic [ref=e59]:
+    - button "Menu" [ref=e60]:
+      - img [ref=e62]
+      - generic: Menu
+    - button "Inspect" [ref=e66]:
+      - img [ref=e68]
+      - generic: Inspect
+    - button "Audit" [ref=e70]:
+      - img [ref=e72]
+      - generic: Audit
+    - button "Settings" [ref=e75]:
+      - img [ref=e77]
+      - generic: Settings

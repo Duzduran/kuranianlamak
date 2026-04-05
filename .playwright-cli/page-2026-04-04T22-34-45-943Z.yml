@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Kur'an'da Yapısal İnceleme
+        - generic [ref=e7]:
+          - link "Ana Sayfa" [ref=e8] [cursor=pointer]:
+            - /url: /
+          - button "Menü" [ref=e9]
+    - main [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: İlk Örnekler
+        - figure "Müddessir 74:30" [ref=e13]:
+          - blockquote [ref=e14]: “Onun üzerinde on dokuz vardır.”
+          - generic [ref=e15]: Müddessir 74:30
+        - heading "Sayısal işaretler buradan görünmeye başlar." [level=1] [ref=e16]
+        - paragraph [ref=e17]: Derin arşivin tamamını açmadan önce, hangi tür düzen örnekleriyle karşılaşılacağını kısa ve anlaşılır başlıklar halinde görmek daha doğrudur.
+      - generic [ref=e19]:
+        - article [ref=e20]:
+          - generic [ref=e21]: "01"
+          - generic [ref=e22]:
+            - heading "19 işareti ve başlangıç eşiği" [level=2] [ref=e23]
+            - paragraph [ref=e24]: Bazı okumalar, sayısal katmanın ilk dikkat çeken kapısının burada açıldığını savunur.
+        - article [ref=e25]:
+          - generic [ref=e26]: "02"
+          - generic [ref=e27]:
+            - heading "Tekrar, denge ve karşılıklar" [level=2] [ref=e28]
+            - paragraph [ref=e29]: Aynı kelime, aynı oran ya da karşılıklı yerleşimler birlikte ele alınır.
+        - article [ref=e30]:
+          - generic [ref=e31]: "03"
+          - generic [ref=e32]:
+            - heading "Sure içinde dizilim ve grup yapısı" [level=2] [ref=e33]
+            - paragraph [ref=e34]: Daha büyük örneklerde odak, tek bir rakamdan çok bütün düzenin nasıl kurulduğuna kayar.
+    - contentinfo [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - paragraph [ref=e38]: Açık Amaç
+          - paragraph [ref=e39]: Bu taslak, kurucu merkezli bir vitrin değil; konuyu ilk kez duyan biri için sade bir giriş, düzenli bir yöntem ve dikkat tüketmeyen bir okuma alanı sunmak amacıyla hazırlanmıştır.
+        - generic [ref=e40]:
+          - link "Ana Sayfa" [ref=e41] [cursor=pointer]:
+            - /url: /
+          - link "Nereden Başlamalı?" [ref=e42] [cursor=pointer]:
+            - /url: /basla
+          - link "Yöntem" [ref=e43] [cursor=pointer]:
+            - /url: /metot
+          - link "Örnek Bulgular" [ref=e44] [cursor=pointer]:
+            - /url: /bulgular
+          - link "Sorular" [ref=e45] [cursor=pointer]:
+            - /url: /sorular
+          - link "Derin Okuma" [ref=e46] [cursor=pointer]:
+            - /url: /derin-okuma
+          - link "Amaç" [ref=e47] [cursor=pointer]:
+            - /url: /hakkinda
+  - generic [ref=e50]:
+    - button "Menu" [ref=e51]:
+      - img [ref=e53]
+      - generic: Menu
+    - button "Inspect" [ref=e57]:
+      - img [ref=e59]
+      - generic: Inspect
+    - button "Audit" [ref=e61]:
+      - img [ref=e63]
+      - generic: Audit
+    - button "Settings" [ref=e66]:
+      - img [ref=e68]
+      - generic: Settings

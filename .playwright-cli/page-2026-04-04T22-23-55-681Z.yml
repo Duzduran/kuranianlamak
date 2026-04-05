@@ -1,0 +1,29 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Sade, Açık, Konu Merkezli Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Sade, Açık, Konu Merkezli
+          - generic [ref=e7]: Kur'an'da Yapısal İnceleme
+        - button "Bölümler" [ref=e9]
+    - main [ref=e10]:
+      - generic [ref=e13]:
+        - paragraph [ref=e14]: Sakin bir başlangıç
+        - heading "Kur'an'ı anlamak." [level=1] [ref=e15]
+        - paragraph [ref=e16]: Anlamaya yaklaşmak için önce sakinlik gerekir.
+        - link "Sakin Bir Giriş" [ref=e18] [cursor=pointer]:
+          - /url: /basla
+  - generic [ref=e21]:
+    - button "Menu" [ref=e22]:
+      - img [ref=e24]
+      - generic: Menu
+    - button "Inspect" [ref=e28]:
+      - img [ref=e30]
+      - generic: Inspect
+    - button "Audit" [ref=e32]:
+      - img [ref=e34]
+      - generic: Audit
+    - button "Settings" [ref=e37]:
+      - img [ref=e39]
+      - generic: Settings

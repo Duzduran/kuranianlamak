@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "Kur'an'da Yapısal İnceleme" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e6]: Kur'an'da Yapısal İnceleme
+        - button "Menü" [ref=e8]
+    - main [ref=e9]:
+      - generic [ref=e12]:
+        - heading "Kur'an'ı anlamak." [level=1] [ref=e13]
+        - figure "Tâhâ 20:114" [ref=e14]:
+          - blockquote [ref=e15]: “Rabbim, ilmimi artır.”
+          - generic [ref=e16]: Tâhâ 20:114
+        - link "Derine İn" [ref=e18] [cursor=pointer]:
+          - /url: "#ilk-esik"
+      - region "Derinleşen akış" [ref=e19]:
+        - article [ref=e20]:
+          - generic [ref=e21]:
+            - paragraph [ref=e22]: İlk durak
+            - blockquote [ref=e23]: “Bu, kendisinde şüphe olmayan kitaptır.”
+            - paragraph [ref=e24]: Bakara 2:2
+            - heading "Kur'an önce kendisini bir kitap olarak tanıtır." [level=2] [ref=e25]
+            - paragraph [ref=e26]: Aşağı indikçe bu kitabın ne söylediği, nasıl okunduğu ve metnin içinde hangi düzenlerin görüldüğü adım adım açılır.
+        - article [ref=e27]:
+          - generic [ref=e28]:
+            - paragraph [ref=e29]: Biraz daha derin
+            - blockquote [ref=e30]: “Ayetlerini düşünsünler ve akıl sahipleri öğüt alsınlar diye sana indirdiğimiz bereketli bir kitaptır.”
+            - paragraph [ref=e31]: Sâd 38:29
+            - heading "Bu okuma yalnızca sözleri değil, düzeni de düşünmeye çağırır." [level=2] [ref=e32]
+            - paragraph [ref=e33]: Önce anlam, sonra yapı görünür. Kelimeler, tekrarlar, diziliş ve oranlar aynı metnin içinde birlikte okunmaya başlar.
+        - article [ref=e34]:
+          - generic [ref=e35]:
+            - paragraph [ref=e36]: Daha derinde
+            - blockquote [ref=e37]: “Onun üzerinde on dokuz vardır.”
+            - paragraph [ref=e38]: Müddessir 74:30
+            - heading "Buradan sonra sayısal işaretler ve yapısal örüntüler başlar." [level=2] [ref=e39]
+            - paragraph [ref=e40]: Aşağıdaki bölüm, Kur'an metninde öne sürülen tekrar, denge ve sayısal düzen örneklerine sade bir giriş sunar.
+            - link "İlk Örnekleri Gör" [ref=e42] [cursor=pointer]:
+              - /url: /bulgular
+  - generic [ref=e45]:
+    - button "Menu" [ref=e46]:
+      - img [ref=e48]
+      - generic: Menu
+    - button "Inspect" [ref=e52]:
+      - img [ref=e54]
+      - generic: Inspect
+    - button "Audit" [ref=e56]:
+      - img [ref=e58]
+      - generic: Audit
+    - button "Settings" [ref=e61]:
+      - img [ref=e63]
+      - generic: Settings

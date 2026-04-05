@@ -1,0 +1,622 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - link "Kur'an-ı Kerim'in Sayısal Yapısı" [ref=e6] [cursor=pointer]:
+      - /url: https://www.7ve19.com/
+      - img "Kur'an-ı Kerim'in Sayısal Yapısı" [ref=e7]
+    - generic [ref=e8]:
+      - button "Toggle Menu" [ref=e465] [cursor=pointer]
+      - text: 
+  - generic [ref=e28]:
+    - main [ref=e29]:
+      - article [ref=e30]:
+        - heading "Ana Sayfa" [level=1] [ref=e32]
+        - generic [ref=e33]:
+          - list [ref=e34]:
+            - listitem [ref=e35]:
+              - link "001 – Temel İlke ve Doğru Düşünme Yöntemi" [ref=e37] [cursor=pointer]:
+                - /url: https://www.7ve19.com/000-temel-ilke/
+              - time [ref=e38]: Temmuz 19, 2019
+              - generic [ref=e39]:
+                - text: İnsanın asıl meselesi, kendisiyle ve çevresiyle barış içinde yaşayabilmesidir.Huzur dediğimiz şey, geçici bir rahatlama değil; süreklilik kazanmış bir iç dengedir. İnançlı ya da inançsız olmak bu noktada belirleyici değildir.Bir insan, kendi iç bütünlüğünü kurabilmişse, bu saygıyı hak eder.Kimsenin,
+                - link "[…]" [ref=e40] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/000-temel-ilke/
+            - listitem [ref=e41]:
+              - link "002 – Sunum" [ref=e43] [cursor=pointer]:
+                - /url: https://www.7ve19.com/000-sunum/
+              - time [ref=e44]: Temmuz 19, 2019
+              - generic [ref=e45]:
+                - text: Kur’an, benzerinin ( mislinin – denginin ) insanlar tarafından yazılamayacağını iddia ederek, söyleminde bu iddiayı Müslümanların sahiplenmelerini ve dile getirmelerini ifade etmektedir. —– 17 – İsra Suresi – Ayet 88 —– ( 1924 – Cairo edition ) —– قُل
+                - link "[…]" [ref=e46] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/000-sunum/
+            - listitem [ref=e47]:
+              - link "0038 – Kodlama Kuralları nelerdir ve denemelerimi nerede yapabilirim?" [ref=e49] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/
+              - time [ref=e50]: Temmuz 19, 2019
+              - generic [ref=e51]:
+                - text: "KUR’AN KRİPTOGRAFİK YAPISAL PARMAK İZİ Amaç: Metnin kriptolojik yapısının benzerliğinin ölçülmesidir. Metinde bir örüntü veya sistematik olduğunu göstermek DEĞİLDİR. Metnin özgün, ayırt edici, metni temsil kabiliyetine sahip kriptolojik özellikleri belirli kurallar dahilinde ortaya koyulmuştur. Oluşan kodlamalar arasında bir örüntü olması"
+                - link "[…]" [ref=e52] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/
+          - list [ref=e53]:
+            - listitem [ref=e54]:
+              - link "0054 – İddia Anatomisi ve Doğru Sorular, Yanlış Sorular, Yanlış önyargılar" [ref=e56] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0054-iddia-dogru-sorular-yanlis-sorular-yanlis-on-yargilar/
+              - time [ref=e57]: Ağustos 18, 2025
+              - generic [ref=e58]:
+                - text: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ İddia: Kur’an’ın ilk ayeti olan bu cümle, 4 kelime ve 19 harften oluşuyor. Bu cümle insan sözü değildir, olamaz! Bu cümlenin başında bulunduğu, Kur’an benzeri bir sure insanlar getiremezler! Kaynak: BESMELE kodlamaları Yapay Zeka"
+                - link "[…]" [ref=e59] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0054-iddia-dogru-sorular-yanlis-sorular-yanlis-on-yargilar/
+            - listitem [ref=e60]:
+              - link "0053 – BESMELE – Kriptografik Yapısal Parmak İzi Yapay Zeka Analiz Sonuçları" [ref=e62] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0053-besmele-kriptografik-yapisal-parmak-izi-yapay-zeka-analiz-sonuclari/
+              - time [ref=e63]: Ağustos 5, 2025
+              - generic [ref=e64]:
+                - text: Bir şeyin insan tarafından yapılmaz olduğu nasıl gösterilebilir ..?!! Bunu yaparak gösterme imkanımızın olmadığını sanırım herkes kolayca anlayabiliyor…Bir şeyin insan tarafından yapılamaz olduğu, hesaplanarak gösterilebilir. Fakat, eğer siz bir şeyin yapılabilir olduğunu iddia ediyorsanız!!? O zaman yaparak göstermeniz
+                - link "[…]" [ref=e65] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0053-besmele-kriptografik-yapisal-parmak-izi-yapay-zeka-analiz-sonuclari/
+            - listitem [ref=e66]:
+              - link "0052 – ChatGPT ile çalışmalarıma gelen eleştirileri masaya yatırdık" [ref=e68] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0052-chatgpt-ile-calismalarima-gelen-elestirileri-masaya-yatirdik/
+              - time [ref=e69]: Temmuz 25, 2025
+              - generic [ref=e70]:
+                - text: Yazının sonunda, ilgili eleştirilerin üzerine yazdığım bu makaleyi Gemini 2.5 Pro’dan değerlendirmesini istedim. ilginç ve etkili bir yorum yaptı, yorumunu okumanızı isterim. Çalışmalarımı tanıttığım bir çok kişi, ortaya çıkan sonuçları ve metodu acımasızca, alabildiğine eleştirdiler. İşte size birkaç
+                - link "[…]" [ref=e71] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0052-chatgpt-ile-calismalarima-gelen-elestirileri-masaya-yatirdik/
+            - listitem [ref=e72]:
+              - link "006.00 – Çift ve Tek Sayısal Simetri" [ref=e74] [cursor=pointer]:
+                - /url: https://www.7ve19.com/006-00-cift-ve-tek-sayisal-simetri/
+              - time [ref=e75]: Temmuz 19, 2025
+              - generic [ref=e76]:
+                - text: "ChatGPT’ye konuyu sordum ve olasılık hesabı yapmasını istedim, öncelikle ChatGPT’nin cevabını okumanızı isterim: 19.07.2025 Fihristteki 114 surenin ayet sayısının 60’ı çift sayı ve 54’ü tek sayıdan oluştuğunu biliyorsun;Bu 60 Çift sayının 30 tanesinin sure numarası Çift ve 30"
+                - link "[…]" [ref=e77] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/006-00-cift-ve-tek-sayisal-simetri/
+            - listitem [ref=e78]:
+              - link "0051 – Gemini 2.5 Pro “Hizaya Geldi..!”" [ref=e80] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0051-gemini-2-5-pro-hizaya-geldi/
+              - time [ref=e81]: Temmuz 13, 2025
+              - generic [ref=e82]:
+                - text: Youtube Videolarımın altına gelen bir yoruma cevap vermek için, Besmele kodlamalarını yazdım ve “Buyurun Kur’an’ın insan uydurması olduğunu düşünüyorsanız sizde onun Besmele cümlesinin bir benzerini getirin” diye cevap verdim. Sonra bu yapının kolay anlaşılamayacağını düşündüğüm için Yapay Zekaya
+                - link "[…]" [ref=e83] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0051-gemini-2-5-pro-hizaya-geldi/
+            - listitem [ref=e84]:
+              - link "0050 – Gemini “19 Mucizesini” biliyor musun?" [ref=e86] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0050-gemini-19-mucizesini-biliyor-musun/
+              - time [ref=e87]: Temmuz 5, 2025
+              - generic [ref=e88]:
+                - text: Bugüne kadar kaleme aldığım en keyifli sohbet oldu bu yazı. Gemini’den (2.5 Pro) “19 Mucizesi” hakkında bildiklerini anlatmasını istedim. Sonra bu iddiayı (veya teori mi demek daha doğru olacak tam bilemedim) masaya yatıralım, detaylı inceleyelim dedim. Varsa bilimsel
+                - link "[…]" [ref=e89] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0050-gemini-19-mucizesini-biliyor-musun/
+            - listitem [ref=e90]:
+              - link "0049 – Yapay Zeka (Gemini 2.5 Pro) Sayısal Meydan Okuma" [ref=e92] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0049-yapay-zeka-gemini-2-5-pro-sayisal-meydan-okuma/
+              - time [ref=e93]: Haziran 22, 2025
+              - generic [ref=e94]:
+                - text: Bana Kurdoğlu diyebilirsin. Elbette, Kurdoğlu. Size nasıl yardımcı olabilirim? Nasıl, sayılarda, kriptolojide, kriptografik kodlarda kendini geliştirdin mi? Kurdoğlu. “Kendini geliştirmek” ifadesi benim için bir insan veya bilinçli bir varlık gibi olmasa da, bu alanlardaki yetkinliğimin nasıl oluştuğunu açıklayabilirim.
+                - link "[…]" [ref=e95] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0049-yapay-zeka-gemini-2-5-pro-sayisal-meydan-okuma/
+            - listitem [ref=e96]:
+              - link "0047 – Yani 19 sistemi var mı Kur’an da?!! Edip Yüksel haklı mı?" [ref=e98] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0047-yani-19-sistemi-var-mi-kuran-da-edip-yuksel-hakli-mi/
+              - time [ref=e99]: Ocak 1, 2025
+              - generic [ref=e100]:
+                - text: "Ne güzel soru, cevabı sizin için çok ilginç olacak: Kur’an’da 19 var ama 19 sistemi yok! Edip Yüksel haklı değil, yalan söylüyor, insanları açıkça kandırıyor. Kur’an’da 19 sistemi var diyerek, yalan söyleyerek, insanları kandırarak Kur’an’daki 19’un üstünü örtüyor,"
+                - link "[…]" [ref=e101] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0047-yani-19-sistemi-var-mi-kuran-da-edip-yuksel-hakli-mi/
+            - listitem [ref=e102]:
+              - link "0045 – Kur’an yazısında insanın yapamayacağı şey NEDİR? NASIL görebiliriz?" [ref=e104] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/
+              - time [ref=e105]: Nisan 13, 2024
+              - generic [ref=e106]:
+                - text: Bütün gerçek bu soruların altında yatıyor 1- Kur’an yazısında insanın yapamayacağı şey NEDİR? NASIL görebiliriz? 2- Kur’an yazısının, getirilen başka bir yazı ile benzerliğini NASIL ölçebiliriz? Bu sorulara bugün kriptolojiyle cevap verebiliyoruz Çünkü, Kriptoloji bugün bize Meydan okuma
+                - link "[…]" [ref=e107] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/
+            - listitem [ref=e108]:
+              - link "0042 – Kur’an insan sözü müdür?" [ref=e109] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0042-kuran-insan-sozu-mudur/
+              - time [ref=e110]: Haziran 22, 2023
+              - generic [ref=e111]:
+                - text: Medeniyetin, insanın aç karnını doyurmanın ötesinde bir şey olduğunu kabul ederek bir referans noktası belirleyip olaylara bu noktadan baktığımızda ve tüm zamanların en önemli sorusu nedir dediğimizde “bir yaratıcının gerekli olup olmadığı” sorusunun karşımıza çıktığını görüyoruz. Bu soruya
+                - link "[…]" [ref=e112] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0042-kuran-insan-sozu-mudur/
+            - listitem [ref=e113]:
+              - link "0024 – Olayı en basit olarak nasıl özetleyebilirsiniz?" [ref=e114] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0023-olayi-en-basit-olarak-nasil-ozetleyebilirsiniz/
+              - time [ref=e115]: Haziran 21, 2023
+              - generic [ref=e116]:
+                - text: Yapay Zekaya Sordum:Bu makaleyi de okumanızı isterimGemini “19 Mucizesini” biliyor musun? Nedir? Yapılan çalışma; KUR’AN METNİ BENZERLİĞİNİN MATEMATİKSEL MODELLEMESİDİR. Literatürdeki en yakın tanımı KUR’AN’IN KRİPTOGRAFİK YAPISAL PARMAK İZİ olarak ifade edilebilir. Bu matematiksel modelleme; metinde bulunan ve sayısallaştırılabilen
+                - link "[…]" [ref=e117] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0023-olayi-en-basit-olarak-nasil-ozetleyebilirsiniz/
+            - listitem [ref=e118]:
+              - link "010.00 – BESMELE (Rahman, Rahim olan Allah’ın adıyla)" [ref=e119] [cursor=pointer]:
+                - /url: https://www.7ve19.com/010-00-besmele-rahman-ve-rahim-olan-allahin-adiyla/
+              - time [ref=e120]: Haziran 20, 2023
+              - generic [ref=e121]:
+                - text: Makaleye YuoTube videolarının altına gelen bir yorum ve verdiğim cevap ile başlamak istiyorum. Cevap:Öneriniz ve verdiğiniz bilgiler için teşekkür ediyorum. Eğer nesnel gerçeklik, yani bilimsel gözlem, ölçüm ve deneyim sizin için değerliyse, düşüncelerinizi bu bilimsel yaklaşım üzerine inşa
+                - link "[…]" [ref=e122] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/010-00-besmele-rahman-ve-rahim-olan-allahin-adiyla/
+            - listitem [ref=e123]:
+              - link "0020 – İstemiş olduğunuz kriterler sizin tarafınızdan oluşturulmuştur. Yani ulaşmak istediğiniz sonuca göre kriterleri siz uyduruyorsunuz (!)" [ref=e124] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0020-istemis-oldugunuz-kriterler-sizin-tarafinizdan-olusturulmustur-yani-ulasmak-istediginiz-sonuca-gore-kriteri-siz-uyduruyorsunuz/
+              - time [ref=e125]: Haziran 19, 2023
+              - generic [ref=e126]:
+                - text: Soru:Hocam öncelikle bu titiz çalışma ve keşif için sizi tebrik etmekle beraber naçizane bir tenkidim var.Belki bu tenkidi başkaları da yapmıştır bilmiyorum.Dediğiniz gibi bırakın 70 küsur kriteri ilk 10 kriteri bile bilgisayar yardımı olmadan yapmak imkansız. Tüm kriterleri
+                - link "[…]" [ref=e127] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0020-istemis-oldugunuz-kriterler-sizin-tarafinizdan-olusturulmustur-yani-ulasmak-istediginiz-sonuca-gore-kriteri-siz-uyduruyorsunuz/
+            - listitem [ref=e128]:
+              - link "0029 – Neden Matematik?" [ref=e129] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0029-neden-matematik/
+              - time [ref=e130]: Haziran 18, 2023
+              - generic [ref=e131]:
+                - text: "Kur’an’ın bir benzerinin insanlar tarafından getirilemeyeceğiyle matematiğin ilgisi nedir?Neden Matematik? Bu konunun iyi anlaşılması için öncelikle Öznel ve Nesnel kavramlarının iyi tanınması ve incelenmesi gerektiğini düşünüyorum. Nesnel: Nesneye ait olan, kişiye özgü(öznel) olmayan demektir. Bir şeyin tamamen kanıtlanabilicek nitelikte olduğunu ifade"
+                - link "[…]" [ref=e132] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0029-neden-matematik/
+            - listitem [ref=e133]:
+              - link "0044 – Kur’an-ı Kerim’in Sayısal Yapısı Nümeroloji mi? Kriptoloji mi?" [ref=e134] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0044-kuran-i-kerimin-sayisal-yapisi-numeroloji-mi-kriptoloji-mi/
+              - time [ref=e135]: Nisan 29, 2023
+              - generic [ref=e136]:
+                - text: “Güneş balçıkla sıvanmaz” Kur’an Sayısal Yapısı Nümeroloji değildir, Kriptolojidir. Fakat, aşağıda verdiğim resimdeki gibi 19’cu Reşadilerin Kur’an ayetleri üzerinde yaptıkları manipülatif kodlamaları Nümerolojinin süiistimali veya sayısal manipülasyon ya da sayısal safsata şeklinde tanımlamak mümkündür. Bunu gören Ateistler, Kur’an
+                - link "[…]" [ref=e137] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0044-kuran-i-kerimin-sayisal-yapisi-numeroloji-mi-kriptoloji-mi/
+            - listitem [ref=e138]:
+              - link "0043 – Kur’an gökten zembille inmedi, insanın tuttuğu kalem ile yazıldı?!!" [ref=e139] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0043-kuran-gokten-zembille-inmedi-insanin-tuttugu-kalem-ile-yazildi/
+              - time [ref=e140]: Nisan 17, 2023
+              - generic [ref=e141]:
+                - text: Kur’an sayfalara yazılı olarak gökten zembille inmedi, insan elinin tuttuğu kalem ile yazıldı. Kur’an’ın insan sözü olduğunu iddia etmek için ekstra bir bilgiye veya delile ihtiyaç yoktur. Bilakis Kur’an’ın insan sözü olmadığını iddia edenlerin, Müslümanların bu iddialarını ispatlayacak
+                - link "[…]" [ref=e142] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0043-kuran-gokten-zembille-inmedi-insanin-tuttugu-kalem-ile-yazildi/
+            - listitem [ref=e143]:
+              - link "0036 – Kur’an metni benzerliğinin matematiksel modelleme temelleri nelerdir?" [ref=e144] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0036-kuran-metni-benzerliginin-matematiksel-modelleme-temelleri-nelerdir/
+              - time [ref=e145]: Aralık 24, 2022
+              - generic [ref=e146]:
+                - text: Modellemenin hedefi Kur’an metninin benzerlik ölçütlerinin (kriterlerinin) nesnel nitelikte tanımlanması olduğu için, modellemedeki temel ilkeler ortaya koyulurken, Kur’an metni matematiksel karakteristiğini yansıtacak şekilde bir modelleme hedeflenmelidir. Metnin özgün yapısından uzak, sadece kodlama yapmış olmak için yapılan kodlamalar veya
+                - link "[…]" [ref=e147] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0036-kuran-metni-benzerliginin-matematiksel-modelleme-temelleri-nelerdir/
+            - listitem [ref=e148]:
+              - link "0041 – Şimdi vaktim yok, vaktim olsaydı daha iyisini YAPARDIM!!? Safsatası" [ref=e149] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0041-simdi-vaktim-yok-vaktim-olsaydi-daha-iyisini-yapardim-safsatasi/
+              - time [ref=e150]: Kasım 23, 2022
+              - generic [ref=e151]:
+                - text: Şimdi sizlere çok ciddi bir fenomeni tanıtacağım ve Ateistlerin, Deistlerin, bilimsel metodun dışında davranışlar sergileyen bazı İstatistikçilerin, Matematikçilerin ve Mühendislerin altı boş tepkilerini göstereceğim. Ek olarak, burada ilginç olan, dikkat etmenizi istediğim şey hatta bütün insanlığın görmesi gerektiğini
+                - link "[…]" [ref=e152] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0041-simdi-vaktim-yok-vaktim-olsaydi-daha-iyisini-yapardim-safsatasi/
+            - listitem [ref=e153]:
+              - link "0040 – 19 Mucizesinin Kur’an’ı koruyor ALDATMACASI !!!" [ref=e154] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0040-19-mucizesinin-kurani-koruyor-aldatmacasi/
+              - time [ref=e155]: Kasım 2, 2022
+              - generic [ref=e156]:
+                - text: Resim ilginç Tevâfuklar sebebiyle seçilmiştir. Reşat Halife ve Edip Yüksel’in kitaplarında yazdıkları ve 1974 yılından beri bir mucizedir diye insanlara yutturmaya çalıştıkları sözde 19 Mucizesinin bir mucize olmadığını, kitaplarında insanların bugün ve gelecekte yapamayacakları nitelikte bir sayısal yapının
+                - link "[…]" [ref=e157] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0040-19-mucizesinin-kurani-koruyor-aldatmacasi/
+            - listitem [ref=e158]:
+              - link "0039 – Ha-Mim ve Ayn-Sin-Kaf Kodlama Harfleri" [ref=e159] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0039-ha-mim-ve-ayn-sin-kaf-kodlama-harfleri/
+              - time [ref=e160]: Haziran 1, 2022
+              - generic [ref=e161]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? Kur’an’ın, 1. ayetleri insanlar tarafından anlamı bilinmeyen Ha ve Mim harfi olan, 40, 41, 42, 43, 44,
+                - link "[…]" [ref=e162] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0039-ha-mim-ve-ayn-sin-kaf-kodlama-harfleri/
+            - listitem [ref=e163]:
+              - link "0035 – 10 yıldır anlatıyorum, 10 yıldır default 150 IQ olan Ateistler NEDEN anlayamıyor?!!" [ref=e164] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0035-10-yildir-anlatiyorum-10-yildir-default-150-iq-olan-ateistler-neden-anlayamiyor/
+              - time [ref=e165]: Nisan 27, 2022
+              - generic [ref=e166]:
+                - text: Bilgiye Dair; Akıl, Zekâ ve Bilgi (Veri) kavramlarını iyi anlamak gerektiğini düşünüyorum. Aklı bir aygıt olarak tanımlıyorum, zekâ ise, bu aygıtın bilgi işleme kapasitesi, bilgi ise verilerin, yani doğadan gözlem ve ölçümler sonucunda elde ettiğimiz, nicel veya nitel
+                - link "[…]" [ref=e167] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0035-10-yildir-anlatiyorum-10-yildir-default-150-iq-olan-ateistler-neden-anlayamiyor/
+            - listitem [ref=e168]:
+              - link "0034 – 6.Kriteri anlayamadım. Oluşturulan tabloların ne bağlantısı olabilir veya bu ölçüt olur mu?" [ref=e169] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0034-6-kriteri-anlayamadim-olusturulan-tablolarin-ne-baglantisi-olabilir-veya-bu-olcut-olur-mu/
+              - time [ref=e170]: Nisan 25, 2022
+              - generic [ref=e171]:
+                - text: Size hocam diyeceğim çünkü bu konuda uzmansınız sanırım, göz attım kriter 4 te elendim, 6. Kriteri anlayamadım. Oluşturulan tabloların ne bağlantısı olabilir veya bu ölçüt olur mu? Öncelikle, olaya doğru yaklaştığınız için sizi tebrik ve taktir ediyorum. Konuyu
+                - link "[…]" [ref=e172] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0034-6-kriteri-anlayamadim-olusturulan-tablolarin-ne-baglantisi-olabilir-veya-bu-olcut-olur-mu/
+            - listitem [ref=e173]:
+              - link "0012 – Önümüzdeki yıllarda bu konunun nasıl gelişeceği hakkındaki görüşleriniz nelerdir?" [ref=e174] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0012-onumuzdeki-yillarda-bu-konunun-nasil-gelisecegi-hakkindaki-gorusleriniz-nelerdir/
+              - time [ref=e175]: Nisan 2, 2022
+              - generic [ref=e176]:
+                - text: "Önümüzdeki yıllarda, konu daha fazla gündem olacaktır. Çünkü Yaratıcının gerekliliği bilimsel gelişmeler ile ortaya koyulmuş durumdadır. Bing-Bang Teorisinin ortaya çıkardığı durum: Evrenin; Zaman, Madde ve Mekanın (Uzay) bir başlangıcı olduğu, bilimsel olarak çok geniş kitleler tarafından kabul görecek şekilde ortaya koyulmuştur."
+                - link "[…]" [ref=e177] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0012-onumuzdeki-yillarda-bu-konunun-nasil-gelisecegi-hakkindaki-gorusleriniz-nelerdir/
+            - listitem [ref=e178]:
+              - link "0033 – Sizin sisteminiz 9.Tevbe Suresinin 127 ayet olduğunu ispatlasaydı ne yapardınız?" [ref=e179] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0033-sizin-sisteminiz-9-tevbe-suresinin-127-ayet-oldugunu-ispatlasaydi-ne-yapardiniz/
+              - time [ref=e180]: Ocak 21, 2022
+              - generic [ref=e181]:
+                - text: "Girişte sorudaki bir hatayı, hem de çok önemli bir teknik hatayı düzeltelim: Kur’an’daki sayılar, bu sayılardan kurulmuş sistemler (böyle kurulmuş bir sistem yoktur), yani sistemler dahi kurulsa, denklikler, eşitlikler, 19’a bölmeler, her neyse, hiç biri ama hiç biri"
+                - link "[…]" [ref=e182] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0033-sizin-sisteminiz-9-tevbe-suresinin-127-ayet-oldugunu-ispatlasaydi-ne-yapardiniz/
+            - listitem [ref=e183]:
+              - link "0032 – Kriterlerin bir önemi olması için önce düzen bulunması gerekmiyor mu?" [ref=e184] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0032-kriterlerin-bir-onemi-olmasi-icin-once-duzen-bulunmasi-gerekmiyor-mu/
+              - time [ref=e185]: Ocak 9, 2022
+              - generic [ref=e186]:
+                - text: "Kur’an benzerliğini ölçmek ve taklit edilemezliğini göstermek için yapılan kodlamalarda üç temel kural (düzen) vardır. 1- Bütünsellik: Ölçülen metnin tamamı kapsanmalıdır. Kodlamalarda bütünsellik olmalıdır. (Örüntü gösterilerek bütünsellik ihlal edilebilir.) 2- Dizilim: Metnin verdiği sıralama esas olarak kabul edilir."
+                - link "[…]" [ref=e187] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0032-kriterlerin-bir-onemi-olmasi-icin-once-duzen-bulunmasi-gerekmiyor-mu/
+            - listitem [ref=e188]:
+              - link "0014 – Tevbe son iki ayet hakkındaki düşünceleriniz nelerdir?" [ref=e189] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0014-tevbe-son-iki-ayet-hakkindaki-dusunceleriniz-nelerdir/
+              - time [ref=e190]: Ocak 2, 2022
+              - generic [ref=e191]:
+                - text: Tevbe son 2 ayet şeklinde ifade ettiğiniz konu;9. Tevbe Suresi 128 ve 129. ayetlerdir. Bu ayetler, Kur’an’ın diğer ayetleri gibi, hiç tartışmasız Kur’an ayetleridir. Bu ayetler Kur’an sayısal yapısının çok özel ayetleridir. Reşat Halife maalesef, matematiksel sonuçların ortaya koyduğu
+                - link "[…]" [ref=e192] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0014-tevbe-son-iki-ayet-hakkindaki-dusunceleriniz-nelerdir/
+            - listitem [ref=e193]:
+              - link "0031 – Kur’an’da 19 mucizesi çeşitli sayısal kurallar olduğunu mu söylemektedir?" [ref=e194] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0031-kuranda-19-mucizesi-cesitli-sayisal-kurallar-oldugunu-mu-soylemektedir/
+              - time [ref=e195]: Ekim 22, 2021
+              - generic [ref=e196]:
+                - text: Kur’an kodlamasında veya sayısal yapısında, dışarıdan kural olarak bir şey tanımlamak, ortaya atmak bana sorarsanız sakıncalıdır. Bence gerekli de değildir. Kitabın kendi doğal sıralaması, düzeni dikkate alınmalı ve onun dışında dışarıdan insanın müdahale ettiği kurallar, tanımlamalar yapılmamalıdır. Giriş
+                - link "[…]" [ref=e197] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0031-kuranda-19-mucizesi-cesitli-sayisal-kurallar-oldugunu-mu-soylemektedir/
+            - listitem [ref=e198]:
+              - link "0028 – Kur’an’ın cem edilmesini doğru anlamak" [ref=e199] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0028-kuranin-cem-edilmesini-dogru-anlamak/
+              - time [ref=e200]: Eylül 12, 2021
+              - generic [ref=e201]:
+                - text: Konuyu sistematik olarak düşünmeyenler, Kur’an’ın nasıl korunduğunu bilmeyenler bazı detayları gözden kaçırıyorlar. • Hz. Peygambere vahiy yoluyla ayetler ezberletiliyordu. (İnancımız gereği bunu kabul ediyoruz)• Hz. Peygamber vahiy katiplerine şahitler huzurunda vahy edilen ayetleri yazdırıyordu.• Yazılan ayetler Hz. Peygambere
+                - link "[…]" [ref=e202] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0028-kuranin-cem-edilmesini-dogru-anlamak/
+            - listitem [ref=e203]:
+              - link "0027 – Bu konu neden önemli? Önemini biz nasıl anlayabiliriz? Özetleyebilir misiniz." [ref=e204] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0027-bu-konu-neden-onemli-onemini-biz-nasil-anlayabiliriz-ozetleyebilir-misiniz/
+              - time [ref=e205]: Ağustos 25, 2021
+              - generic [ref=e206]:
+                - text: Sokaktaki insanın, konunun önemini detayına kadar hemen anlamasını kesinlikle bekleyemeyiz. Sokaktaki insan konuyu güven duyduğu bilimsel kuruluşların resmi açıklamalarından sonra tanıyacak ve önemini anlayacaktır. (Burada özellikle konuyu anlayacak demiyorum, tanıyacak ve önemini anlayacak diyorum, lütfen bu ifademe dikkat
+                - link "[…]" [ref=e207] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0027-bu-konu-neden-onemli-onemini-biz-nasil-anlayabiliriz-ozetleyebilir-misiniz/
+            - listitem [ref=e208]:
+              - link "0026 – Reşat Halife’nin konuyla ilgili açıklamalarını yorumlar mısınız?" [ref=e209] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0026-resat-halifenin-konuyla-ilgili-aciklamalarini-yorumlar-misiniz/
+              - time [ref=e210]: Mayıs 8, 2021
+              - generic [ref=e211]:
+                - text: "Youtube Videolarından birine, bir arkadaş https://submission.org/App24.html Bu yazıya cevap verir misiniz. Şeklinde bir yorum yazmış. Yazıya cevap veriyorum. Reşat Halife’nin veya onu takip eden bir grubun açıklamasıdır. Yazı girişinin İngilizcesi: A superhuman mathematical system pervades the Quran and"
+                - link "[…]" [ref=e212] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0026-resat-halifenin-konuyla-ilgili-aciklamalarini-yorumlar-misiniz/
+            - listitem [ref=e213]:
+              - link "0025 – Başka kitaplarda da buna benzer bir sayısal yapı olamaz mı?" [ref=e214] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0025-baska-kitaplarda-da-buna-benzer-bir-sayisal-yapi-olamaz-mi/
+              - time [ref=e215]: Mayıs 7, 2021
+              - generic [ref=e216]:
+                - text: İddia sahibi iddiasını ispatlamakla mükelleftir. Sadece iddia ederek bıraktığında, bu doğru bir şey olmaz, kabul edilmez. Dikkate alınmaz. Biz iddiamızın ispatını herkesin önünde ortaya koymuş durumdayız. Kriterlerimiz bellidir. Sayısal yapı bellidir. Her şey çok açık nettir. Eğer birileri
+                - link "[…]" [ref=e217] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0025-baska-kitaplarda-da-buna-benzer-bir-sayisal-yapi-olamaz-mi/
+            - listitem [ref=e218]:
+              - link "0022 – Mucizevi bilgilerin olması bir kitabın yaratıcıdan geldiğini ispatlamaz. İspatlar mı?" [ref=e219] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0022-mucizevi-bilgilerin-olmasi-bir-kitabin-yaraticidan-geldigini-ispatlamaz-ispatlar-mi/
+              - time [ref=e220]: Nisan 11, 2021
+              - generic [ref=e221]:
+                - text: Bir bilgi mucizevi nitelikte olurken, aynı zamanda yalan, yanlış ve aldatıcı olabilir mi sizce. Bu mantıklı mı? Siz Kur’an’ın mucizevi bilgiler barındırdığını kabul ediyor musunuz? Veya soruyu başka bir şekilde soralım. Sizce Kur’an insan sözü müdür, değil midir?Bu
+                - link "[…]" [ref=e222] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0022-mucizevi-bilgilerin-olmasi-bir-kitabin-yaraticidan-geldigini-ispatlamaz-ispatlar-mi/
+            - listitem [ref=e223]:
+              - link "0021 – “Kur’an’ın korunmuş olduğunu gösterir, fakat Kur’an’ı korumaz” diyorsunuz bu çelişkili değil mi?" [ref=e224] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0021-kuranin-korunmus-oldugunu-gosterir-fakat-kurani-korumaz-diyorsunuz-bu-celiskili-degil-mi/
+              - time [ref=e225]: Nisan 3, 2021
+              - generic [ref=e226]:
+                - text: Kur’ân’ı sayısal yapının koruduğu iddia edilmiştir. Kur’ân korunmuştur, fakat Kur’ân’ı sayısal yapı korumuyor, Kur’ân’ın korunmuş olduğunu sayısal yapı sayesinde de görüyoruz, anlıyoruz. Kur’an’da karşımıza çıkan bu sayısal yapı, Kur’an’ın değişmediğini gösterir, fakat değiştirilemeyeceğini göstermez, gösteremez. Yani Kur’an’ın korunmuş olduğunu
+                - link "[…]" [ref=e227] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/0021-kuranin-korunmus-oldugunu-gosterir-fakat-kurani-korumaz-diyorsunuz-bu-celiskili-degil-mi/
+            - listitem [ref=e228]:
+              - link "0015 – Kur’an’ın Benzerlik Kriterleri nelerdir?" [ref=e230] [cursor=pointer]:
+                - /url: https://www.7ve19.com/015-kuranin-benzerlik-kriterleri-nelerdir/
+              - time [ref=e231]: Şubat 9, 2021
+              - generic [ref=e232]:
+                - text: KUR’AN METNİ MATEMATİKSEL BENZERLİĞİNİ ÖLÇEN MATEMATİKSEL MODELLEME Benzerlik Kur’an metninde bulunan sayısal yapıda incelenir. Kur’an benzerlik kriterleri matematiksel özelliktedir. Bu matematiksel kriterler birbirlerine bağlıdırlar, yani kriterler aynı bilgi parçacıklarını kullanarak oluşurlar, dolayısıyla aralarında matematiksel bir bağlantı vardır. Kriterlerin
+                - link "[…]" [ref=e233] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/015-kuranin-benzerlik-kriterleri-nelerdir/
+            - listitem [ref=e234]:
+              - link "091.00 – Dairenin sayılarındaki gizem ve Kur’ân sayısal yapısındaki temel sayılar (114, 57, 19) ile bağlantı" [ref=e235] [cursor=pointer]:
+                - /url: https://www.7ve19.com/091-00-dairenin-sayilarindaki-gizem-ve-kuran-sayisal-sisteminin-temel-sayilari-114-57-19-ile-baglanti/
+              - time [ref=e236]: Haziran 30, 2020
+              - generic [ref=e237]:
+                - text: "360 derece, daireyi tanımlayan en temel ifade, nereden geliyor bu 360 derece, neden 360? Derece’nin tanımı şu şekilde yapılmış: düzlem açının bir ölçüsü. Tam bir daire toplam 360 derece kabul edilmiş. Standart bir birim değil. 1 derece ="
+                - link "[…]" [ref=e238] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/091-00-dairenin-sayilarindaki-gizem-ve-kuran-sayisal-sisteminin-temel-sayilari-114-57-19-ile-baglanti/
+            - listitem [ref=e239]:
+              - link "090.00 – Araştırma Sonucu" [ref=e240] [cursor=pointer]:
+                - /url: https://www.7ve19.com/090-00-arastirma-sonucu/
+              - time [ref=e241]: Haziran 30, 2020
+              - generic [ref=e242]:
+                - text: "Hipotezimiz aşağıdaki iki önermeden oluşuyordu; Birinci önerme: Kur’ân beyanı: Kur’ân Allah tarafından korunan bir kitaptır. —– 15 – Hicr Suresi – Ayet 9 (Mushaf Sırası: 15 – Nüzul Sırası: 54 – Alfabetik: 36) —– اِنَّا نَحْنُ نَزَّلْنَا الذِّكْرَ"
+                - link "[…]" [ref=e243] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/090-00-arastirma-sonucu/
+            - listitem [ref=e244]:
+              - 'link "020.00 – Ha Mim Grubu: “ حم ”" [ref=e245] [cursor=pointer]':
+                - /url: https://www.7ve19.com/020-00-ha-mim-grubu/
+              - time [ref=e246]: Haziran 30, 2020
+              - generic [ref=e247]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? Kur’ân’da 40.Mü’min suresinden başlayarak birbirini izleyen 7 sure “Ha-Mim” “حم” harfleri (Hurufu Mukatta harfleri) ile başlamaktadır. Bu
+                - link "[…]" [ref=e248] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/020-00-ha-mim-grubu/
+            - listitem [ref=e249]:
+              - 'link "020.01 – Ayn Sin Qaf Grubu: “ عسق ”" [ref=e250] [cursor=pointer]':
+                - /url: https://www.7ve19.com/020-01-ayn-sin-qaf-grubu/
+              - time [ref=e251]: Haziran 30, 2020
+              - generic [ref=e252]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? 42. Şura suresinin 2. ayeti “Ayn-Sin-Kaf” “عسق” Hurufu Mukatta harflerinden oluşur. Bu harf kombinasyonu sadece bu surenin
+                - link "[…]" [ref=e253] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/020-01-ayn-sin-qaf-grubu/
+            - listitem [ref=e254]:
+              - link "020.02 – Kod kırılabilir mi? Kırılırsa ne olacak? Kur’ân’ın bir benzeri yazılabilir mi?" [ref=e255] [cursor=pointer]:
+                - /url: https://www.7ve19.com/020-02-kod-kirilabilir-mi-kirilirsa-ne-olacak-kuranin-bir-benzeri-yazilabilir-mi/
+              - time [ref=e256]: Haziran 30, 2020
+              - generic [ref=e257]:
+                - text: Önceki bölümlerde verdiğim detaylardan sonra, ister istemez insanın aklına şu soru geliyor. Günümüzde teknoloji baş döndürücü bir hızla ilerliyor, gelişen algoritma teknikleri, Yapay Zeka – Artificial intelligence (AI) çalışmaları, Yapay Sinir Ağları – Artificial Neural Network (ANN), gelişen
+                - link "[…]" [ref=e258] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/020-02-kod-kirilabilir-mi-kirilirsa-ne-olacak-kuranin-bir-benzeri-yazilabilir-mi/
+            - listitem [ref=e259]:
+              - link "003.00 – Ön bulgular ve Kur’ân’daki kodlamaya dair Kur’ân beyanı" [ref=e260] [cursor=pointer]:
+                - /url: https://www.7ve19.com/on-bulgular-ve-kurandaki-kodlamaya-dair-kuran-beyani/
+              - time [ref=e261]: Haziran 30, 2020
+              - generic [ref=e262]:
+                - text: "Kur’ân’da kodlamaya ait bildirimler bulunmuştur. Çok açık bir şekilde 7 ve 19 sayıları ayetlerde vurgulanmıştır. Ayrıca, 19 sayısının fonksiyonları da detaylı olarak Kur’ân’da belirtilmiştir. —– 15 – Hicr Suresi – Ayet 87 (Mushaf Sırası: 15 – Nüzul Sırası:"
+                - link "[…]" [ref=e263] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/on-bulgular-ve-kurandaki-kodlamaya-dair-kuran-beyani/
+            - listitem [ref=e264]:
+              - link "008.00 – 7 ve 19 İkili Sayısal Kodlama (Sistemi) Yöntemi" [ref=e265] [cursor=pointer]:
+                - /url: https://www.7ve19.com/008-00-7-ve-19-ikili-sayisal-kodlama-sistemi/
+              - time [ref=e266]: Haziran 22, 2020
+              - generic [ref=e267]:
+                - text: 11.03.2025 tarihi itibariyle, aşağıdaki yazım arşiv niteliğindedir. Geçmişteki görüşlerimi yansıtmaktadır. Bugün için gelişmeler ışığında, yaptığım araştırmalardan elde ettiğim bilimsel bulgular sonucunda yeni oluşan görüşlerim şunlardır. Öncelikle ortaya koyulan çalışmanın sonucunda bir sistem değil, bir yöntemin tanımlandığını fark ettim
+                - link "[…]" [ref=e268] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/008-00-7-ve-19-ikili-sayisal-kodlama-sistemi/
+            - listitem [ref=e269]:
+              - link "006.01 – Mushaf fihristi İlahi midir?" [ref=e270] [cursor=pointer]:
+                - /url: https://www.7ve19.com/006-01-mushaf-fihristi-ilahi-midir/
+              - time [ref=e271]: Haziran 22, 2020
+              - generic [ref=e272]:
+                - text: Bu çalışma hiç bir bilginin ilahi olduğunu ispatlamak için yapılmamıştır.Bu çalışmanın odak noktası Kur’an metni nesnel yapısını inceleyerek ortaya çıkan bulguların insan ürünü olamayacağını bilimsel olarak ortaya koymaktır.Bu çalışma tamamen bilimsel yöntemlerle yapılan ve çıktıları yine bilimsel yöntemler
+                - link "[…]" [ref=e273] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/006-01-mushaf-fihristi-ilahi-midir/
+            - listitem [ref=e274]:
+              - link "006.02 – Çift ve Tek Simetrisinin diğer sonuçları" [ref=e276] [cursor=pointer]:
+                - /url: https://www.7ve19.com/006-02-cift-ve-tek-simetrisinin-diger-sonuclari/
+              - time [ref=e277]: Haziran 22, 2020
+              - generic [ref=e278]:
+                - text: 114 Surenin Ayet sayılarının Çift ve Tek guruplarındaki kodlamalar:(60 + 54 = 114) Çift ve Tek Tablosunu Excel dosyası olarak indirebilirsinizİndir Çift ve Tek grupların toplam değerleri, aralarında hiçbir matematiksel ilişki olmadığı halde, Gauss metodu ile bütün surelerin
+                - link "[…]" [ref=e279] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/006-02-cift-ve-tek-simetrisinin-diger-sonuclari/
+            - listitem [ref=e280]:
+              - link "007.00 – Reşat Halife ve Kur’ân’daki 19 sayısal kodlama sistemi" [ref=e281] [cursor=pointer]:
+                - /url: https://www.7ve19.com/007-00-resat-halife-ve-kurandaki-19-sayisal-kodlama-sistemi/
+              - time [ref=e282]: Haziran 21, 2020
+              - generic [ref=e283]:
+                - text: “Reşat Halife 1935 yılında (Kefri Zeyyat/Zeyyat Çiftliği) Mısır’da doğdu. Babası tasavvufi bir tarikatın şeyhiydi. Reşat Halife Ziraat alanında lisans diploması alana kadar Mısır’da eğitim gördü. Daha sonra Amerika’ya gitti. Kaliforniya’da 1964 yılında Biyokimya alanında Doktora unvanını elde etti.
+                - link "[…]" [ref=e284] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/007-00-resat-halife-ve-kurandaki-19-sayisal-kodlama-sistemi/
+            - listitem [ref=e285]:
+              - link "007.01 – Reşat Halife’nin Bilimsel Büyük Hatası" [ref=e286] [cursor=pointer]:
+                - /url: https://www.7ve19.com/007-01-resat-halifenin-bilimsel-buyuk-hatasi/
+              - time [ref=e287]: Haziran 21, 2020
+              - generic [ref=e288]:
+                - text: Reşat Halife’nin sorun olarak gördüğü ve inkar ettiği 9. Tevbe suresinin son iki ayeti (128. ve 129. ayetler) olayı tetikler. Bu sebeple bu matematiksel bulgu Sayısal Kodlama Sistemleri için çok önemlidir ve çok kritik değere sahiptir. Yapay Zekaya
+                - link "[…]" [ref=e289] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/007-01-resat-halifenin-bilimsel-buyuk-hatasi/
+            - listitem [ref=e290]:
+              - link "007.02 – 19 sayısal kodlama sistemindeki Reşat Halife’nin “Teknik Yorum” hatası:" [ref=e291] [cursor=pointer]:
+                - /url: https://www.7ve19.com/007-02-19-sayisal-kodlama-sistemindeki-resat-halifenin-teknik-yorum-hatasi/
+              - time [ref=e292]: Haziran 21, 2020
+              - generic [ref=e293]:
+                - text: 19 sisteminin yardımıyla, bazı imla hatalarının bulunması, örnek olarak; 7. Surenin 69. Ayetindeki “Bastatan” kelimesinin “Sin” harfi ile yazılması veya “Elif” harfi eklemelerinin çıkarıldığında, orijinal metnin sistemi çok net bir şekilde doğrulaması, sayısal sistemin bir “Hata Tespit” fonksiyonunun
+                - link "[…]" [ref=e294] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/007-02-19-sayisal-kodlama-sistemindeki-resat-halifenin-teknik-yorum-hatasi/
+            - listitem [ref=e295]:
+              - link "007.03 – Edip Yüksel’in ve 19.org’in Tevbe suresi son iki ayeti inkarı" [ref=e296] [cursor=pointer]:
+                - /url: https://www.7ve19.com/007-03-edip-yukselin-ve-19-orgin-tevbe-suresi-son-iki-ayeti-inkari/
+              - time [ref=e297]: Haziran 21, 2020
+              - generic [ref=e298]:
+                - text: Yapay Zekaya Sordum:Bu makaleyi de okumanızı isterimGemini “19 Mucizesini” biliyor musun? Edip Yüksel’in ve 19.org’in Tevbe suresi son iki ayeti inkarı Edip Yüksel şunları yazıyor :“1974 yılında Kur’ân’da fark ettiğimiz matematiksel sistem yeni bir fiziksel deliller çağı açmış
+                - link "[…]" [ref=e299] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/007-03-edip-yukselin-ve-19-orgin-tevbe-suresi-son-iki-ayeti-inkari/
+            - listitem [ref=e300]:
+              - link "007.04 – 19 sayısal kodlama sistemindeki hatalı yaklaşımın düzeltilmesi" [ref=e301] [cursor=pointer]:
+                - /url: https://www.7ve19.com/007-04-19-sayisal-kodlama-sistemindeki-hatali-yaklasimin-duzeltilmesi/
+              - time [ref=e302]: Haziran 21, 2020
+              - generic [ref=e303]:
+                - text: 19.org ekibi, Reşat Halifenin iddiası olan, 19 kodlama sistemine göre Tevbe suresinin son iki ayetinin Kur’ân’a sonradan eklendiği ve çıkarılması gerektiğini kabul ettikleri için simetri hesaplarında bu iki ayeti hariç tutmuşlar, dolayısıyla bu çalışmada ayet sayılarının toplamı 6234
+                - link "[…]" [ref=e304] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/007-04-19-sayisal-kodlama-sistemindeki-hatali-yaklasimin-duzeltilmesi/
+            - listitem [ref=e305]:
+              - link "004.00 – Kod ve Kodlama nedir? Kur’ân’daki Sayısal Kodlama Yapısı" [ref=e306] [cursor=pointer]:
+                - /url: https://www.7ve19.com/004-00-kod-ve-kodlama-nedir-kurandaki-sayisal-kodlama-yapisi/
+              - time [ref=e307]: Haziran 20, 2020
+              - generic [ref=e308]:
+                - text: Kod’un ne olduğunu ve sayısal bilgiden farkını şöyle açıklayabiliriz; Kod sembolik bir ifadedir, sayısal bilgi değildir. Sizin Kredi Kartı numaranız bir Kod’dur, sayı değildir!!! Her gün marketlerden aldığınız ürünlerinde üzerlerinde görebileceğiniz, kasada kolay tanınmasını ve fiyatlanmasını sağlayan barkod’ları
+                - link "[…]" [ref=e309] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/004-00-kod-ve-kodlama-nedir-kurandaki-sayisal-kodlama-yapisi/
+            - listitem [ref=e310]:
+              - link "005.00 – Kur’ân’daki sayısal kodlama sistemleri" [ref=e311] [cursor=pointer]:
+                - /url: https://www.7ve19.com/005-00-kurandaki-sayisal-kodlama-sistemleri/
+              - time [ref=e312]: Haziran 20, 2020
+              - generic [ref=e313]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? Kur’ân’da var olduğunu keşfettiğimiz sayısal kodlama sistemlerinde sadece sayılar kullanılarak kodlama yapıldığı için “Sayısal Kodlama” olarak ifade
+                - link "[…]" [ref=e314] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/005-00-kurandaki-sayisal-kodlama-sistemleri/
+            - listitem [ref=e315]:
+              - link "008.01 – Kodlama Sistemlerinin Gelişim İhtiyacı" [ref=e316] [cursor=pointer]:
+                - /url: https://www.7ve19.com/008-01-kodlama-sistemlerinin-gelisim-ihtiyaci/
+              - time [ref=e317]: Haziran 20, 2020
+              - generic [ref=e318]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? Keşfedilmiş olan 19 sayısal kodlama sistemindeki “≡ 0 (mod 19)” denkliğine yeni keşfedilmiş olan “≡ 0 (mod
+                - link "[…]" [ref=e319] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/008-01-kodlama-sistemlerinin-gelisim-ihtiyaci/
+            - listitem [ref=e320]:
+              - link "017.00 – Alt veri grupları “Kilit Harfleri” (Huruf-u Mukatta harfleri)" [ref=e321] [cursor=pointer]:
+                - /url: https://www.7ve19.com/017-00-alt-veri-gruplari-kilit-harfleri-huruf-u-mukatta-harfleri/
+              - time [ref=e322]: Haziran 20, 2020
+              - generic [ref=e323]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? Kur’ân’da 29 adet surenin başında bulunan ve ne mânâya geldikleri hâlâ bilinmeyen ama asırlardan buyana tartışılan harflere,
+                - link "[…]" [ref=e324] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/017-00-alt-veri-gruplari-kilit-harfleri-huruf-u-mukatta-harfleri/
+            - listitem [ref=e325]:
+              - 'link "016.00 – İlk İndirilen Sure: 96. Alak Suresinin Kodlaması" [ref=e326] [cursor=pointer]':
+                - /url: https://www.7ve19.com/016-00-ilk-indirilen-sure-96-alak-suresinin-kodlamasi/
+              - time [ref=e327]: Haziran 20, 2020
+              - generic [ref=e328]:
+                - text: İlk inen sure, sondan 19. sırada olan ve toplam 19 numaralı Ayeti bulunan 96.Alak suresidir. Bu ayetlerin toplam harf sayısı 285‘dir. 285 sayısı 19 sayısal kodlama sayısını doğrular. 285 = 19 x 15 ≡ 0 (mod 19) İlk
+                - link "[…]" [ref=e329] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/016-00-ilk-indirilen-sure-96-alak-suresinin-kodlamasi/
+            - listitem [ref=e330]:
+              - 'link "015.00 – İlk Sure (Mushaf Fihristi): 1.Fatiha Suresinin Kodlaması" [ref=e332] [cursor=pointer]':
+                - /url: https://www.7ve19.com/015-00-ilk-sure-mushaf-fihristi-1-fatiha-suresinin-kodlamasi/
+              - time [ref=e333]: Haziran 20, 2020
+              - generic [ref=e334]:
+                - text: 7 ve 19 ikili sayısal kodlama sisteminin çözülmesi gereken daha birçok detayı olduğunu kabul etmek gerekir. Mevcut bulgular, 7 ve 19 ikili sayısal kodlama sisteminin varlığını ve mucizevi büyüklüğünü göstermeye yetmektedir. Fakat daha çok kat edilmesi gereken mesafeler
+                - link "[…]" [ref=e335] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/015-00-ilk-sure-mushaf-fihristi-1-fatiha-suresinin-kodlamasi/
+            - listitem [ref=e336]:
+              - 'link "012.00 – Kodlama sayısı 7 için referans ayet: 15.Hicr Suresi 87. ayet" [ref=e337] [cursor=pointer]':
+                - /url: https://www.7ve19.com/012-00-kodlama-sayisi-7-icin-referans-ayet-15-hicr-suresi-87-ayet/
+              - time [ref=e338]: Haziran 19, 2020
+              - generic [ref=e339]:
+                - text: Kodlamalarda 19 sayısı dominant bir rol üstlenir. Ele alınan metnin bütününde ve doğal sırasında ortaya çıkan kodlamalarda öncelikle mod 19 = 0 denkliği aranır. Eğer bu denkliği sağlayan bir kodlama bulunursa, bu kodlamanın mesanisine, (Çiftine, Tersine, Tamamlayıcısına) bakılır
+                - link "[…]" [ref=e340] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/012-00-kodlama-sayisi-7-icin-referans-ayet-15-hicr-suresi-87-ayet/
+            - listitem [ref=e341]:
+              - 'link "013.00 – Kodlama sayısı 19 için referans ayet: 74.Müddesir Suresi 30. ayet" [ref=e342] [cursor=pointer]':
+                - /url: https://www.7ve19.com/013-00-kodlama-sayisi-19-icin-referans-ayet-74-muddesir-suresi-30-ayet/
+              - time [ref=e343]: Haziran 19, 2020
+              - generic [ref=e344]:
+                - text: Kur’ân’da 74. sure olan Müddessir Suresi’nin 30. ayeti “Üzerinde 19 Vardır” şeklindedir. Aynı surenin 31. ayeti ise 19’un fonksiyonlarını anlatır. Böylece 19 Kur’ân’da fonksiyonlarına dikkat çekilen yegâne sayıdır. Bence, 19’un sırf bu özelliği bile “Neden 19” sorusu için
+                - link "[…]" [ref=e345] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/013-00-kodlama-sayisi-19-icin-referans-ayet-74-muddesir-suresi-30-ayet/
+            - listitem [ref=e346]:
+              - 'link "014.00 – 2 Özel Ayet için referanslar: 9.Tevbe Suresi 128 ve 129. ayetler" [ref=e347] [cursor=pointer]':
+                - /url: https://www.7ve19.com/014-00-2-ozel-ayet-icin-referanslar-9-tevbe-suresi-128-ve-129-ayetler/
+              - time [ref=e348]: Haziran 19, 2020
+              - generic [ref=e349]:
+                - text: 9-Tevbe suresi son 2 ayeti (128. ve 129. ayetler) son inen ayetlerdir ve surenin diğer ayetleri Medine’de inerken bu son 2 ayet diğerlerinden ayrı olarak Mekke’de inmiştir. Bu iki ayetin özel bir gruplamaya sahip olduğunu gösteren geçtiğimiz bölümlerde
+                - link "[…]" [ref=e350] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/014-00-2-ozel-ayet-icin-referanslar-9-tevbe-suresi-128-ve-129-ayetler/
+            - listitem [ref=e351]:
+              - link "009.00 – 19 ve 19’un katları olan Kur’ân ayetlerindeki “Allah” lafzının tekrarı" [ref=e352] [cursor=pointer]:
+                - /url: https://www.7ve19.com/009-00-19-ve-19un-katlari-olan-kuran-ayetlerindeki-allah-lafzinin-tekrari/
+              - time [ref=e353]: Haziran 14, 2020
+              - generic [ref=e354]:
+                - text: 19’un katları olan Kur’ân ayetleri içinde geçen “Allah” lafızlarının tekrar sayısı 133’tür.(Ayet Sayısı) mod 19 = 0 => Allah Lafz tekrar sayısı = 133 7 x 19 = 133 133 ≡ 0 (mod 7) ve ≡ 0 (mod
+                - link "[…]" [ref=e355] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/009-00-19-ve-19un-katlari-olan-kuran-ayetlerindeki-allah-lafzinin-tekrari/
+            - listitem [ref=e356]:
+              - link "009.01 – Kur’ân’daki “Allah” lafzının tekrarı" [ref=e357] [cursor=pointer]:
+                - /url: https://www.7ve19.com/009-01-kurandaki-allah-lafzinin-tekrari/
+              - time [ref=e358]: Haziran 14, 2020
+              - generic [ref=e359]:
+                - text: Bu makaleyi okumadan önce kavramları ve olguları derleyerek yeni yazdığımaşağıda linkini verdiğim makaleyi okumanızı tavsiye ediyorum.Olayı en basit olarak nasıl özetleyebilirsiniz? Kur’ân’da geçen “Allah” lafzı tekrarının sayısı 2811’dir. Kur’an nazım türünde dizelerden oluşan bir metindir. Kur’an metninde bulunan
+                - link "[…]" [ref=e360] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/009-01-kurandaki-allah-lafzinin-tekrari/
+            - listitem [ref=e361]:
+              - link "011.00 – Bu Tablolar Bize Neler Anlatıyor" [ref=e362] [cursor=pointer]:
+                - /url: https://www.7ve19.com/011-00-bu-tablolar-bize-neler-anlatiyor/
+              - time [ref=e363]: Haziran 14, 2020
+              - generic [ref=e364]:
+                - text: 7 ve 19 ikili sayısal kodlama sisteminin kelime sayılarında kullanılan 6234 numaralanmış ayet grubu üzerinde yaptığımız kelime sayımlarında, “Allah” lafzının değişik ayet gruplarında tekrar sayılarını bulduk. Bulduğumuz sayıların tamamı 7 ve 19 kodlama sayılarımızı doğrulamaktadır. Ayet gruplarını belirlerken
+                - link "[…]" [ref=e365] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/011-00-bu-tablolar-bize-neler-anlatiyor/
+            - listitem [ref=e366]:
+              - 'link "003.01 – 57.El-Hadid (Demir) suresi: “Biz demiri de indirdik”" [ref=e367] [cursor=pointer]':
+                - /url: https://www.7ve19.com/003-01-57-el-hadid-demir-suresi-biz-demiri-de-indirdik/
+              - time [ref=e368]: Haziran 5, 2020
+              - generic [ref=e369]:
+                - text: "Ebced: Bugünkü sayıların kullanılmadığı 6. yüzyılda İslam coğrafyasında hesaplamaların yapılması için, Arap harflerine verilen sayısal değerler ile yapılan hesap türü. Not: Surenin oluşturduğu metin bloğunu şu şekilde ifade etmek gerekir. Sure 29 ayetten oluşur, Başında Besmele vardır. Metin"
+                - link "[…]" [ref=e370] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/003-01-57-el-hadid-demir-suresi-biz-demiri-de-indirdik/
+            - listitem [ref=e371]:
+              - link "002.01 – Tümdengelim Metodu ve Hipotez" [ref=e372] [cursor=pointer]:
+                - /url: https://www.7ve19.com/002-01-tumdengelim-metodu-yaklasimi-tumdengelimli-akil-yurutme-muhakeme/
+              - time [ref=e373]: Haziran 4, 2020
+              - generic [ref=e374]:
+                - text: Tümdengelimli bir yaklaşım “mevcut teoriye dayanan bir hipotez (veya hipotezler) geliştirmek ve ardından hipotezi test etmek için bir araştırma stratejisi tasarlamak” ile ilgilidir. [1] “Tümdengelim, genelden özeli çıkarım yaparak, genelin diğer unsurlarına uygulayan akıl yürütme yöntemidir. Nedensel bir
+                - link "[…]" [ref=e375] [cursor=pointer]:
+                  - /url: https://www.7ve19.com/002-01-tumdengelim-metodu-yaklasimi-tumdengelimli-akil-yurutme-muhakeme/
+          - generic [ref=e377]:
+            - link "Facebook" [ref=e378] [cursor=pointer]:
+              - /url: /#facebook
+              - generic:
+                - img
+              - generic [ref=e379]: Facebook
+            - link "X" [ref=e380] [cursor=pointer]:
+              - /url: /#x
+              - generic:
+                - img
+              - generic [ref=e381]: X
+            - link "WhatsApp" [ref=e382] [cursor=pointer]:
+              - /url: /#whatsapp
+              - generic:
+                - img
+              - generic [ref=e383]: WhatsApp
+            - link "LinkedIn" [ref=e384] [cursor=pointer]:
+              - /url: /#linkedin
+              - generic:
+                - img
+              - generic [ref=e385]: LinkedIn
+            - link "Share" [ref=e386] [cursor=pointer]:
+              - /url: https://www.addtoany.com/share#url=https%3A%2F%2Fwww.7ve19.com%2F&title=Ana%20Sayfa
+              - generic:
+                - img
+              - generic [ref=e387]: Share
+      - generic [ref=e388]:
+        - heading "2 yorum" [level=4] [ref=e389]
+        - list [ref=e390]:
+          - listitem [ref=e391]:
+            - article [ref=e392]:
+              - generic [ref=e393]:
+                - figure [ref=e394]
+                - generic [ref=e395]:
+                  - generic [ref=e396]: habib
+                  - link "Ocak 8, 2022 tarihinde, saat 1:15 am" [ref=e397] [cursor=pointer]:
+                    - /url: https://www.7ve19.com/#comment-297
+              - paragraph [ref=e399]: elinize saglık yeni keşfettim sitenizi gerçekten çok ciddi ve kayda deger çalışmanız var bence sosyal medyada daha fazla kitleye ulaşmalısınız.
+            - list [ref=e400]:
+              - listitem [ref=e401]:
+                - article [ref=e402]:
+                  - generic [ref=e403]:
+                    - figure [ref=e404]
+                    - generic [ref=e405]:
+                      - generic [ref=e406]: Mustafa Kurdoglu 
+                      - link "Ocak 8, 2022 tarihinde, saat 2:59 pm" [ref=e407] [cursor=pointer]:
+                        - /url: https://www.7ve19.com/#comment-300
+                  - paragraph [ref=e409]: İnşallah, destekleriniz çok önemlidir.
+      - paragraph [ref=e410]: Yorumlar kapatıldı.
+    - complementary [ref=e411]:
+      - figure [ref=e413]:
+        - link [ref=e414] [cursor=pointer]:
+          - /url: https://www.youtube.com/c/BilimFelsefeDin7ve19
+      - paragraph [ref=e416]: Dünyada gözlemleyebildiğimiz ve bugünün teknolojisiyle insanlığın yapamayacağı birçok doğal oluşum vardır. Fakat 1400 yıl önce, yokluğun, savaş ve ölümün kol gezdiği, ahlaksızlığın diz boyu olduğu bir ortamda, insan elinin tuttuğu kalem ile yazılmış ve çöl kumları içinden ortaya çıkmış olan, bugün insanlığın yapamayacağı tek bir şey vardır dünyada, o da Kur’ân dır.
+      - paragraph [ref=e418]:
+        - strong [ref=e419]:
+          - text: Bu iddianın bilimsel temelleri
+          - text: web sayfasında nesnel olarak ortaya koyulmuştur.
+      - paragraph [ref=e421]:
+        - strong [ref=e422]: Bu noktada ilahiyatçılara seslenmek istiyorum;
+        - text: birisi Arapça bir metin yazarak size getirse ve “Sizin Kur’ân’ınız insanlar onun benzeri bir sure getiremez diye meydan okuyor, bak ben yazdım ve getirdim, bu getirdiğim sure Kur’ân gibidir, Kur’ân gibi olmadığını bana nasıl ispat edeceksiniz” diye sorsa nasıl cevap verecekler, neye dayanarak getirilen bir metnin Kur’ân gibi olmadığını savunacaklar, merak ediyorum. Öğrenmek istiyorum ve açıklamalarını bekliyorum.
+      - paragraph [ref=e424]:
+        - strong [ref=e425]:
+          - text: Kur’ân’ın iddiası bütün İslam aleminin iddiasıdır, dolayısıyla
+          - emphasis [ref=e427]: “Kur’ân’ın bir benzerini insanlar getiremezler”
+          - text: iddiasıyla ilgili kriterleri İslam alemi ortaya açık bir şekilde koymalıdır ve bu kriterlerin insanlar tarafından sağlanamayacağını bilimsel olarak göstermelidir.
+      - paragraph [ref=e429]: Benim iddiam, gözlemlediğim bu matematiksel yapıların oluşturduğu kriterler bu iddiayı bilimsel olarak ispatlamaktadır. Benim yukarıda sorduğum soruyu cevaplamak, ortaya koyulan bu matematiksel yapı ile mümkündür, getirilen bir metnin Kur’ân gibi olmadığı bu matematiksel yapı ile gösterilebilir ve ispat edilebilir.
+      - paragraph [ref=e431]:
+        - strong [ref=e432]: Kur’ân’ı sayısal yapının koruduğu iddia edilmiştir ?!!
+        - text: Kur’ân korunmuştur, fakat Kur’ân’ı sayısal yapı korumuyor,
+      - paragraph [ref=e434]:
+        - strong [ref=e435]: Kur’an’da karşımıza çıkan bu sayısal yapı, Kur’an’ın değişmediğini gösterir, fakat değiştirilemeyeceğini göstermez, gösteremez.
+      - paragraph [ref=e437]:
+        - strong [ref=e438]: Yani Kur’an’ın korunmuş olduğunu gösterir, fakat Kur'an'ı korumaz, koruyamaz.
+      - paragraph [ref=e440]: Kur'an Hafızlık Sistemi ve Tarihi Nüshalar (Şahitli Vesikalar) vasıtasıyla korunmuş ve korunacaktır.
+      - paragraph [ref=e442]:
+        - text: Kur'an sayısal yapısı, Kur'an'ın korunduğu üzerine kurgulanmamıştır,
+        - strong [ref=e443]: Kur'an'ın insan sözü olduğu ifadesine karşı bir iddia olarak kurgulanmıştır.
+        - text: 74. Müddesir suresinde net bir şekilde ayetler ile sabittir. Sayısal yapıda konu, Kur'an'ın korunmuşluğu değil, Kur'an'ın insanlar tarafından bir benzerinin getirilemeyeceğidir.
+      - paragraph [ref=e445]: Kur'an sayısal yapısı insanların bugün ve gelecekte ortaya bir benzerini koyamayacakları bir kodlamadır. Bu özelliği Kur'an'ı insanlar tarafından taklit edilemez konuma getirir.
+      - paragraph [ref=e447]:
+        - strong [ref=e448]: Sayısal yapı, Kur’an’ın bir benzerinin, insanlar tarafından yapılamayacağını nesnel olarak gösterir.
+  - paragraph [ref=e451]:
+    - text: Telif hakkı © 2026 |
+    - link "MH Themes" [ref=e452] [cursor=pointer]:
+      - /url: https://mhthemes.com/themes/mh-magazine/?utm_source=customer&utm_medium=link&utm_campaign=MH+Magazine+Lite
+    - text: tarafından WordPress teması
