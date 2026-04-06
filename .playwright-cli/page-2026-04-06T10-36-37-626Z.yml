@@ -1,0 +1,268 @@
+- generic [active] [ref=e1]:
+  - main [ref=e3]:
+    - generic [ref=e5]:
+      - heading "Kur'an'ı anlamak." [level=1] [ref=e6]
+      - figure "Tâhâ 20:114" [ref=e7]:
+        - blockquote [ref=e8]: “Rabbim, ilmimi artır.”
+        - generic [ref=e9]: Tâhâ 20:114
+      - link "Derine in" [ref=e11] [cursor=pointer]:
+        - /url: "#ilk-esik"
+        - img [ref=e13]
+    - region "Derinleşen akış" [ref=e15]:
+      - article [ref=e16]:
+        - generic [ref=e17]:
+          - paragraph [ref=e18]: İlk durak
+          - blockquote [ref=e19]: “Bu kitap, mutlak gerçeğin ta kendisidir.”
+          - paragraph [ref=e20]: Bakara 2:2
+          - heading "Metin önce kendini tanıtır." [level=2] [ref=e21]
+          - link "Aşağı in" [ref=e23] [cursor=pointer]:
+            - /url: "#ikinci-esik"
+            - img [ref=e25]
+      - article [ref=e27]:
+        - generic [ref=e28]:
+          - paragraph [ref=e29]: İkinci durak
+          - blockquote [ref=e30]: “Eğer kulumuza indirdiğimizden yana şüphede iseniz, haydi onun benzeri bir sure getirin.”
+          - paragraph [ref=e31]: Bakara 2:23-24
+          - heading "Burada çağrı açılır." [level=2] [ref=e32]
+          - link "Aşağı in" [ref=e34] [cursor=pointer]:
+            - /url: "#ucuncu-esik"
+            - img [ref=e36]
+      - article [ref=e38]:
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: Şüphe konuşur
+          - blockquote [ref=e41]: “Bu, insan sözünden başka bir şey değildir.”
+          - paragraph [ref=e42]: Müddessir 74:24-25
+          - heading "Burada itiraz görünür olur." [level=2] [ref=e43]
+          - link "Aşağı in" [ref=e45] [cursor=pointer]:
+            - /url: "#dorduncu-esik"
+            - img [ref=e47]
+      - article [ref=e49]:
+        - generic [ref=e50]:
+          - paragraph [ref=e51]: Cevap gelir
+          - blockquote [ref=e52]: “Onun üzerinde on dokuz vardır.”
+          - paragraph [ref=e53]: Müddessir 74:30-31
+          - heading "Buradan sonra örüntüler başlar." [level=2] [ref=e54]
+          - link "Aşağı in" [ref=e56] [cursor=pointer]:
+            - /url: "#kod-19"
+            - img [ref=e58]
+      - article [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - paragraph [ref=e63]: 19 ile ilk temas
+            - heading "İlk işaretler görünür olur." [level=2] [ref=e64]
+          - generic [ref=e65]:
+            - article [ref=e66]:
+              - generic [ref=e68]:
+                - paragraph [ref=e69]: İlk ayet
+                - paragraph [ref=e70]: 19 harf
+                - heading "Besmele" [level=3] [ref=e71]
+                - paragraph [ref=e72]: Kur'an'ın ilk ayeti Besmele 19 harftir.
+            - article [ref=e73]:
+              - generic [ref=e75]:
+                - paragraph [ref=e76]: Bütün
+                - paragraph [ref=e77]: 114 sure
+                - heading "Kur'an" [level=3] [ref=e78]
+                - paragraph [ref=e79]: Kur'an 114 sureden oluşur. 114 = 19 x 6.
+            - article [ref=e80]:
+              - generic [ref=e82]:
+                - paragraph [ref=e83]: İlk vahiy
+                - paragraph [ref=e84]: 96 / 19
+                - heading "Alak suresi" [level=3] [ref=e85]
+                - paragraph [ref=e86]: İlk vahyedilen 96. sure, sondan 19. suredir.
+          - link "Aşağı in" [ref=e88] [cursor=pointer]:
+            - /url: "#kod-19-derin"
+            - img [ref=e90]
+      - article [ref=e92]:
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - paragraph [ref=e95]: 19 derinleşir
+            - heading "Aşağı indikçe bağlar çoğalır." [level=2] [ref=e96]
+          - generic [ref=e97]:
+            - article [ref=e98]:
+              - generic [ref=e100]:
+                - paragraph [ref=e101]: Toplam
+                - paragraph [ref=e102]: 6346 ayet
+                - heading "Tam sayı" [level=3] [ref=e103]
+                - paragraph [ref=e104]: Numarasız Besmeleler dahil toplam 6346 ayet vardır. 6346 = 19 x 334.
+            - article [ref=e105]:
+              - article [ref=e107]:
+                - button "Eksik ve tamam 27 + 30 = 57 Kayıp Besmele 9. surenin başındaki eksik Besmele, 27. surenin 30. ayetindeki Besmele ile tamamlanır. 57 = 19 x 3. İncele" [ref=e108] [cursor=pointer]:
+                  - paragraph [ref=e109]: Eksik ve tamam
+                  - paragraph [ref=e110]: 27 + 30 = 57
+                  - heading "Kayıp Besmele" [level=3] [ref=e111]
+                  - paragraph [ref=e112]: 9. surenin başındaki eksik Besmele, 27. surenin 30. ayetindeki Besmele ile tamamlanır. 57 = 19 x 3.
+                  - generic [ref=e113]: İncele
+            - article [ref=e114]:
+              - article [ref=e116]:
+                - button "Tekrarlar 19 / 2698 / 57 / 114 Allah ve diğer kelimeler İsim = 19 x 1, Allah ve türevleri = 19 x 142, Rahman = 19 x 3, Rahim = 19 x 6. Ayet no'su 19'un katı olan ayetlerde 133 Allah kelimesi geçer. İncele" [ref=e117] [cursor=pointer]:
+                  - paragraph [ref=e118]: Tekrarlar
+                  - paragraph [ref=e119]: 19 / 2698 / 57 / 114
+                  - heading "Allah ve diğer kelimeler" [level=3] [ref=e120]
+                  - paragraph [ref=e121]: İsim = 19 x 1, Allah ve türevleri = 19 x 142, Rahman = 19 x 3, Rahim = 19 x 6. Ayet no'su 19'un katı olan ayetlerde 133 Allah kelimesi geçer.
+                  - generic [ref=e122]: İncele
+            - article [ref=e123]:
+              - generic [ref=e125]:
+                - paragraph [ref=e126]: Fatiha
+                - paragraph [ref=e127]: 1 7 29 = 19 x 9
+                - heading "İlk sure" [level=3] [ref=e128]
+                - paragraph [ref=e129]: "5. ayette 19 harf vardır: 19 = 19 x 1. Ebced değeri 836'dır: 836 = 19 x 44."
+          - link "Aşağı in" [ref=e131] [cursor=pointer]:
+            - /url: "#yedi-on-dokuz"
+            - img [ref=e133]
+      - article [ref=e135]:
+        - generic [ref=e136]:
+          - generic [ref=e137]:
+            - paragraph [ref=e138]: Daha derin bulgular
+            - heading "Şimdi örnekler yoğunlaşır." [level=2] [ref=e139]
+          - generic [ref=e140]:
+            - article [ref=e141]:
+              - generic [ref=e143]:
+                - paragraph [ref=e144]: İlk inen sure
+                - paragraph [ref=e145]: 285 harf
+                - heading "19 ayet" [level=3] [ref=e146]
+                - paragraph [ref=e147]: 96. sure 19 ayettir. Bu 19 ayet 285 harf taşır ve 285 = 19 x 15'tir. Aynı grubun ebced diziliminden oluşan 511 basamaklı sayı mod 7 = 0 verir.
+            - article [ref=e148]:
+              - generic [ref=e150]:
+                - paragraph [ref=e151]: Tek ayet
+                - paragraph [ref=e152]: "57 : 19"
+                - heading "Aynı eşikte buluşur" [level=3] [ref=e153]
+                - paragraph [ref=e154]: Kur'an ayet no'su 19'un katı, sure no'su 19'un katı ve ayet no'su 19'un katı olan tek ayet 57:19 ayetidir. Bu ayette 76 hurufu mukatta harfi kullanıldığı belirtilir.
+            - article [ref=e155]:
+              - generic [ref=e157]:
+                - paragraph [ref=e158]: Sondan 19.
+                - paragraph [ref=e159]: "82 : 19"
+                - heading "Son kelime" [level=3] [ref=e160]
+                - paragraph [ref=e161]: Kur'an'ın sondan 19. Allah kelimesi, 19 ayetli 82. surenin 19. ayetinin son kelimesidir. Bu, Kur'an'da ayetin son kelimesi olan tek Allah kelimesidir.
+            - article [ref=e162]:
+              - generic [ref=e164]:
+                - paragraph [ref=e165]: Allah + kelime sayısı
+                - paragraph [ref=e166]: 18544 = 19 x 976
+                - heading "Basamak sayısı" [level=3] [ref=e167]
+                - paragraph [ref=e168]: Allah geçen ayetlerde, ayetteki Allah sayısı ile toplam kelime sayısı birlikte dizildiğinde 18544 basamaklı bir sayı oluşur. Burada 19'un katı olan şey bu büyük sayının basamak sayısıdır.
+            - article [ref=e169]:
+              - article [ref=e171]:
+                - button "Yakından bak Fatiha Dizilimler Ayet no, harf sayısı ve ebced değeri birlikte yazıldığında oluşan dizilimlerin her biri 19'un katıdır. İncele" [ref=e172] [cursor=pointer]:
+                  - paragraph [ref=e173]: Yakından bak
+                  - paragraph [ref=e174]: Fatiha
+                  - heading "Dizilimler" [level=3] [ref=e175]
+                  - paragraph [ref=e176]: Ayet no, harf sayısı ve ebced değeri birlikte yazıldığında oluşan dizilimlerin her biri 19'un katıdır.
+                  - generic [ref=e177]: İncele
+            - article [ref=e178]:
+              - article [ref=e180]:
+                - button "Yakından bak 15124 basamak Allah dizilimi Allah kelimesinin geçtiği ayetlerin sırası, sure numarası, ayet numarası ve ayetteki geçiş sayısı art arda dizildiğinde 15124 basamaklı bir sayı oluşur. İncele" [ref=e181] [cursor=pointer]:
+                  - paragraph [ref=e182]: Yakından bak
+                  - paragraph [ref=e183]: 15124 basamak
+                  - heading "Allah dizilimi" [level=3] [ref=e184]
+                  - paragraph [ref=e185]: Allah kelimesinin geçtiği ayetlerin sırası, sure numarası, ayet numarası ve ayetteki geçiş sayısı art arda dizildiğinde 15124 basamaklı bir sayı oluşur.
+                  - generic [ref=e186]: İncele
+          - generic [ref=e187]:
+            - paragraph [ref=e188]:
+              - text: Devam için
+              - link "7 ve 19 yöntemi" [ref=e189] [cursor=pointer]:
+                - /url: https://www.7ve19.com/008-00-7-ve-19-ikili-sayisal-kodlama-sistemi/
+              - text: ","
+              - link "kodlama kuralları" [ref=e190] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/
+              - text: ","
+              - link "insanın yapamayacağı şey" [ref=e191] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/
+              - text: ","
+              - link "57:19 bulgusu" [ref=e192] [cursor=pointer]:
+                - /url: https://kuranmucizeler.com/kuran-ayet-no-su-19-un-kati-sure-no-su-19-un-kati-ve-ayet-no-su-19-un-kati-olan-tek-ayet-57-19-ayetidir-bu-ayette-yuce-allah-76-19x-hurufu-mukatta-harfi-kullanmistir
+              - text: ","
+              - link "sondan 19. Allah" [ref=e193] [cursor=pointer]:
+                - /url: https://kuranmucizeler.com/kuran-in-sondan-19-allah-kelimesi-19-ayetli-82-surenin-19-ayetinin-son-kelimesidir-bu-allah-kelimesi-tum-kuran-da-icinde-bulundugu-ayetin-son-kelimesi-olan-biricik-allah-kelimesidir
+              - text: ","
+              - link "133 Allah" [ref=e194] [cursor=pointer]:
+                - /url: https://kuranmucizeler.com/kuran-da-ayet-numarasi-19-un-kati-olan-ayetlerde-toplam-133-allah-kelimesi-gecer-ki-bu-rakam-19-un-tam-katidir
+              - text: ve
+              - link "18544 basamaklı sayı" [ref=e195] [cursor=pointer]:
+                - /url: https://kuranmucizeler.com/ayetteki-allah-kelimesi-sayisi-ve-ayetteki-toplam-kelime-sayisinin-isareti-18544-19x-basamakli-sayi
+              - text: ","
+              - link "Fatiha'daki 19 kodlaması" [ref=e196] [cursor=pointer]:
+                - /url: https://kuranmucizeler.com/fatiha-daki-muhtesem-mucize-19-sistemi
+              - text: .
+            - paragraph [ref=e197]: "Soru artık şudur: Bu kadar çok uyum, gerçekten tesadüf ile açıklanabilir mi?"
+          - link "Aşağı in" [ref=e199] [cursor=pointer]:
+            - /url: "#besmele-olcutleri"
+            - img [ref=e201]
+      - article [ref=e203]:
+        - generic [ref=e204]:
+          - generic [ref=e205]:
+            - paragraph [ref=e206]: Besmele ölçütleri
+            - heading "Burada Besmele daha yakından okunur." [level=2] [ref=e207]
+          - generic [ref=e208]:
+            - article [ref=e209]:
+              - article [ref=e211]:
+                - button "B1-B2 Temel ölçüler İlk bakışta görünen ana ölçüler burada toplanır. İncele" [ref=e212] [cursor=pointer]:
+                  - paragraph [ref=e213]: B1-B2
+                  - heading "Temel ölçüler" [level=3] [ref=e214]
+                  - paragraph [ref=e215]: İlk bakışta görünen ana ölçüler burada toplanır.
+                  - generic [ref=e216]: İncele
+            - article [ref=e217]:
+              - article [ref=e219]:
+                - button "B3-B4 Harf dizilimleri Kelime sırası ve harf düzeni birlikte okunur. İncele" [ref=e220] [cursor=pointer]:
+                  - paragraph [ref=e221]: B3-B4
+                  - heading "Harf dizilimleri" [level=3] [ref=e222]
+                  - paragraph [ref=e223]: Kelime sırası ve harf düzeni birlikte okunur.
+                  - generic [ref=e224]: İncele
+            - article [ref=e225]:
+              - article [ref=e227]:
+                - button "B5-B6.1 Ebced dizilimleri Ebced değerleri tek tek ve kümülatif biçimde izlenir. İncele" [ref=e228] [cursor=pointer]:
+                  - paragraph [ref=e229]: B5-B6.1
+                  - heading "Ebced dizilimleri" [level=3] [ref=e230]
+                  - paragraph [ref=e231]: Ebced değerleri tek tek ve kümülatif biçimde izlenir.
+                  - generic [ref=e232]: İncele
+            - article [ref=e233]:
+              - article [ref=e235]:
+                - button "B7-B9 İleri ölçütler Daha yoğun dizilimler ve birleşik yapılar bu katmanda yer alır. İncele" [ref=e236] [cursor=pointer]:
+                  - paragraph [ref=e237]: B7-B9
+                  - heading "İleri ölçütler" [level=3] [ref=e238]
+                  - paragraph [ref=e239]: Daha yoğun dizilimler ve birleşik yapılar bu katmanda yer alır.
+                  - generic [ref=e240]: İncele
+          - paragraph [ref=e241]:
+            - text: Tam kodlamayı görmek için
+            - link "kod.7ve19.com/Besmele_Tr.asp" [ref=e242] [cursor=pointer]:
+              - /url: https://kod.7ve19.com/Besmele_Tr.asp
+            - text: .
+          - link "Aşağı in" [ref=e244] [cursor=pointer]:
+            - /url: "#meydan-okuma"
+            - img [ref=e246]
+      - article [ref=e248]:
+        - generic [ref=e249]:
+          - paragraph [ref=e250]: Bir sonraki eşik
+          - blockquote [ref=e251]: قُل لَّئِنِ ٱجْتَمَعَتِ ٱلْإِنسُ وَٱلْجِنُّ عَلَىٰٓ أَن يَأْتُوا۟ بِمِثْلِ هَٰذَا ٱلْقُرْءَانِ لَا يَأْتُونَ بِمِثْلِهِۦ وَلَوْ كَانَ بَعْضُهُمْ لِبَعْضٍ ظَهِيرًا
+          - paragraph [ref=e252]: İsrâ 17:88
+          - paragraph [ref=e253]: "De ki: Bilinen ve bilinmeyen bütün varlıklar bu Kur'an'ın bir benzerini getirmek için toplansa da yine onun benzerini getiremez."
+          - generic [ref=e254]:
+            - article [ref=e255]:
+              - paragraph [ref=e256]: 77 harf
+              - paragraph [ref=e257]: mod 7 = 0
+            - article [ref=e258]:
+              - paragraph [ref=e259]: 19 kelime
+              - paragraph [ref=e260]: mod 19 = 0
+          - paragraph [ref=e261]:
+            - text: Ayrıntılı çalışma için
+            - link "7ve19 sunumu" [ref=e262] [cursor=pointer]:
+              - /url: https://www.7ve19.com/000-sunum/
+            - text: ve
+            - link "ilgili yazı" [ref=e263] [cursor=pointer]:
+              - /url: https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/
+            - text: .
+      - article [ref=e264]:
+        - generic [ref=e265]:
+          - paragraph [ref=e266]: Sıradaki adım
+          - heading "Geliştirme aşamasında" [level=2] [ref=e267]
+  - generic [ref=e270]:
+    - button "Menu" [ref=e271]:
+      - img [ref=e273]
+      - generic: Menu
+    - button "Inspect" [ref=e277]:
+      - img [ref=e279]
+      - generic: Inspect
+    - button "Audit" [ref=e281]:
+      - img [ref=e283]
+      - generic: Audit
+    - button "Settings" [ref=e286]:
+      - img [ref=e288]
+      - generic: Settings

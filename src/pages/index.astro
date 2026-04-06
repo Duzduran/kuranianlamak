@@ -5,32 +5,44 @@ import { allah15124Number } from "../data/allah15124";
 
 const besmeleCriteriaGroups = [
   {
+    id: "temel",
+    range: "B1-B2",
     title: "Temel ölçüler",
+    intro: "İlk bakışta görünen ana ölçüler burada toplanır.",
     items: [
       ["B1", "Harf sayısı", "19", "mod 19 = 0"],
       ["B2", "Kelime, harf ve ebced dizilimi", "4 19 786", "mod 19 = 0"]
     ]
   },
   {
+    id: "harf",
+    range: "B3-B4",
     title: "Harf dizilimleri",
+    intro: "Kelime sırası ve harf düzeni birlikte okunur.",
     items: [
       ["B3", "Kelime sırası ve harf sayıları", "1 3 / 2 4 / 3 6 / 4 6 ve tersi", "iki yönde mod 19 = 0"],
-      ["B4", "Kelime numarası ve kümülatif harf toplamları", "1 3 / 2 7 / 3 13 / 4 19 ve tersi", "düz mod 19, ters mod 7"]
+      ["B4", "Kelime numarası ve kümülatif harf toplamları", "1 3 / 2 7 / 3 13 / 4 19", "mod 19 = 0"]
     ]
   },
   {
+    id: "ebced",
+    range: "B5-B6.1",
     title: "Ebced dizilimleri",
+    intro: "Ebced değerleri tek tek ve kümülatif biçimde izlenir.",
     items: [
       ["B5", "Kelime sırası ve ebced değerleri", "1 102 / 2 66 / 3 329 / 4 289", "mod 19 = 0"],
       ["B6", "Kelime numarası ve kümülatif ebced toplamları", "1 102 / 2 168 / 3 497 / 4 786", "mod 19 = 0"],
-      ["B6.1", "Asal çarpan toplamları dizilimi", "0 22 2 16 3 78 4 136", "mod 19 = 0 ve mod 7 = 0"]
+      ["B6.1", "Asal çarpan toplamları dizilimi", "0 22 2 16 3 78 4 136", "mod 19 = 0"]
     ]
   },
   {
+    id: "ileri",
+    range: "B7-B9",
     title: "İleri ölçütler",
+    intro: "Daha yoğun dizilimler ve birleşik yapılar bu katmanda yer alır.",
     items: [
       ["B7", "Kelime ve harf ebced dizilimi", "Düz, ters, basamak toplamı ve kayan pencere", "hepsi mod 19 = 0"],
-      ["B8", "Harf ebcedlerinin kümülatif dizilimi", "1 2 62 102 ... 4 786", "mod 19 = 0 ve mod 7 = 0"],
+      ["B8", "Harf ebcedlerinin kümülatif dizilimi", "1 2 62 102 ... 4 786", "mod 19 = 0"],
       ["B9", "Kelime sıra no, harf sıra no ve harf ebced dizilimi", "1 1 2 2 60 ... 4 1 30 200 8 10 40", "mod 19 = 0"]
     ]
   }
@@ -59,6 +71,15 @@ const allah15124Sequence = [
   ["2", "1", "2", "1"],
   ["14", "2", "7", "1"],
   ["6221", "112", "2", "1"]
+];
+
+const allahWordBreakdown = [
+  ["İsim", "19 = 19 x 1"],
+  ["Allah ve türevleri", "2698 = 19 x 142"],
+  ["Rahman", "57 = 19 x 3"],
+  ["Rahim", "114 = 19 x 6"],
+  ["Ayet no'su 19'un katı olan ayetlerde Allah", "133, 19'un katıdır."],
+  ["Allah + er-Rahman + er-Rahim", "684 = 19 x 36"]
 ];
 ---
 
@@ -100,13 +121,12 @@ const allah15124Sequence = [
 
     <article id="ikinci-esik" class="journey-stage journey-stage--mid">
       <div class="journey-shell">
-        <p class="journey-label">Biraz daha derin</p>
+        <p class="journey-label">İkinci durak</p>
         <blockquote class="journey-quote">
-          “Ayetlerini düşünsünler ve akıl sahipleri öğüt alsınlar diye sana indirdiğimiz bereketli
-          bir kitaptır.”
+          “Eğer kulumuza indirdiğimizden yana şüphede iseniz, haydi onun benzeri bir sure getirin.”
         </blockquote>
-        <p class="journey-reference">Sâd 38:29</p>
-        <h2 class="journey-title journey-title--subtle">Burada metnin varlığının sebebi açılır.</h2>
+        <p class="journey-reference">Bakara 2:23-24</p>
+        <h2 class="journey-title journey-title--subtle">Burada çağrı açılır.</h2>
         <div class="mt-10 flex justify-center">
           <ScrollCue href="#ucuncu-esik" label="Aşağı in" />
         </div>
@@ -115,11 +135,25 @@ const allah15124Sequence = [
 
     <article id="ucuncu-esik" class="journey-stage journey-stage--deep">
       <div class="journey-shell">
-        <p class="journey-label">Daha derinde</p>
+        <p class="journey-label">Şüphe konuşur</p>
+        <blockquote class="journey-quote journey-quote--deep">
+          “Bu, insan sözünden başka bir şey değildir.”
+        </blockquote>
+        <p class="journey-reference journey-reference--deep">Müddessir 74:24-25</p>
+        <h2 class="journey-title journey-title--subtle">Burada itiraz görünür olur.</h2>
+        <div class="mt-10 flex justify-center">
+          <ScrollCue href="#dorduncu-esik" label="Aşağı in" />
+        </div>
+      </div>
+    </article>
+
+    <article id="dorduncu-esik" class="journey-stage journey-stage--deeper">
+      <div class="journey-shell">
+        <p class="journey-label">Cevap gelir</p>
         <blockquote class="journey-quote journey-quote--deep">
           “Onun üzerinde on dokuz vardır.”
         </blockquote>
-        <p class="journey-reference journey-reference--deep">Müddessir 74:30</p>
+        <p class="journey-reference journey-reference--deep">Müddessir 74:30-31</p>
         <h2 class="journey-title journey-title--subtle">Buradan sonra örüntüler başlar.</h2>
         <div class="mt-10 flex justify-center">
           <ScrollCue href="#kod-19" label="Aşağı in" />
@@ -128,205 +162,254 @@ const allah15124Sequence = [
     </article>
 
     <article id="kod-19" class="journey-stage journey-stage--code">
-      <div class="journey-shell journey-shell--wide">
-        <p class="journey-label">19 ile ilk temas</p>
-        <h2 class="journey-title">Burada 19 görünür olur.</h2>
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <p class="journey-label">19 ile ilk temas</p>
+          <h2 class="journey-title journey-title--descent">İlk işaretler görünür olur.</h2>
+        </header>
 
-        <div class="mt-10 grid gap-4 md:grid-cols-2">
-          <article class="signal-card">
-            <h3 class="signal-card__title">Besmele</h3>
-            <p class="signal-card__text">Kur'an'ın ilk ayeti Besmele 19 harftir.</p>
+        <div class="descent-rail">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">İlk ayet</p>
+                <p class="descent-panel__value">19 harf</p>
+                <h3 class="descent-panel__title">Besmele</h3>
+                <p class="descent-panel__text">Kur'an'ın ilk ayeti Besmele 19 harftir.</p>
+              </div>
+            </div>
           </article>
 
-          <article class="signal-card">
-            <h3 class="signal-card__title">114 sure</h3>
-            <p class="signal-card__text">Kur'an 114 sureden oluşur. Bu sayı 19'un 6 katıdır.</p>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">Bütün</p>
+                <p class="descent-panel__value">114 sure</p>
+                <h3 class="descent-panel__title">Kur'an</h3>
+                <p class="descent-panel__text">Kur'an 114 sureden oluşur. 114 = 19 x 6.</p>
+              </div>
+            </div>
           </article>
 
-          <article class="signal-card">
-            <h3 class="signal-card__title">6346 ayet</h3>
-            <p class="signal-card__text">Numarasız Besmeleler dahil toplam 6346 ayet vardır. 6346 = 19 x 334.</p>
-          </article>
-
-          <article class="signal-card">
-            <h3 class="signal-card__title">96. sure</h3>
-            <p class="signal-card__text">İlk vahyedilen 96. sure sondan 19. suredir.</p>
-          </article>
-
-          <article class="signal-card">
-            <h3 class="signal-card__title">Fatiha'nın 5. ayeti</h3>
-            <p class="signal-card__text">
-              Fatiha'da harf sayısı ve ebced değeri birlikte 19'un katı olan ayet 5. ayettir:
-              19 harf, 836 ebced.
-            </p>
-          </article>
-
-          <article class="signal-card">
-            <h3 class="signal-card__title">Fatiha</h3>
-            <p class="signal-card__text">
-              1 1 2 3 4 5 6 7 ve 1 7 29 dizilimleri 19'un katıdır.
-            </p>
-          </article>
-
-          <article class="signal-card">
-            <h3 class="signal-card__title">Kayıp Besmele</h3>
-            <p class="signal-card__text">9. surenin başındaki eksik Besmele, 27. surenin 30. ayetinde tamamlanır. 27 + 30 = 57 = 19 x 3.</p>
-          </article>
-
-          <article class="signal-card">
-            <h3 class="signal-card__title">Allah ve diğer kelimeler</h3>
-            <div class="signal-card__list">
-              <p class="signal-card__text">Besmele'deki dört kelime Kur'an boyunca şu sayılarda geçer:</p>
-              <ul>
-                <li>İsim: 19</li>
-                <li>Allah ve türevleri: 2698</li>
-                <li>Rahman: 57</li>
-                <li>Rahim: 114</li>
-              </ul>
-              <p class="signal-card__text">Bu sayıların her biri 19'un katıdır.</p>
-              <p class="signal-card__text">
-                Allah, er-Rahman ve er-Rahim isimlerinin ebced toplamı 684'tür. 684 = 19 x 36.
-              </p>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">İlk vahiy</p>
+                <p class="descent-panel__value">96 / 19</p>
+                <h3 class="descent-panel__title">Alak suresi</h3>
+                <p class="descent-panel__text">İlk vahyedilen 96. sure, sondan 19. suredir.</p>
+              </div>
             </div>
           </article>
         </div>
 
-        <p class="journey-note">
-          Daha ayrıntılı anlatım için
-          <a href="https://www.7ve19.com/007-00-resat-halife-ve-kurandaki-19-sayisal-kodlama-sistemi/" target="_blank" rel="noreferrer">
-            7ve19 yazısı
-          </a>
-          .
-        </p>
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#kod-19-derin" label="Aşağı in" />
+        </div>
+      </div>
+    </article>
 
-        <div class="mt-10 flex justify-center">
+    <article id="kod-19-derin" class="journey-stage journey-stage--code-layer">
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <p class="journey-label">19 derinleşir</p>
+          <h2 class="journey-title journey-title--descent">Aşağı indikçe bağlar çoğalır.</h2>
+        </header>
+
+        <div class="descent-rail">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">Toplam</p>
+                <p class="descent-panel__value">6346 ayet</p>
+                <h3 class="descent-panel__title">Tam sayı</h3>
+                <p class="descent-panel__text">Numarasız Besmeleler dahil toplam 6346 ayet vardır. 6346 = 19 x 334.</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
+            <div class="descent-step__inner">
+              <article class="descent-panel descent-panel--trigger">
+                <button type="button" class="descent-panel__button" data-detail-open="kayip-besmele">
+                  <p class="descent-panel__eyebrow">Eksik ve tamam</p>
+                  <p class="descent-panel__value">27 + 30 = 57</p>
+                  <h3 class="descent-panel__title">Kayıp Besmele</h3>
+                  <p class="descent-panel__text">
+                    9. surenin başındaki eksik Besmele, 27. surenin 30. ayetindeki Besmele ile tamamlanır. 57 = 19 x 3.
+                  </p>
+                  <span class="descent-panel__cta">İncele</span>
+                </button>
+              </article>
+            </div>
+          </article>
+
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
+            <div class="descent-step__inner">
+              <article class="descent-panel descent-panel--trigger">
+                <button type="button" class="descent-panel__button" data-detail-open="allah-kelimeler">
+                  <p class="descent-panel__eyebrow">Tekrarlar</p>
+                  <p class="descent-panel__value">19 / 2698 / 57 / 114</p>
+                  <h3 class="descent-panel__title">Allah ve diğer kelimeler</h3>
+                  <p class="descent-panel__text">
+                    İsim = 19 x 1, Allah ve türevleri = 19 x 142, Rahman = 19 x 3, Rahim = 19 x 6. Ayet no'su 19'un katı olan ayetlerde 133 Allah kelimesi geçer.
+                  </p>
+                  <span class="descent-panel__cta">İncele</span>
+                </button>
+              </article>
+            </div>
+          </article>
+
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 3;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">Fatiha</p>
+                <p class="descent-panel__value">1729 = 19 x 91</p>
+                <h3 class="descent-panel__title">İlk sure</h3>
+                <p class="descent-panel__text">
+                  Fatiha'daki ayet ve kelime dizilimi 1729 eder. 5. ayette 19 harf vardır: 19 = 19 x 1. Ebced değeri 836'dır: 836 = 19 x 44.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mt-12 flex justify-center">
           <ScrollCue href="#yedi-on-dokuz" label="Aşağı in" />
         </div>
       </div>
     </article>
 
     <article id="yedi-on-dokuz" class="journey-stage journey-stage--method">
-      <div class="journey-shell journey-shell--wide">
-        <p class="journey-label">Daha derin bulgular</p>
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <p class="journey-label">Daha derin bulgular</p>
+          <h2 class="journey-title journey-title--descent">Şimdi örnekler yoğunlaşır.</h2>
+        </header>
 
-        <div class="mt-10 grid gap-4 md:grid-cols-2">
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">İlk inen sure</h3>
-            <p class="signal-card__text">
-              96. sure 19 ayettir. Bu 19 ayet 285 harf taşır ve 285 = 19 x 15'tir. Aynı grubun ebced
-              diziliminden oluşan 511 basamaklı sayı mod 7 = 0 verir.
-            </p>
+        <div class="descent-rail descent-rail--dense">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">İlk inen sure</p>
+                <p class="descent-panel__value">285 harf</p>
+                <h3 class="descent-panel__title">19 ayet</h3>
+                <p class="descent-panel__text">
+                  96. sure 19 ayettir. Bu 19 ayet 285 harf taşır ve 285 = 19 x 15'tir.
+                </p>
+              </div>
+            </div>
           </article>
 
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">Tevbe'nin son iki ayeti</h3>
-            <p class="signal-card__text">
-              9 + 128 + 129 = 266'dır. 266 hem 7'ye hem 19'a bölünür ve 7 x 19 x 2 olarak açılır.
-            </p>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">Tek ayet</p>
+                <p class="descent-panel__value">57 : 19</p>
+                <h3 class="descent-panel__title">Aynı eşikte buluşur</h3>
+                <p class="descent-panel__text">
+                  Kur'an ayet no'su 19'un katı, sure no'su 19'un katı ve ayet no'su 19'un katı olan tek ayet 57:19 ayetidir. Bu ayette 76 hurufu mukatta harfi kullanıldığı belirtilir.
+                </p>
+              </div>
+            </div>
           </article>
 
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">9 128 9 129</h3>
-            <p class="signal-card__text">
-              Sure numarası ve son iki ayetin numaraları art arda yazıldığında 9 128 9 129 sayısı
-              mod 19 = 0 verir.
-            </p>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">Sondan 19.</p>
+                <p class="descent-panel__value">82 : 19</p>
+                <h3 class="descent-panel__title">Son kelime</h3>
+                <p class="descent-panel__text">
+                  Kur'an'ın sondan 19. Allah kelimesi, 19 ayetli 82. surenin 19. ayetinin son kelimesidir. Bu, Kur'an'da ayetin son kelimesi olan tek Allah kelimesidir.
+                </p>
+              </div>
+            </div>
           </article>
 
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">Ha-Mim</h3>
-            <p class="signal-card__text">
-              40-46. surelerdeki Ha(8) ve Mim(40) harflerinden oluşan 4002 basamaklı kod
-              mod 19 = 0 verir.
-            </p>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 3;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <p class="descent-panel__eyebrow">Allah + kelime sayısı</p>
+                <p class="descent-panel__value">18544 = 19 x 976</p>
+                <h3 class="descent-panel__title">Basamak sayısı</h3>
+                <p class="descent-panel__text">
+                  Allah geçen ayetlerde, ayetteki Allah sayısı ile toplam kelime sayısı birlikte dizildiğinde 18544 basamaklı bir sayı oluşur. Burada 19'un katı olan şey bu büyük sayının basamak sayısıdır.
+                </p>
+              </div>
+            </div>
           </article>
 
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">6 + 3 + 4 + 6 = 19</h3>
-            <p class="signal-card__text">
-              6346 sayısının rakamları toplandığında yine 19 elde edilir. Bu da aynı sayı etrafında
-              ikinci bir uyum olarak sunulur.
-            </p>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 4;">
+            <div class="descent-step__inner">
+              <article class="descent-panel descent-panel--trigger">
+                <button type="button" class="descent-panel__button" data-fatiha-open>
+                  <p class="descent-panel__eyebrow">Yakından bak</p>
+                  <p class="descent-panel__value">Fatiha</p>
+                  <h3 class="descent-panel__title">Dizilimler</h3>
+                  <p class="descent-panel__text">
+                    Ayet no, harf sayısı ve ebced değeri birlikte yazıldığında oluşan dizilimlerin her biri 19'un katıdır.
+                  </p>
+                  <span class="descent-panel__cta">İncele</span>
+                </button>
+              </article>
+            </div>
           </article>
 
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">Sondan 19. Allah</h3>
-            <p class="signal-card__text">
-              Kur'an'ın sondan 19. Allah kelimesi, 19 ayetli 82. surenin 19. ayetinin son
-              kelimesidir.
-            </p>
-          </article>
-
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">57:19</h3>
-            <p class="signal-card__text">
-              Kur'an ayet no'su 19'un katı, sure no'su 19'un katı ve ayet no'su 19'un katı olan
-              tek ayet 57:19 ayetidir. Bu ayette 76 hurufu mukatta harfi kullanıldığı belirtilir.
-              76 = 19 x 4.
-            </p>
-          </article>
-
-          <article class="signal-card signal-card--method">
-            <h3 class="signal-card__title">Fatiha harf dizilimi</h3>
-            <p class="signal-card__text">
-              1 19 17 12 11 19 18 43 dizilimi 19'un katıdır.
-            </p>
-          </article>
-
-          <article class="signal-card signal-card--method signal-card--trigger">
-            <button type="button" class="signal-card__button" data-fatiha-open>
-              <h3 class="signal-card__title">Fatiha tam dizilim</h3>
-              <p class="signal-card__text">
-                Ayet no, harf sayısı ve ebced değeri birlikte yazıldığında oluşan sayı 19'un
-                katıdır.
-              </p>
-              <span class="signal-card__cta">İncele</span>
-            </button>
-          </article>
-
-          <article class="signal-card signal-card--method signal-card--trigger">
-            <button type="button" class="signal-card__button" data-15124-open>
-              <h3 class="signal-card__title">15124 basamaklı sayı</h3>
-              <p class="signal-card__text">
-                Allah kelimesinin geçtiği ayetlerin sırası, sure numarası, ayet numarası ve ayetteki
-                geçiş sayısı art arda dizildiğinde 15124 basamaklı bir sayı oluşur.
-              </p>
-              <span class="signal-card__cta">İncele</span>
-            </button>
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 5;">
+            <div class="descent-step__inner">
+              <article class="descent-panel descent-panel--trigger">
+                <button type="button" class="descent-panel__button" data-15124-open>
+                  <p class="descent-panel__eyebrow">Yakından bak</p>
+                  <p class="descent-panel__value">15124 basamak</p>
+                  <h3 class="descent-panel__title">Allah dizilimi</h3>
+                  <p class="descent-panel__text">
+                    Allah kelimesinin geçtiği ayetlerin sırası, sure numarası, ayet numarası ve ayetteki geçiş sayısı art arda dizildiğinde 15124 basamaklı bir sayı oluşur.
+                  </p>
+                  <span class="descent-panel__cta">İncele</span>
+                </button>
+              </article>
+            </div>
           </article>
         </div>
 
-        <p class="journey-note">
-          Devam için
-          <a href="https://www.7ve19.com/008-00-7-ve-19-ikili-sayisal-kodlama-sistemi/" target="_blank" rel="noreferrer">
-            7 ve 19 yöntemi
-          </a>
-          ,
-          <a href="https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/" target="_blank" rel="noreferrer">
-            kodlama kuralları
-          </a>
-          ,
-          <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
-            insanın yapamayacağı şey
-          </a>
-          ,
-          <a href="https://kuranmucizeler.com/kuran-ayet-no-su-19-un-kati-sure-no-su-19-un-kati-ve-ayet-no-su-19-un-kati-olan-tek-ayet-57-19-ayetidir-bu-ayette-yuce-allah-76-19x-hurufu-mukatta-harfi-kullanmistir" target="_blank" rel="noreferrer">
-            57:19 bulgusu
-          </a>
-          ,
-          <a href="https://kuranmucizeler.com/fatiha-daki-muhtesem-mucize-19-sistemi" target="_blank" rel="noreferrer">
-            Fatiha'daki 19 kodlaması
-          </a>
-          ve
-          <a href="https://kod.7ve19.com/Besmele_Tr.asp" target="_blank" rel="noreferrer">
-            interaktif Besmele kodlamaları
-          </a>
-          .
-        </p>
+        <div class="descent-outro reveal-step" data-reveal>
+          <p class="journey-note">
+            Devam için
+            <a href="https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/" target="_blank" rel="noreferrer">
+              kodlama kuralları
+            </a>
+            ,
+            <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
+              insanın yapamayacağı şey
+            </a>
+            ,
+            <a href="https://kuranmucizeler.com/kuran-ayet-no-su-19-un-kati-sure-no-su-19-un-kati-ve-ayet-no-su-19-un-kati-olan-tek-ayet-57-19-ayetidir-bu-ayette-yuce-allah-76-19x-hurufu-mukatta-harfi-kullanmistir" target="_blank" rel="noreferrer">
+              57:19 bulgusu
+            </a>
+            ,
+            <a href="https://kuranmucizeler.com/kuran-in-sondan-19-allah-kelimesi-19-ayetli-82-surenin-19-ayetinin-son-kelimesidir-bu-allah-kelimesi-tum-kuran-da-icinde-bulundugu-ayetin-son-kelimesi-olan-biricik-allah-kelimesidir" target="_blank" rel="noreferrer">
+              sondan 19. Allah
+            </a>
+            ,
+            <a href="https://kuranmucizeler.com/kuran-da-ayet-numarasi-19-un-kati-olan-ayetlerde-toplam-133-allah-kelimesi-gecer-ki-bu-rakam-19-un-tam-katidir" target="_blank" rel="noreferrer">
+              133 Allah
+            </a>
+            ve
+            <a href="https://kuranmucizeler.com/ayetteki-allah-kelimesi-sayisi-ve-ayetteki-toplam-kelime-sayisinin-isareti-18544-19x-basamakli-sayi" target="_blank" rel="noreferrer">
+              18544 basamaklı sayı
+            </a>
+            ,
+            <a href="https://kuranmucizeler.com/fatiha-daki-muhtesem-mucize-19-sistemi" target="_blank" rel="noreferrer">
+              Fatiha'daki 19 kodlaması
+            </a>
+            .
+          </p>
 
-        <p class="journey-note journey-note--question">
-          Soru artık şudur: Bu kadar çok uyum, gerçekten tesadüf ile açıklanabilir mi?
-        </p>
+          <p class="journey-note journey-note--question">
+            Soru artık şudur: Bu kadar çok uyum, gerçekten tesadüf ile açıklanabilir mi?
+          </p>
+        </div>
 
         <dialog class="number-dialog" data-15124-dialog>
           <div class="number-dialog__panel">
@@ -429,33 +512,128 @@ const allah15124Sequence = [
 
               <article class="pattern-item">
                 <h3>Sure toplamı</h3>
-                <p>1 7 139 10143 = 19x</p>
+                <p>13910143 = 19x</p>
               </article>
 
               <article class="pattern-item">
                 <h3>Ayet ve kelime</h3>
-                <p>1 7 29 = 19x</p>
+                <p>1729 = 19x</p>
               </article>
             </div>
           </div>
         </dialog>
 
-        <div class="mt-10 flex justify-center">
+        <dialog class="number-dialog" data-detail-dialog="allah-kelimeler">
+          <div class="number-dialog__panel">
+            <div class="number-dialog__top">
+              <div>
+                <p class="journey-label">Allah ve diğer kelimeler</p>
+                <h2 class="number-dialog__title">19'un katları</h2>
+              </div>
+              <button type="button" class="number-dialog__close" data-detail-close="allah-kelimeler">Kapat</button>
+            </div>
+
+            <div class="pattern-list">
+              {
+                allahWordBreakdown.map(([label, value]) => (
+                  <article class="pattern-item">
+                    <h3>{label}</h3>
+                    <p>{value}</p>
+                  </article>
+                ))
+              }
+            </div>
+          </div>
+        </dialog>
+
+        <dialog class="number-dialog" data-detail-dialog="kayip-besmele">
+          <div class="number-dialog__panel">
+            <div class="number-dialog__top">
+              <div>
+                <p class="journey-label">Kayıp Besmele</p>
+                <h2 class="number-dialog__title">Eksik olan burada tamamlanır</h2>
+              </div>
+              <button type="button" class="number-dialog__close" data-detail-close="kayip-besmele">Kapat</button>
+            </div>
+
+            <div class="pattern-list">
+              <article class="pattern-item">
+                <h3>Eksik başlangıç</h3>
+                <p>Normalde sure başlarında görülen Besmele, 9. surenin başında yer almaz.</p>
+              </article>
+
+              <article class="pattern-item">
+                <h3>Tamamlanan sayı</h3>
+                <p>Bu eksik, Neml suresinin 30. ayetindeki Besmele ile tamamlanır ve toplam yine 114 olur.</p>
+              </article>
+
+              <article class="pattern-item">
+                <h3>19 ilişkisi</h3>
+                <p>Eksik Besmele'nin tamamlandığı yer Neml suresinin 30. ayetidir. Burada 27 sure numarası, 30 ise ayet numarasıdır. Bu iki sayı toplandığında 57 elde edilir. 57 = 19 x 3.</p>
+              </article>
+            </div>
+          </div>
+        </dialog>
+
+        <div class="mt-12 flex justify-center">
           <ScrollCue href="#besmele-olcutleri" label="Aşağı in" />
         </div>
       </div>
     </article>
 
     <article id="besmele-olcutleri" class="journey-stage journey-stage--criteria">
-      <div class="journey-shell journey-shell--wide">
-        <p class="journey-label">Besmele ölçütleri</p>
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <p class="journey-label">Besmele ölçütleri</p>
+          <h2 class="journey-title journey-title--descent">Burada Besmele daha yakından okunur.</h2>
+        </header>
 
-        <div class="criteria-groups">
+        <div class="descent-rail descent-rail--criteria">
           {
-            besmeleCriteriaGroups.map((group) => (
-              <section class="criteria-group">
-                <h2 class="criteria-group__title">{group.title}</h2>
-                <div class="criteria-list">
+            besmeleCriteriaGroups.map((group, index) => (
+              <article class="descent-step reveal-step" data-reveal style={`--step-depth: ${index};`}>
+                <div class="descent-step__inner">
+                  <article class="descent-panel descent-panel--trigger descent-panel--gate">
+                    <button type="button" class="descent-panel__button" data-criteria-open={group.id}>
+                      <p class="descent-panel__eyebrow">{group.range}</p>
+                      <h3 class="descent-panel__title">{group.title}</h3>
+                      <p class="descent-panel__text">{group.intro}</p>
+                      <span class="descent-panel__cta">İncele</span>
+                    </button>
+                  </article>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+
+        <p class="journey-note reveal-step" data-reveal>
+          Tam kodlamayı görmek için
+          <a href="https://kod.7ve19.com/Besmele_Tr.asp" target="_blank" rel="noreferrer">
+            kod.7ve19.com/Besmele_Tr.asp
+          </a>
+          .
+        </p>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#meydan-okuma" label="Aşağı in" />
+        </div>
+
+        {
+          besmeleCriteriaGroups.map((group) => (
+            <dialog class="number-dialog" data-criteria-dialog={group.id}>
+              <div class="number-dialog__panel">
+                <div class="number-dialog__top">
+                  <div>
+                    <p class="journey-label">{group.range}</p>
+                    <h2 class="number-dialog__title">{group.title}</h2>
+                  </div>
+                  <button type="button" class="number-dialog__close" data-criteria-close={group.id}>Kapat</button>
+                </div>
+
+                <p class="signal-card__text number-dialog__text">{group.intro}</p>
+
+                <div class="criteria-list criteria-list--dialog">
                   {
                     group.items.map(([code, label, data, result]) => (
                       <article class="criteria-item">
@@ -469,27 +647,10 @@ const allah15124Sequence = [
                     ))
                   }
                 </div>
-              </section>
-            ))
-          }
-        </div>
-
-        <p class="journey-note">
-          Bu ölçütler, Besmele'nin sadece 4 kelime ve 19 harf olmasından ibaret olmadığını; daha
-          derin bir sayısal iz taşıdığını göstermek için verilir.
-        </p>
-
-        <p class="journey-note">
-          Tam kodlamayı görmek için
-          <a href="https://kod.7ve19.com/Besmele_Tr.asp" target="_blank" rel="noreferrer">
-            kod.7ve19.com/Besmele_Tr.asp
-          </a>
-          .
-        </p>
-
-        <div class="mt-10 flex justify-center">
-          <ScrollCue href="#meydan-okuma" label="Aşağı in" />
-        </div>
+              </div>
+            </dialog>
+          ))
+        }
       </div>
     </article>
 
@@ -507,11 +668,6 @@ const allah15124Sequence = [
         </p>
 
         <div class="next-metrics">
-          <article class="next-metric">
-            <p class="next-metric__value">77 harf</p>
-            <p class="next-metric__result">mod 7 = 0</p>
-          </article>
-
           <article class="next-metric">
             <p class="next-metric__value">19 kelime</p>
             <p class="next-metric__result">mod 19 = 0</p>
@@ -542,17 +698,52 @@ const allah15124Sequence = [
 </Layout>
 
 <script define:vars={{ allah15124Preview }}>
+  document.documentElement.classList.add("has-reveal");
+
   const dialog = document.querySelector("[data-15124-dialog]");
   const openButton = document.querySelector("[data-15124-open]");
   const closeButton = document.querySelector("[data-15124-close]");
   const fatihaDialog = document.querySelector("[data-fatiha-dialog]");
   const fatihaOpenButton = document.querySelector("[data-fatiha-open]");
   const fatihaCloseButton = document.querySelector("[data-fatiha-close]");
+  const detailDialogs = Array.from(document.querySelectorAll("[data-detail-dialog]"));
+  const detailOpenButtons = Array.from(document.querySelectorAll("[data-detail-open]"));
+  const detailCloseButtons = Array.from(document.querySelectorAll("[data-detail-close]"));
+  const criteriaDialogs = Array.from(document.querySelectorAll("[data-criteria-dialog]"));
+  const criteriaOpenButtons = Array.from(document.querySelectorAll("[data-criteria-open]"));
+  const criteriaCloseButtons = Array.from(document.querySelectorAll("[data-criteria-close]"));
   const input = document.querySelector("[data-15124-input]");
   const analyzeButton = document.querySelector("[data-15124-analyze]");
   const mutateButton = document.querySelector("[data-15124-mutate]");
   const resetButton = document.querySelector("[data-15124-reset]");
   const status = document.querySelector("[data-15124-status]");
+  const revealItems = Array.from(document.querySelectorAll("[data-reveal]"));
+
+  if (revealItems.length && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px"
+      }
+    );
+
+    revealItems.forEach((item, index) => {
+      if (index === 0) {
+        item.classList.add("is-visible");
+      }
+
+      revealObserver.observe(item);
+    });
+  } else {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+  }
 
   const computeMod19 = (value) => {
     let mod = 0;
@@ -599,6 +790,54 @@ const allah15124Sequence = [
     if (event.target === fatihaDialog) {
       fatihaDialog.close();
     }
+  });
+
+  detailOpenButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-detail-open");
+      const target = document.querySelector(`[data-detail-dialog="${id}"]`);
+      target?.showModal();
+    });
+  });
+
+  detailCloseButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-detail-close");
+      const target = document.querySelector(`[data-detail-dialog="${id}"]`);
+      target?.close();
+    });
+  });
+
+  detailDialogs.forEach((detailDialog) => {
+    detailDialog.addEventListener("click", (event) => {
+      if (event.target === detailDialog) {
+        detailDialog.close();
+      }
+    });
+  });
+
+  criteriaOpenButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-criteria-open");
+      const target = document.querySelector(`[data-criteria-dialog="${id}"]`);
+      target?.showModal();
+    });
+  });
+
+  criteriaCloseButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-criteria-close");
+      const target = document.querySelector(`[data-criteria-dialog="${id}"]`);
+      target?.close();
+    });
+  });
+
+  criteriaDialogs.forEach((criteriaDialog) => {
+    criteriaDialog.addEventListener("click", (event) => {
+      if (event.target === criteriaDialog) {
+        criteriaDialog.close();
+      }
+    });
   });
 
   analyzeButton?.addEventListener("click", () => {
