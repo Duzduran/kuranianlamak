@@ -1,6 +1,7 @@
 ---
 import { siteDescription, siteTitle } from "../data/site";
 import { defaultLocale, siteMeta, uiCopy } from "../data/i18n";
+import logo from "../assets/logo.png";
 import "../styles/global.css";
 
 interface Props {
@@ -17,8 +18,8 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href={logo.src} />
+    <link rel="apple-touch-icon" href={logo.src} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} data-site-meta="description" />
     <meta name="theme-color" content="#17202d" />
