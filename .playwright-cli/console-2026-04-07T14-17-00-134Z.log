@@ -1,0 +1,1 @@
+[     694ms] [ERROR] Failed to load resource: the server responded with a status of 504 (Outdated Optimize Dep) @ http://127.0.0.1:4326/node_modules/.vite/deps/@rive-app_canvas.js?v=11608874:0

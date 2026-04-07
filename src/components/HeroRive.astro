@@ -1,0 +1,41 @@
+---
+const { src = "/animations/ramadan_animation.riv" } = Astro.props;
+---
+
+<div class="hero-rive" aria-hidden="true" data-hero-rive>
+  <canvas class="hero-rive__canvas" width="720" height="720" data-rive-canvas data-rive-src={src}></canvas>
+</div>
+
+<script>
+  import { Alignment, Fit, Layout, Rive } from "@rive-app/canvas";
+
+  document.querySelectorAll("[data-hero-rive]").forEach((root) => {
+    if (!(root instanceof HTMLElement) || root.dataset.bound === "true") return;
+    const canvas = root.querySelector("[data-rive-canvas]");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+
+    root.dataset.bound = "true";
+
+    let rive;
+
+    const resize = () => {
+      rive?.resizeDrawingSurfaceToCanvas();
+    };
+
+    rive = new Rive({
+      src: canvas.dataset.riveSrc,
+      canvas,
+      autoplay: true,
+      layout: new Layout({
+        fit: Fit.Contain,
+        alignment: Alignment.Center
+      }),
+      onLoad: () => {
+        root.dataset.ready = "true";
+        resize();
+      }
+    });
+
+    window.addEventListener("resize", resize, { passive: true });
+  });
+</script>

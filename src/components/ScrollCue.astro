@@ -1,13 +1,28 @@
 ---
+import { uiCopy } from "../data/i18n";
+
 interface Props {
   href: string;
-  label?: string;
+  labelTr?: string;
+  labelEn?: string;
+  class?: string;
 }
 
-const { href, label = "Aşağı in" } = Astro.props;
+const {
+  href,
+  labelTr = uiCopy.tr.scrollDown,
+  labelEn = uiCopy.en.scrollDown,
+  class: className
+} = Astro.props;
 ---
 
-<a class="scroll-cue" href={href} aria-label={label}>
+<a
+  class:list={["scroll-cue", className]}
+  href={href}
+  aria-label={labelTr}
+  data-locale-label-tr={labelTr}
+  data-locale-label-en={labelEn}
+>
   <span class="scroll-cue__arrow" aria-hidden="true">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 5.5v12" />

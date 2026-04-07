@@ -1,0 +1,15 @@
+---
+interface Props {
+  tr: string;
+  en: string;
+  as?: keyof HTMLElementTagNameMap;
+  class?: string;
+}
+
+const { tr, en, as: Tag = "span", class: className, ...attrs } = Astro.props;
+---
+
+<Tag class={className} {...attrs}>
+  <span data-copy-lang="tr">{tr}</span>
+  <span data-copy-lang="en">{en}</span>
+</Tag>

@@ -1,4 +1,5 @@
-export const siteTitle = "Kur'an'da Yapısal İnceleme";
+import { siteMeta } from "./i18n";
 
-export const siteDescription =
-  "Kur'an metnindeki yapısal, sayısal ve biçimsel düzenleri sade bir dille açıklayan konu merkezli bir inceleme sitesi.";
+export const siteTitle = siteMeta.tr.title;
+
+export const siteDescription = siteMeta.tr.description;

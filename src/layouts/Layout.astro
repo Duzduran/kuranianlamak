@@ -1,5 +1,6 @@
 ---
 import { siteDescription, siteTitle } from "../data/site";
+import { defaultLocale, siteMeta, uiCopy } from "../data/i18n";
 import "../styles/global.css";
 
 interface Props {
@@ -12,28 +13,230 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 ---
 
 <!doctype html>
-<html lang="tr">
+<html lang={defaultLocale} data-locale={defaultLocale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
+    <meta name="description" content={description} data-site-meta="description" />
     <meta name="theme-color" content="#17202d" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={pageTitle} data-site-meta="og:title" />
+    <meta property="og:description" content={description} data-site-meta="og:description" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={pageTitle} data-site-meta="twitter:title" />
+    <meta name="twitter:description" content={description} data-site-meta="twitter:description" />
     <title>{pageTitle}</title>
+    <script is:inline define:vars={{ defaultLocale }}>
+      (() => {
+        const STORAGE_KEY = "within19-locale";
+        const normalizeLocale = (value) => {
+          const lower = String(value || "").toLowerCase();
+          return lower.startsWith("tr") ? "tr" : "en";
+        };
+
+        try {
+          const saved = window.localStorage.getItem(STORAGE_KEY);
+          const browserLocale = navigator.language || navigator.languages?.[0] || defaultLocale;
+          const locale = normalizeLocale(saved || browserLocale || defaultLocale);
+          document.documentElement.dataset.locale = locale;
+          document.documentElement.lang = locale;
+        } catch {
+          document.documentElement.dataset.locale = defaultLocale;
+          document.documentElement.lang = defaultLocale;
+        }
+      })();
+    </script>
   </head>
   <body class="min-h-screen">
     <div class="page-shell">
+      <div
+        class="locale-switcher"
+        role="group"
+        aria-label={uiCopy.tr.switcherLabel}
+        data-locale-switcher
+        data-locale-label-tr={uiCopy.tr.switcherLabel}
+        data-locale-label-en={uiCopy.en.switcherLabel}
+      >
+        <button type="button" class="locale-switcher__current" data-locale-toggle aria-haspopup="true" aria-expanded="false">
+          <span data-locale-current>Türkçe</span>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="m4.25 6.25 3.75 3.5 3.75-3.5" />
+          </svg>
+        </button>
+        <div class="locale-switcher__menu" data-locale-menu hidden>
+          <button type="button" class="locale-switcher__button" data-locale-button="tr" aria-pressed="true">
+            Türkçe
+          </button>
+          <button type="button" class="locale-switcher__button" data-locale-button="en" aria-pressed="false">
+            English
+          </button>
+        </div>
+      </div>
       <main>
         <slot />
       </main>
     </div>
+    <script is:inline define:vars={{ defaultLocale, siteMeta }}>
+      (() => {
+        const STORAGE_KEY = "within19-locale";
+        const root = document.documentElement;
+
+        const normalizeLocale = (value) => {
+          const lower = String(value || "").toLowerCase();
+          return lower.startsWith("tr") ? "tr" : "en";
+        };
+
+        const setMeta = (locale) => {
+          const meta = siteMeta[locale];
+          document.title = meta.title;
+
+          const description = document.querySelector('[data-site-meta="description"]');
+          if (description instanceof HTMLMetaElement) {
+            description.content = meta.description;
+          }
+
+          const ogTitle = document.querySelector('[data-site-meta="og:title"]');
+          if (ogTitle instanceof HTMLMetaElement) {
+            ogTitle.content = meta.title;
+          }
+
+          const ogDescription = document.querySelector('[data-site-meta="og:description"]');
+          if (ogDescription instanceof HTMLMetaElement) {
+            ogDescription.content = meta.description;
+          }
+
+          const twitterTitle = document.querySelector('[data-site-meta="twitter:title"]');
+          if (twitterTitle instanceof HTMLMetaElement) {
+            twitterTitle.content = meta.title;
+          }
+
+          const twitterDescription = document.querySelector('[data-site-meta="twitter:description"]');
+          if (twitterDescription instanceof HTMLMetaElement) {
+            twitterDescription.content = meta.description;
+          }
+        };
+
+        const syncLocaleButtons = (locale) => {
+          const labels = { tr: "Türkçe", en: "English" };
+
+          document.querySelectorAll("[data-locale-button]").forEach((button) => {
+            if (!(button instanceof HTMLButtonElement)) return;
+            const isActive = button.dataset.localeButton === locale;
+            button.dataset.active = String(isActive);
+            button.setAttribute("aria-pressed", String(isActive));
+          });
+
+          document.querySelectorAll("[data-locale-current]").forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+            node.textContent = labels[locale];
+          });
+        };
+
+        const syncLocaleLabels = (locale) => {
+          document.querySelectorAll("[data-locale-label-tr]").forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+            const label = locale === "tr" ? node.dataset.localeLabelTr : node.dataset.localeLabelEn;
+            if (!label) return;
+            node.setAttribute("aria-label", label);
+          });
+        };
+
+        const applyLocale = (locale) => {
+          root.dataset.locale = locale;
+          root.lang = locale;
+          setMeta(locale);
+          syncLocaleButtons(locale);
+          syncLocaleLabels(locale);
+          window.dispatchEvent(new CustomEvent("site:locale-change", { detail: { locale } }));
+        };
+
+        const getInitialLocale = () => {
+          try {
+            const saved = window.localStorage.getItem(STORAGE_KEY);
+            const browserLocale = navigator.language || navigator.languages?.[0] || defaultLocale;
+            return normalizeLocale(saved || browserLocale || defaultLocale);
+          } catch {
+            return defaultLocale;
+          }
+        };
+
+        const setLocale = (locale) => {
+          const normalized = normalizeLocale(locale);
+          try {
+            window.localStorage.setItem(STORAGE_KEY, normalized);
+          } catch {
+            // Ignore storage failures and keep the in-memory locale.
+          }
+
+          applyLocale(normalized);
+        };
+
+        applyLocale(normalizeLocale(root.dataset.locale || getInitialLocale()));
+
+        const closeSwitcher = () => {
+          document.querySelectorAll("[data-locale-switcher]").forEach((switcher) => {
+            if (!(switcher instanceof HTMLElement)) return;
+            switcher.dataset.open = "false";
+            const toggle = switcher.querySelector("[data-locale-toggle]");
+            const menu = switcher.querySelector("[data-locale-menu]");
+            if (toggle instanceof HTMLButtonElement) {
+              toggle.setAttribute("aria-expanded", "false");
+            }
+            if (menu instanceof HTMLElement) {
+              menu.hidden = true;
+            }
+          });
+        };
+
+        const toggleSwitcher = (switcher) => {
+          if (!(switcher instanceof HTMLElement)) return;
+          const isOpen = switcher.dataset.open === "true";
+          closeSwitcher();
+          if (isOpen) return;
+          switcher.dataset.open = "true";
+          const toggle = switcher.querySelector("[data-locale-toggle]");
+          const menu = switcher.querySelector("[data-locale-menu]");
+          if (toggle instanceof HTMLButtonElement) {
+            toggle.setAttribute("aria-expanded", "true");
+          }
+          if (menu instanceof HTMLElement) {
+            menu.hidden = false;
+          }
+        };
+
+        document.addEventListener("click", (event) => {
+          const targetElement = event.target instanceof Element ? event.target : null;
+          const toggle = targetElement?.closest("[data-locale-toggle]");
+          if (toggle instanceof HTMLButtonElement) {
+            const switcher = toggle.closest("[data-locale-switcher]");
+            toggleSwitcher(switcher);
+            return;
+          }
+
+          const target = event.target instanceof Element ? event.target.closest("[data-locale-button]") : null;
+          if (!(target instanceof HTMLButtonElement)) return;
+          const locale = target.dataset.localeButton;
+          if (!locale) return;
+          setLocale(locale);
+          closeSwitcher();
+        });
+
+        document.addEventListener("click", (event) => {
+          const target = event.target instanceof Element ? event.target : null;
+          if (target?.closest("[data-locale-switcher]")) return;
+          closeSwitcher();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key !== "Escape") return;
+          closeSwitcher();
+        });
+
+        window.setSiteLocale = setLocale;
+      })();
+    </script>
   </body>
 </html>
