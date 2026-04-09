@@ -1487,6 +1487,38 @@ dialog::backdrop {
   margin-top: 1.1rem;
 }
 
+.criteria-transform {
+  margin-top: 1.1rem;
+  border: 1px solid rgba(244, 235, 223, 0.08);
+  border-radius: 1.15rem;
+  background: rgba(244, 235, 223, 0.03);
+  padding: 1rem 1.05rem;
+}
+
+.criteria-transform__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(244, 235, 223, 0.64);
+}
+
+.criteria-transform__text {
+  margin-top: 0.6rem;
+  font-size: 0.94rem;
+  line-height: 1.75;
+  color: rgba(244, 235, 223, 0.8);
+}
+
+.criteria-transform__formula {
+  margin-top: 0.7rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: #d8ba8f;
+  word-break: break-word;
+}
+
 .signal-card__list ul {
   margin-top: 0.7rem;
   display: grid;

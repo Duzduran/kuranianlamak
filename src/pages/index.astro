@@ -3,7 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import LocalizedText from "../components/LocalizedText.astro";
 import ScrollCue from "../components/ScrollCue.astro";
 import HeroRive from "../components/HeroRive.astro";
-import { allah15124Number } from "../data/allah15124";
 import { uiCopy } from "../data/i18n";
 
 const l = (tr, en) => ({ tr, en });
@@ -81,34 +80,6 @@ const escapeHtml = (value) =>
 
 const highlightNumericText = (value) =>
   escapeHtml(value).replace(/(\d+(?:\.\d+)?|mod|x|=)/g, '<span class="criteria-number">$1</span>');
-
-const allah15124Preview = allah15124Number.match(/.{1,88}/g)?.join("\n") ?? allah15124Number;
-
-const allah15124Fields = [
-  [l("Kuran ayet no", "Qur'an ayah no"), "number-field--quran-ayah"],
-  [l("Sure no", "Surah no"), "number-field--surah"],
-  [l("Suredeki ayet no", "Ayah no in the surah"), "number-field--surah-ayah"],
-  [l("Geçiş sayısı", "Occurrence count"), "number-field--count"]
-];
-
-const allah15124Sequence = [
-  ["1", "1", "1", "1"],
-  ["2", "1", "2", "1"],
-  ["14", "2", "7", "1"],
-  ["6221", "112", "2", "1"]
-];
-
-const allahWordBreakdown = [
-  [l("İsim", "Name"), l("19 = 19 x 1", "19 = 19 x 1")],
-  [l("Allah ve türevleri", "Allah and its derivatives"), l("2698 = 19 x 142", "2698 = 19 x 142")],
-  [l("Rahman", "Al-Rahman"), l("57 = 19 x 3", "57 = 19 x 3")],
-  [l("Rahim", "Al-Rahim"), l("114 = 19 x 6", "114 = 19 x 6")],
-  [
-    l("Ayet no'su 19'un katı olan ayetlerde Allah", "In verses whose verse number is a multiple of 19"),
-    l("Allah kelimesi 133 kez geçer. 133, 19'un katıdır.", "The word Allah appears 133 times. 133 is a multiple of 19.")
-  ],
-  [l("Allah + er-Rahman + er-Rahim", "Allah + Al-Rahman + Al-Rahim"), l("684 = 19 x 36", "684 = 19 x 36")]
-];
 ---
 
 <Layout>
@@ -332,40 +303,6 @@ const allahWordBreakdown = [
             </div>
           </article>
 
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
-            <div class="descent-step__inner">
-              <article class="descent-panel descent-panel--trigger">
-                <button type="button" class="descent-panel__button" data-detail-open="allah-kelimeler">
-                  <LocalizedText as="p" class="descent-panel__eyebrow" tr="Tekrarlar" en="Repetitions" />
-                  <p class="descent-panel__value">19 / 2698 / 57 / 114</p>
-                  <LocalizedText as="h3" class="descent-panel__title" tr="Allah ve diğer kelimeler" en="Allah and the other words" />
-                  <LocalizedText
-                    as="p"
-                    class="descent-panel__text"
-                    tr="İsim = 19 x 1, Allah ve türevleri = 19 x 142, Rahman = 19 x 3, Rahim = 19 x 6. Ayet no'su 19'un katı olan ayetlerde 133 Allah kelimesi geçer."
-                    en="Name = 19 x 1, Allah and its derivatives = 19 x 142, Al-Rahman = 19 x 3, Al-Rahim = 19 x 6. In verses whose verse number is a multiple of 19, the word Allah appears 133 times."
-                  />
-                  <LocalizedText as="span" class="descent-panel__cta" tr={uiCopy.tr.explore} en={uiCopy.en.explore} />
-                </button>
-              </article>
-            </div>
-          </article>
-
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
-            <div class="descent-step__inner">
-              <div class="descent-panel">
-                <LocalizedText as="p" class="descent-panel__eyebrow" tr="Fatiha" en="Al-Fatiha" />
-                <p class="descent-panel__value">1729 = 19 x 91</p>
-                <LocalizedText as="h3" class="descent-panel__title" tr="İlk sure" en="First surah" />
-                <LocalizedText
-                  as="p"
-                  class="descent-panel__text"
-                  tr="Fatiha'daki ayet ve kelime dizilimi 1729 eder. 5. ayette 19 harf vardır: 19 = 19 x 1. Ebced değeri 836'dır: 836 = 19 x 44."
-                  en="The verse and word sequence in Al-Fatiha gives 1729. Verse 5 contains 19 letters: 19 = 19 x 1. Its abjad value is 836: 836 = 19 x 44."
-                />
-              </div>
-            </div>
-          </article>
         </div>
 
         <div class="mt-12 flex justify-center">
@@ -403,91 +340,6 @@ const allahWordBreakdown = [
             </div>
           </article>
 
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
-            <div class="descent-step__inner">
-              <div class="descent-panel">
-                <LocalizedText as="p" class="descent-panel__eyebrow" tr="Tek ayet" en="Single verse" />
-                <p class="descent-panel__value">57 : 19</p>
-                <LocalizedText as="h3" class="descent-panel__title" tr="Aynı eşikte buluşur" en="They meet at one threshold" />
-                <LocalizedText
-                  as="p"
-                  class="descent-panel__text"
-                  tr="Kur'an ayet no'su 19'un katı, sure no'su 19'un katı ve ayet no'su 19'un katı olan tek ayet 57:19 ayetidir. Bu ayette 76 hurufu mukatta harfi kullanıldığı belirtilir."
-                  en="The only verse whose Qur'anic verse number, surah number, and verse number are all multiples of 19 is 57:19. This verse is also said to contain 76 disconnected letters."
-                />
-              </div>
-            </div>
-          </article>
-
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
-            <div class="descent-step__inner">
-              <div class="descent-panel">
-                <LocalizedText as="p" class="descent-panel__eyebrow" tr="Sondan 19." en="19th from the end" />
-                <p class="descent-panel__value">82 : 19</p>
-                <LocalizedText as="h3" class="descent-panel__title" tr="Son kelime" en="Final word" />
-                <LocalizedText
-                  as="p"
-                  class="descent-panel__text"
-                  tr="Kur'an'ın sondan 19. Allah kelimesi, 19 ayetli 82. surenin 19. ayetinin son kelimesidir. Bu, Kur'an'da ayetin son kelimesi olan tek Allah kelimesidir."
-                  en="The 19th Allah from the end of the Qur'an is the last word of verse 19 in surah 82, which itself has 19 verses. It is the only Allah that appears as the final word of its verse."
-                />
-              </div>
-            </div>
-          </article>
-
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 3;">
-            <div class="descent-step__inner">
-              <div class="descent-panel">
-                <LocalizedText as="p" class="descent-panel__eyebrow" tr="Allah + kelime sayısı" en="Allah + word count" />
-                <p class="descent-panel__value">18544 = 19 x 976</p>
-                <LocalizedText as="h3" class="descent-panel__title" tr="Basamak sayısı" en="Digit count" />
-                <LocalizedText
-                  as="p"
-                  class="descent-panel__text"
-                  tr="Allah geçen ayetlerde, ayetteki Allah sayısı ile toplam kelime sayısı birlikte dizildiğinde 18544 basamaklı bir sayı oluşur. Burada 19'un katı olan şey bu büyük sayının basamak sayısıdır."
-                  en="When the count of Allah within each verse is written together with the verse's total word count, a 18544-digit number is formed. What is a multiple of 19 here is the digit count of that number."
-                />
-              </div>
-            </div>
-          </article>
-
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 4;">
-            <div class="descent-step__inner">
-              <article class="descent-panel descent-panel--trigger">
-                <button type="button" class="descent-panel__button" data-fatiha-open>
-                  <LocalizedText as="p" class="descent-panel__eyebrow" tr="Yakından bak" en="Look closer" />
-                  <LocalizedText as="p" class="descent-panel__value" tr="Fatiha" en="Al-Fatiha" />
-                  <LocalizedText as="h3" class="descent-panel__title" tr="Dizilimler" en="Sequences" />
-                  <LocalizedText
-                    as="p"
-                    class="descent-panel__text"
-                    tr="Ayet no, harf sayısı ve ebced değeri birlikte yazıldığında oluşan dizilimlerin her biri 19'un katıdır."
-                    en="When verse number, letter count, and abjad value are written together, each resulting sequence is a multiple of 19."
-                  />
-                  <LocalizedText as="span" class="descent-panel__cta" tr={uiCopy.tr.explore} en={uiCopy.en.explore} />
-                </button>
-              </article>
-            </div>
-          </article>
-
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 5;">
-            <div class="descent-step__inner">
-              <article class="descent-panel descent-panel--trigger">
-                <button type="button" class="descent-panel__button" data-15124-open>
-                  <LocalizedText as="p" class="descent-panel__eyebrow" tr="Yakından bak" en="Look closer" />
-                  <LocalizedText as="p" class="descent-panel__value" tr="15124 basamak" en="15124 digits" />
-                  <LocalizedText as="h3" class="descent-panel__title" tr="Allah dizilimi" en="Allah sequence" />
-                  <LocalizedText
-                    as="p"
-                    class="descent-panel__text"
-                    tr="Allah kelimesinin geçtiği ayetlerin sırası, sure numarası, ayet numarası ve ayetteki geçiş sayısı art arda dizildiğinde 15124 basamaklı bir sayı oluşur."
-                    en="When the order of each verse containing Allah, the surah number, the verse number, and the occurrence count are written one after another, a 15124-digit number is formed."
-                  />
-                  <LocalizedText as="span" class="descent-panel__cta" tr={uiCopy.tr.explore} en={uiCopy.en.explore} />
-                </button>
-              </article>
-            </div>
-          </article>
         </div>
 
         <div class="descent-outro reveal-step" data-reveal>
@@ -501,26 +353,6 @@ const allahWordBreakdown = [
               <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
                 insanın yapamayacağı şey
               </a>
-              ,
-              <a href="https://kuranmucizeler.com/kuran-ayet-no-su-19-un-kati-sure-no-su-19-un-kati-ve-ayet-no-su-19-un-kati-olan-tek-ayet-57-19-ayetidir-bu-ayette-yuce-allah-76-19x-hurufu-mukatta-harfi-kullanmistir" target="_blank" rel="noreferrer">
-                57:19 bulgusu
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/kuran-in-sondan-19-allah-kelimesi-19-ayetli-82-surenin-19-ayetinin-son-kelimesidir-bu-allah-kelimesi-tum-kuran-da-icinde-bulundugu-ayetin-son-kelimesi-olan-biricik-allah-kelimesidir" target="_blank" rel="noreferrer">
-                sondan 19. Allah
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/kuran-da-ayet-numarasi-19-un-kati-olan-ayetlerde-toplam-133-allah-kelimesi-gecer-ki-bu-rakam-19-un-tam-katidir" target="_blank" rel="noreferrer">
-                133 Allah
-              </a>
-              ve
-              <a href="https://kuranmucizeler.com/ayetteki-allah-kelimesi-sayisi-ve-ayetteki-toplam-kelime-sayisinin-isareti-18544-19x-basamakli-sayi" target="_blank" rel="noreferrer">
-                18544 basamaklı sayı
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/fatiha-daki-muhtesem-mucize-19-sistemi" target="_blank" rel="noreferrer">
-                Fatiha'daki 19 kodlaması
-              </a>
               .
             </span>
             <span data-copy-lang="en">
@@ -531,26 +363,6 @@ const allahWordBreakdown = [
               ,
               <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
                 what a human cannot do
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/kuran-ayet-no-su-19-un-kati-sure-no-su-19-un-kati-ve-ayet-no-su-19-un-kati-olan-tek-ayet-57-19-ayetidir-bu-ayette-yuce-allah-76-19x-hurufu-mukatta-harfi-kullanmistir" target="_blank" rel="noreferrer">
-                the 57:19 finding
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/kuran-in-sondan-19-allah-kelimesi-19-ayetli-82-surenin-19-ayetinin-son-kelimesidir-bu-allah-kelimesi-tum-kuran-da-icinde-bulundugu-ayetin-son-kelimesi-olan-biricik-allah-kelimesidir" target="_blank" rel="noreferrer">
-                the 19th Allah from the end
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/kuran-da-ayet-numarasi-19-un-kati-olan-ayetlerde-toplam-133-allah-kelimesi-gecer-ki-bu-rakam-19-un-tam-katidir" target="_blank" rel="noreferrer">
-                133 Allah
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/ayetteki-allah-kelimesi-sayisi-ve-ayetteki-toplam-kelime-sayisinin-isareti-18544-19x-basamakli-sayi" target="_blank" rel="noreferrer">
-                the 18544-digit number
-              </a>
-              ,
-              <a href="https://kuranmucizeler.com/fatiha-daki-muhtesem-mucize-19-sistemi" target="_blank" rel="noreferrer">
-                the 19 coding in Al-Fatiha
               </a>
               .
             </span>
@@ -563,166 +375,6 @@ const allahWordBreakdown = [
             en="The question now is this: can so much alignment really be explained by coincidence?"
           />
         </div>
-
-        <dialog class="number-dialog" data-15124-dialog>
-          <div class="number-dialog__panel">
-            <div class="number-dialog__top">
-              <div>
-                <LocalizedText as="p" class="journey-label" tr="15124 basamaklı sayı" en="15124-digit number" />
-              </div>
-              <button type="button" class="number-dialog__close" data-15124-close>
-                <span data-copy-lang="tr">{uiCopy.tr.close}</span>
-                <span data-copy-lang="en">{uiCopy.en.close}</span>
-              </button>
-            </div>
-
-            <p class="signal-card__text number-dialog__text">
-              <span data-copy-lang="tr">
-                Allah ve türevleri <span class="signal-inline-number">1820</span> ayette
-                <span class="signal-inline-number">2698</span> kez geçer. Her geçiş için şu dört bilgi
-                yan yana yazılır:
-              </span>
-              <span data-copy-lang="en">
-                Allah and its derivatives appear <span class="signal-inline-number">2698</span> times in
-                <span class="signal-inline-number">1820</span> verses. For each occurrence, these four pieces
-                of data are written side by side:
-              </span>
-            </p>
-
-            <div class="number-build">
-              {
-                allah15124Fields.map(([label, className]) => (
-                  <div class={`number-build__step ${className}`}>
-                    <LocalizedText tr={label.tr} en={label.en} />
-                  </div>
-                ))
-              }
-            </div>
-
-            <p class="number-dialog__sequence">
-              {
-                allah15124Sequence.map(([quranAyah, surahNo, surahAyah, count], index) => (
-                  <>
-                    <span class="signal-inline-group">
-                      <span class="signal-inline-token number-field--quran-ayah">{quranAyah}</span>
-                      <span class="signal-inline-separator">|</span>
-                      <span class="signal-inline-token number-field--surah">{surahNo}</span>
-                      <span class="signal-inline-separator">|</span>
-                      <span class="signal-inline-token number-field--surah-ayah">{surahAyah}</span>
-                      <span class="signal-inline-separator">|</span>
-                      <span class="signal-inline-token number-field--count">{count}</span>
-                    </span>
-                    {index === 2 && <span class="signal-inline-number">...</span>}
-                  </>
-                ))
-              }
-            </p>
-
-            <label class="number-analyzer">
-              <LocalizedText as="span" class="number-analyzer__label" tr={uiCopy.tr.number} en={uiCopy.en.number} />
-              <textarea class="number-analyzer__input number-analyzer__input--editor" data-15124-input>{allah15124Preview}</textarea>
-            </label>
-
-            <div class="number-analyzer__actions">
-              <button type="button" class="number-analyzer__button" data-15124-analyze>
-                <span data-copy-lang="tr">{uiCopy.tr.analyze}</span>
-                <span data-copy-lang="en">{uiCopy.en.analyze}</span>
-              </button>
-              <button type="button" class="number-analyzer__button number-analyzer__button--ghost" data-15124-mutate>
-                <span data-copy-lang="tr">{uiCopy.tr.mutate}</span>
-                <span data-copy-lang="en">{uiCopy.en.mutate}</span>
-              </button>
-              <button type="button" class="number-analyzer__button number-analyzer__button--ghost" data-15124-reset>
-                <span data-copy-lang="tr">{uiCopy.tr.reset}</span>
-                <span data-copy-lang="en">{uiCopy.en.reset}</span>
-              </button>
-            </div>
-
-            <p class="number-analyzer__status" data-15124-status>
-              <span data-copy-lang="tr">15124 basamaklı sayı hazır.</span>
-              <span data-copy-lang="en">The 15124-digit number is ready.</span>
-            </p>
-          </div>
-        </dialog>
-
-        <dialog class="number-dialog" data-fatiha-dialog>
-          <div class="number-dialog__panel">
-            <div class="number-dialog__top">
-              <div>
-                <LocalizedText as="p" class="journey-label" tr="Fatiha tam dizilim" en="Full Fatiha sequence" />
-              </div>
-              <button type="button" class="number-dialog__close" data-fatiha-close>
-                <span data-copy-lang="tr">{uiCopy.tr.close}</span>
-                <span data-copy-lang="en">{uiCopy.en.close}</span>
-              </button>
-            </div>
-
-            <LocalizedText
-              as="p"
-              class="signal-card__text number-dialog__text"
-              tr="Fatiha için verilen 19 dizilimleri aşağıdaki gibi özetlenir:"
-              en="The 19-based sequences presented for Al-Fatiha can be summarized as follows:"
-            />
-
-            <div class="pattern-list">
-              <article class="pattern-item">
-                <LocalizedText as="h3" tr="Ayet numaraları" en="Verse numbers" />
-                <p>11234567 = 19x</p>
-              </article>
-
-              <article class="pattern-item">
-                <LocalizedText as="h3" tr="Harf sayıları" en="Letter counts" />
-                <p>1 19 17 12 11 19 18 43 = 19x</p>
-              </article>
-
-              <article class="pattern-item">
-                <LocalizedText as="h3" tr="Harf ve ebced" en="Letters and abjad" />
-                <p>1 19 786 17 581 12 618 11 241 19 836 18 1072 43 6009 = 19x</p>
-              </article>
-
-              <article class="pattern-item">
-                <LocalizedText as="h3" tr="Tam dizilim" en="Full sequence" />
-                <p>1 1 19 786 2 17 581 3 12 618 4 11 241 5 19 836 6 18 1072 7 43 6009 = 19x</p>
-              </article>
-
-              <article class="pattern-item">
-                <LocalizedText as="h3" tr="Sure toplamı" en="Surah total" />
-                <p>13910143 = 19x</p>
-              </article>
-
-              <article class="pattern-item">
-                <LocalizedText as="h3" tr="Ayet ve kelime" en="Verses and words" />
-                <p>1729 = 19x</p>
-              </article>
-            </div>
-          </div>
-        </dialog>
-
-        <dialog class="number-dialog" data-detail-dialog="allah-kelimeler">
-          <div class="number-dialog__panel">
-            <div class="number-dialog__top">
-              <div>
-                <LocalizedText as="p" class="journey-label" tr="Allah ve diğer kelimeler" en="Allah and the other words" />
-                <LocalizedText as="h2" class="number-dialog__title" tr="19'un katları" en="Multiples of 19" />
-              </div>
-              <button type="button" class="number-dialog__close" data-detail-close="allah-kelimeler">
-                <span data-copy-lang="tr">{uiCopy.tr.close}</span>
-                <span data-copy-lang="en">{uiCopy.en.close}</span>
-              </button>
-            </div>
-
-            <div class="pattern-list">
-              {
-                allahWordBreakdown.map(([label, value]) => (
-                  <article class="pattern-item">
-                    <LocalizedText as="h3" tr={label.tr} en={label.en} />
-                    <LocalizedText as="p" tr={value.tr} en={value.en} />
-                  </article>
-                ))
-              }
-            </div>
-          </div>
-        </dialog>
 
         <dialog class="number-dialog" data-detail-dialog="kayip-besmele">
           <div class="number-dialog__panel">
@@ -863,6 +515,31 @@ const allahWordBreakdown = [
                     ))
                   }
                 </div>
+
+                {
+                  group.id === "ileri" && (
+                    <div class="criteria-transform">
+                      <LocalizedText
+                        as="h3"
+                        class="criteria-transform__title"
+                        tr="Sola kayan pencere basamak toplamı"
+                        en="Sliding window digit sum"
+                      />
+                      <LocalizedText
+                        as="p"
+                        class="criteria-transform__text"
+                        tr="Bu dönüşümde sayı basamakları soldan değil, basamak komşulukları üzerinden yeniden okunur. Birler basamağından başlayarak her basamak bir sonraki basamakla toplanır."
+                        en="In this transformation, the number is reread through neighboring digits rather than as a flat sequence. Starting from the ones place, each digit is added to the next digit."
+                      />
+                      <LocalizedText
+                        as="p"
+                        class="criteria-transform__formula"
+                        tr="D = { d1, d2, d3, ..., dk }  →  D' = { (0+d1), (d1+d2), (d2+d3), ..., (d{k-1}+dk) }"
+                        en="D = { d1, d2, d3, ..., dk }  →  D' = { (0+d1), (d1+d2), (d2+d3), ..., (d{k-1}+dk) }"
+                      />
+                    </div>
+                  )
+                }
               </div>
             </dialog>
           ))
@@ -936,50 +613,16 @@ const allahWordBreakdown = [
   </section>
 </Layout>
 
-<script
-  define:vars={{
-    allah15124Preview,
-    analyzerMessages: {
-      tr: {
-        ready: "15124 basamaklı sayı hazır.",
-        empty: "Önce sayıyı gir.",
-        mutated: "Bir rakam değiştirildi. Şimdi tekrar analiz edebilirsin.",
-        updated: "Sayı güncellendi.",
-        restored: "15124 basamaklı sayı geri yüklendi."
-      },
-      en: {
-        ready: "The 15124-digit number is ready.",
-        empty: "Enter the number first.",
-        mutated: "One digit was changed. You can analyze it again now.",
-        updated: "The number was updated.",
-        restored: "The 15124-digit number was restored."
-      }
-    }
-  }}
->
+<script>
   document.documentElement.classList.add("has-reveal");
 
-  const dialog = document.querySelector("[data-15124-dialog]");
-  const openButton = document.querySelector("[data-15124-open]");
-  const closeButton = document.querySelector("[data-15124-close]");
-  const fatihaDialog = document.querySelector("[data-fatiha-dialog]");
-  const fatihaOpenButton = document.querySelector("[data-fatiha-open]");
-  const fatihaCloseButton = document.querySelector("[data-fatiha-close]");
   const detailDialogs = Array.from(document.querySelectorAll("[data-detail-dialog]"));
   const detailOpenButtons = Array.from(document.querySelectorAll("[data-detail-open]"));
   const detailCloseButtons = Array.from(document.querySelectorAll("[data-detail-close]"));
   const criteriaDialogs = Array.from(document.querySelectorAll("[data-criteria-dialog]"));
   const criteriaOpenButtons = Array.from(document.querySelectorAll("[data-criteria-open]"));
   const criteriaCloseButtons = Array.from(document.querySelectorAll("[data-criteria-close]"));
-  const input = document.querySelector("[data-15124-input]");
-  const analyzeButton = document.querySelector("[data-15124-analyze]");
-  const mutateButton = document.querySelector("[data-15124-mutate]");
-  const resetButton = document.querySelector("[data-15124-reset]");
-  const status = document.querySelector("[data-15124-status]");
   const revealItems = Array.from(document.querySelectorAll("[data-reveal]"));
-  let statusState = { type: "ready" };
-
-  const getLocale = () => (document.documentElement.dataset.locale === "en" ? "en" : "tr");
 
   if (revealItems.length && "IntersectionObserver" in window) {
     const revealObserver = new IntersectionObserver(
@@ -1006,95 +649,6 @@ const allahWordBreakdown = [
   } else {
     revealItems.forEach((item) => item.classList.add("is-visible"));
   }
-
-  const computeMod19 = (value) => {
-    let mod = 0;
-    let length = 0;
-
-    for (const char of value) {
-      if (char < "0" || char > "9") continue;
-      mod = (mod * 10 + Number(char)) % 19;
-      length += 1;
-    }
-
-    return { mod, length };
-  };
-
-  const setStatus = (message, tone, state) => {
-    if (!status) return;
-    status.textContent = message;
-    status.dataset.tone = tone;
-    statusState = state;
-  };
-
-  const renderStatus = () => {
-    const locale = getLocale();
-    const messages = analyzerMessages[locale];
-
-    if (statusState.type === "empty") {
-      setStatus(messages.empty, "idle", statusState);
-      return;
-    }
-
-    if (statusState.type === "mutated") {
-      setStatus(messages.mutated, "idle", statusState);
-      return;
-    }
-
-    if (statusState.type === "updated") {
-      setStatus(messages.updated, "idle", statusState);
-      return;
-    }
-
-    if (statusState.type === "restored") {
-      setStatus(messages.restored, "idle", statusState);
-      return;
-    }
-
-    if (statusState.type === "result") {
-      const tone = statusState.mod === 0 ? "success" : "fail";
-      const message =
-        locale === "tr"
-          ? statusState.mod === 0
-            ? `${statusState.length} basamaklı sayı mod 19 = 0 veriyor.`
-            : `${statusState.length} basamaklı sayı mod 19 = ${statusState.mod} veriyor.`
-          : statusState.mod === 0
-            ? `The ${statusState.length}-digit number gives mod 19 = 0.`
-            : `The ${statusState.length}-digit number gives mod 19 = ${statusState.mod}.`;
-      setStatus(message, tone, statusState);
-      return;
-    }
-
-    setStatus(messages.ready, "idle", { type: "ready" });
-  };
-
-  openButton?.addEventListener("click", () => {
-    dialog?.showModal();
-  });
-
-  closeButton?.addEventListener("click", () => {
-    dialog?.close();
-  });
-
-  dialog?.addEventListener("click", (event) => {
-    if (event.target === dialog) {
-      dialog.close();
-    }
-  });
-
-  fatihaOpenButton?.addEventListener("click", () => {
-    fatihaDialog?.showModal();
-  });
-
-  fatihaCloseButton?.addEventListener("click", () => {
-    fatihaDialog?.close();
-  });
-
-  fatihaDialog?.addEventListener("click", (event) => {
-    if (event.target === fatihaDialog) {
-      fatihaDialog.close();
-    }
-  });
 
   detailOpenButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -1143,50 +697,4 @@ const allahWordBreakdown = [
       }
     });
   });
-
-  analyzeButton?.addEventListener("click", () => {
-    if (!input) return;
-    const { mod, length } = computeMod19(input.value);
-
-    if (!length) {
-      statusState = { type: "empty" };
-      renderStatus();
-      return;
-    }
-
-    statusState = { type: "result", length, mod };
-    renderStatus();
-  });
-
-  mutateButton?.addEventListener("click", () => {
-    if (!input) return;
-    const chars = Array.from(input.value);
-    const index = chars.findIndex((char) => char >= "0" && char <= "8");
-
-    if (index === -1) return;
-
-    chars[index] = String(Number(chars[index]) + 1);
-    input.value = chars.join("");
-    statusState = { type: "mutated" };
-    renderStatus();
-  });
-
-  input?.addEventListener("input", () => {
-    statusState = { type: "updated" };
-    renderStatus();
-  });
-
-  resetButton?.addEventListener("click", () => {
-    if (!input) return;
-    input.value = allah15124Preview;
-    statusState = { type: "restored" };
-    renderStatus();
-  });
-
-  if (input) {
-    input.value = allah15124Preview;
-  }
-
-  renderStatus();
-  window.addEventListener("site:locale-change", renderStatus);
 </script>
