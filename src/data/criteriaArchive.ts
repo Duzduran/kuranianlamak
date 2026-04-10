@@ -125,12 +125,20 @@ const normalizeArabicLetterStream = (text: string) => {
 };
 
 const quranFffRows = readFileSync(resolve(process.cwd(), "scripts/fff.txt"), "utf8").trim().split(/\r?\n/u);
-const arafVerseRows = quranFffRows
+const quranVerseRows = quranFffRows
   .map((row) => row.split("|", 4))
-  .filter((parts) => parts[1] === "7")
+  .filter((parts) => parts.length === 4)
   .map((parts) => ({
+    globalNo: Number(parts[0]),
+    surah: Number(parts[1]),
     ayah: Number(parts[2]),
     text: parts[3] ?? ""
+  }));
+const arafVerseRows = quranVerseRows
+  .filter((row) => row.surah === 7)
+  .map((row) => ({
+    ayah: row.ayah,
+    text: row.text
   }));
 
 const buildArafAlmsNaturalSequence = () => {
@@ -192,6 +200,7 @@ const arafAlmsCumulativeLengthsCountsAndCumulativeCountsSequence = sequenceFrom(
   ...arafAlmsCountValues,
   ...arafAlmsCumulativeCounts
 ]);
+const arafAlmsLengthTotalSequence = sequenceFrom([arafAlmsNatural.sequence.length, arafAlmsCountTotal]);
 const arafLetterPositions = {
   elif: [...arafNormalizedStream].flatMap((character, index) => (character === "ا" ? [index + 1] : [])),
   lam: [...arafNormalizedStream].flatMap((character, index) => (character === "ل" ? [index + 1] : [])),
@@ -212,6 +221,90 @@ const basmalaLamCount = normalizeArabicLetterStream(BASMALA_TEXT).split("").filt
 const arafLamPerVerseCountsWithBasmala = [basmalaLamCount, ...arafVerseLetterStats.map((row) => row.counts.lam)];
 const arafLamCumulativeCountsWithBasmala = cumulativeSums(arafLamPerVerseCountsWithBasmala);
 const arafLamCumulativeCountSequence = sequenceFrom(arafLamCumulativeCountsWithBasmala);
+
+const ALMS_FAMILY_SURAHS = [2, 3, 7, 29, 30, 31, 32];
+const buildAlmsFamilyData = () => {
+  const basmalaNormalized = normalizeArabicLetterStream(BASMALA_TEXT);
+
+  const perSurah = ALMS_FAMILY_SURAHS.map((surahNo) => {
+    const targetLetters = surahNo === 7 ? "المص" : "الم";
+    const allowed = new Set(targetLetters.split(""));
+    const text = `${basmalaNormalized}${quranVerseRows
+      .filter((row) => row.surah === surahNo)
+      .map((row) => normalizeArabicLetterStream(row.text))
+      .join("")}`;
+    const filtered = [...text].filter((character) => allowed.has(character));
+    const digits = filtered.map((character) => ELMS_ABJAD_DIGITS[character]).join("");
+    const counts = {
+      elif: filtered.filter((character) => character === "ا").length,
+      lam: filtered.filter((character) => character === "ل").length,
+      mim: filtered.filter((character) => character === "م").length,
+      sad: filtered.filter((character) => character === "ص").length
+    };
+
+    return {
+      surahNo,
+      digits,
+      digitLength: digits.length,
+      counts,
+      countTotal: counts.elif + counts.lam + counts.mim + counts.sad
+    };
+  });
+
+  const familyCounts = [
+    sum(perSurah.map((entry) => entry.counts.elif)),
+    sum(perSurah.map((entry) => entry.counts.lam)),
+    sum(perSurah.map((entry) => entry.counts.mim)),
+    sum(perSurah.map((entry) => entry.counts.sad))
+  ];
+  const familyCumulativeCounts = cumulativeSums(familyCounts);
+  const familyNaturalDigitLengths = familyCounts.map((value, index) => String(arafAlmsEbcedValues[index]).length * value);
+  const familyCumulativeDigitLengths = cumulativeSums(familyNaturalDigitLengths);
+
+  return {
+    perSurah,
+    familyCounts,
+    familyCumulativeCounts,
+    familyNaturalDigitLengths,
+    familyCumulativeDigitLengths
+  };
+};
+
+const almsFamilyData = buildAlmsFamilyData();
+const almsFamilyCountSequence = sequenceFrom(almsFamilyData.familyCounts);
+const almsFamilyCumulativeCountSequence = sequenceFrom(almsFamilyData.familyCumulativeCounts);
+const almsFamilyPerSurahTotalCounts = almsFamilyData.perSurah.map((entry) => entry.countTotal);
+const almsFamilyPerSurahTotalCountSequence = sequenceFrom(almsFamilyPerSurahTotalCounts);
+const almsFamilyCumulativeSurahLengths = cumulativeSums(almsFamilyData.perSurah.map((entry) => entry.digitLength));
+const almsFamilyCumulativeSurahLengthSequence = sequenceFrom(almsFamilyCumulativeSurahLengths);
+const almsFamilyPerSurahCountsThenEbcedSequence = sequenceFrom([...almsFamilyPerSurahTotalCounts, ...arafAlmsEbcedValues]);
+const almsFamilyCumulativeLengthsThenCumEbcedThenEbcedSequence = sequenceFrom([
+  ...almsFamilyData.familyCumulativeDigitLengths,
+  ...arafAlmsCumulativeEbced,
+  ...arafAlmsEbcedValues
+]);
+const spineCrossSequence1 = sequenceFrom([
+  ...arafAlmsCumulativeNaturalDigitLengths,
+  ...arafAlmsCountValues,
+  ...arafAlmsCumulativeCounts,
+  ...almsFamilyData.familyCumulativeCounts
+]);
+const spineCrossSequence2 = sequenceFrom([
+  ...arafAlmsCountValues,
+  arafAlmsNatural.sequence.length,
+  arafAlmsCountTotal,
+  ...almsFamilyCumulativeSurahLengths
+]);
+const spineCrossSequence3 = sequenceFrom([
+  ...arafAlmsCountValues,
+  arafAlmsNatural.sequence.length,
+  arafAlmsCountTotal,
+  ...arafAlmsCumulativeNaturalDigitLengths,
+  ...arafAlmsCountValues,
+  ...arafAlmsCumulativeCounts,
+  ...almsFamilyData.familyCumulativeCounts,
+  ...almsFamilyCumulativeSurahLengths
+]);
 
 const totalSurahSum = sum(surahNumbers);
 const totalAyahSum = sum(surahVerseCounts);
@@ -456,11 +549,11 @@ const referenceCriterion = ({
 
 export const criteriaGroups: CriterionGroup[] = [
   {
-    id: "alms",
-    title: l("Elif-Lam-Mim-Sad Grubu", "Alif-Lam-Mim-Sad group"),
+    id: "spine",
+    title: l("A'râf ve Elif-Lam-Mim(-Sad) Omurgası", "Al-A'raf and Alif-Lam-Mim(-Sad) spine"),
     intro: l(
-      "A'râf 7:1 başındaki Elif-Lam-Mim-Sad harflerinden türetilen bulgular; Ebced temelli çekirdek, konum temelli çekirdek, yardımcı ve deneysel katmanlar halinde düzenlendi.",
-      "Findings derived from the Alif-Lam-Mim-Sad letters at the opening of Al-A'raf 7:1, arranged as abjad-based core, position-based core, supporting, and experimental layers."
+      "A'râf tek-sure hattı ile Elif-Lam-Mim(-Sad) aile hattının birbirini kilitlediği seçilmiş çekirdek kayıtlar.",
+      "Selected core records where the single-surah Al-A'raf line interlocks with the Alif-Lam-Mim(-Sad) family line."
     )
   },
   {
@@ -493,6 +586,14 @@ export const criteriaGroups: CriterionGroup[] = [
     intro: l(
       "Sure numarası ile ayet sayısı toplamı 19'un katı olan kayıtlar üzerinde kurulan ikinci grup kodlamalar.",
       "Second-group codings built on records where the surah number plus verse count is a multiple of 19."
+    )
+  },
+  {
+    id: "experimental-archive",
+    title: l("Deneysel", "Experimental"),
+    intro: l(
+      "Ana omurga dışında bırakılan Elif-Lam-Mim-Sad ve aile türevleri bu bölümde arşivlenir.",
+      "Alif-Lam-Mim-Sad and family derivatives kept outside the main spine are archived in this section."
     )
   }
 ];
@@ -1377,7 +1478,7 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-3",
     code: "ELMS-3",
     groupId: "alms",
-    bucket: "core-ebced-main",
+    bucket: "core-ebced-summary",
     title: l("Kümülatif Ebced dizilimi"),
     summary: l(
       "Elif=1, Lam=30, Mim=40 ve Sad=90 değerlerinin kümülatif toplamları 1, 31, 71 ve 161 olarak ilerler. Bu dizilim ardışık yazıldığında 19 modunda doğrulanır.",
@@ -1455,36 +1556,36 @@ const almsCriteria: CriterionEntry[] = [
     code: "ELMS-2",
     groupId: "alms",
     bucket: "core-ebced-main",
-    title: l("A'râf içi harf toplamları dizilimi"),
+    title: l("A'râf içi harf frekansları dizilimi"),
     summary: l(
-      "A'râf suresinde, numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin toplam tekrar sayıları doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "A'râf suresinde, numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin frekansları 2347-1530-1164-98 olarak doğal sırada yazıldığında 19 modunda doğrulanır.",
       "In Surah Al-A'raf, when the total occurrence counts of Alif, Lam, Mim, and Sad are written in natural order, including the unnumbered basmala, the sequence verifies modulo 19."
     ),
     sourceLabel: sourceWithin19Research.label,
     sourceUrl: sourceWithin19Research.url,
     discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
     facts: [
-      { label: l("Toplam harf sayısı"), value: l(String(arafAlmsCountTotal)) },
+      { label: l("Toplam frekans"), value: l(String(arafAlmsCountTotal)) },
       { label: l("Ölçüt"), value: l("≡ 0 (mod 19)") }
     ],
     tests: [
       {
         id: "criterion-elms-6-sequence",
-        label: l("Elif / Lam / Mim / Sad toplamları"),
+        label: l("Elif / Lam / Mim / Sad frekansları"),
         sequence: arafAlmsCountSequence,
         mods: [19]
       }
     ],
-    tags: ["elif-lam-mim-sad", "a'raf", "harf toplamı", "19"]
+    tags: ["elif-lam-mim-sad", "a'raf", "harf frekansı", "19"]
   },
   {
     id: "criterion-elms-7",
     code: "ELMS-6",
     groupId: "alms",
-    bucket: "core-ebced-summary",
-    title: l("Basamak uzunluğu ile toplam harf sayısı birleşimi"),
+    bucket: "core-ebced-main",
+    title: l("Basamak uzunluğu ile toplam frekans birleşimi"),
     summary: l(
-      "Büyük doğal Ebced diziliminin basamak uzunluğu 7931 ile, A'râf metninde numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin toplam tekrar sayısı olan 5139 doğal sırada birleştirildiğinde sonuç 19 modunda doğrulanır.",
+      "Büyük doğal Ebced diziliminin basamak uzunluğu 7931 ile, A'râf metninde numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin toplam frekansı olan 5139 doğal sırada birleştirildiğinde sonuç 19 modunda doğrulanır.",
       "When the digit length 7931 of the large natural abjad sequence is concatenated in natural order with 5139, the total occurrence count of Alif, Lam, Mim, and Sad in the Al-A'raf text including the unnumbered basmala, the result verifies modulo 19."
     ),
     sourceLabel: sourceWithin19Research.label,
@@ -1492,47 +1593,47 @@ const almsCriteria: CriterionEntry[] = [
     discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
     facts: [
       { label: l("Basamak uzunluğu"), value: l(String(arafAlmsNatural.sequence.length)) },
-      { label: l("Elif + Lam + Mim + Sad toplamı"), value: l(String(arafAlmsCountTotal)) }
+      { label: l("Elif + Lam + Mim + Sad toplam frekansı"), value: l(String(arafAlmsCountTotal)) }
     ],
     tests: [
       {
         id: "criterion-elms-7-sequence",
         label: l(
-          "7931 / Elif+Lam+Mim+Sad toplamı 5139",
-          "7931 / Alif+Lam+Mim+Sad total 5139"
+          "7931 / Elif+Lam+Mim+Sad toplam frekansı 5139",
+          "7931 / Alif+Lam+Mim+Sad total frequency 5139"
         ),
         sequence: `${arafAlmsNatural.sequence.length} ${arafAlmsCountTotal}`,
         mods: [19]
       }
     ],
-    tags: ["elif-lam-mim-sad", "basamak uzunluğu", "harf toplamı", "19"]
+    tags: ["elif-lam-mim-sad", "basamak uzunluğu", "harf frekansı", "19"]
   },
   {
     id: "criterion-elms-8",
     code: "ELMS-4",
     groupId: "alms",
-    bucket: "core-ebced-main",
-    title: l("Harf toplamları ile kümülatif Ebced dizilimi"),
+    bucket: "core-ebced-summary",
+    title: l("Harf frekansları ile kümülatif Ebced dizilimi"),
     summary: l(
-      "Sabit harf-Ebced sırası korunarak, önce A'râf içindeki Elif-Lam-Mim-Sad toplamları 2347-1530-1164-98, ardından aynı grubun kümülatif Ebced toplamları 1-31-71-161 doğal sırada yazılır. Oluşan dizilim hem 19 hem 7 modunda doğrulanır.",
+      "Sabit harf-Ebced sırası korunarak, önce A'râf içindeki Elif-Lam-Mim-Sad harf frekansları 2347-1530-1164-98, ardından aynı grubun kümülatif Ebced toplamları 1-31-71-161 doğal sırada yazılır. Oluşan dizilim hem 19 hem 7 modunda doğrulanır.",
       "Preserving the fixed letter-abjad order highlighted by Mustafa Kurdoğlu, the Alif-Lam-Mim-Sad totals in Al-A'raf (2347-1530-1164-98) are written first, followed by the group's cumulative abjad totals (1-31-71-161). The resulting sequence verifies modulo both 19 and 7."
     ),
     sourceLabel: sourceWithin19Research.label,
     sourceUrl: sourceWithin19Research.url,
     discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
     facts: [
-      { label: l("Harf toplamları"), value: l(arafAlmsCountSequence) },
+      { label: l("Harf frekansları"), value: l(arafAlmsCountSequence) },
       { label: l("Kümülatif Ebced"), value: l(sequenceFrom(arafAlmsCumulativeEbced)) }
     ],
     tests: [
       {
         id: "criterion-elms-8-sequence",
-        label: l("Harf toplamları / kümülatif Ebced"),
+        label: l("Harf frekansları / kümülatif Ebced"),
         sequence: arafAlmsCountsThenCumulativeEbcedSequence,
         mods: [19, 7]
       }
     ],
-    tags: ["elif-lam-mim-sad", "harf toplamı", "kümülatif", "19", "7"]
+    tags: ["elif-lam-mim-sad", "harf frekansı", "kümülatif", "19", "7"]
   },
   {
     id: "criterion-elms-13",
@@ -1592,7 +1693,7 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-15",
     code: "ELMS-11",
     groupId: "alms",
-    bucket: "core-ebced-main",
+    bucket: "core-ebced-summary",
     title: l("Kümülatif doğal Ebced uzunlukları ile çekirdek Ebced dizisi"),
     summary: l(
       "A'râf metninde Elif-Lam-Mim-Sad harflerinin kendi doğal Ebced akışlarının kümülatif basamak uzunlukları 2347-5407-7735-7931 olarak oluşur. Bu dört değer, aynı sabit sıradaki çekirdek Ebced dizisi 1-30-40-90 ile ardışık yazıldığında ortaya çıkan sayı hem 19 hem 7 modunda doğrulanır.",
@@ -1621,9 +1722,9 @@ const almsCriteria: CriterionEntry[] = [
     code: "ELMS-12",
     groupId: "alms",
     bucket: "core-ebced-main",
-    title: l("Kümülatif doğal uzunluklar, harf toplamları ve kümülatif toplamlar"),
+    title: l("Kümülatif doğal uzunluklar, harf frekansları ve kümülatif frekanslar"),
     summary: l(
-      "A'râf metninde Elif-Lam-Mim-Sad için önce kümülatif doğal Ebced uzunlukları 2347-5407-7735-7931, ardından harf toplamları 2347-1530-1164-98 ve son olarak bu toplamların kümülatif ilerleyişi 2347-3877-5041-5139 doğal sırada yazılır. Oluşan birleşik dizi hem 19 hem 7 modunda doğrulanır.",
+      "A'râf metninde Elif-Lam-Mim-Sad için önce kümülatif doğal Ebced uzunlukları 2347-5407-7735-7931, ardından harf frekansları 2347-1530-1164-98 ve son olarak bu frekansların kümülatif ilerleyişi 2347-3877-5041-5139 doğal sırada yazılır. Oluşan birleşik dizi hem 19 hem 7 modunda doğrulanır.",
       "In the Al-A'raf text, the cumulative natural abjad lengths 2347-5407-7735-7931 for Alif-Lam-Mim-Sad are followed by the letter totals 2347-1530-1164-98 and then by the cumulative progression of those totals 2347-3877-5041-5139. The resulting combined sequence verifies modulo both 19 and 7."
     ),
     sourceLabel: sourceWithin19Research.label,
@@ -1631,18 +1732,18 @@ const almsCriteria: CriterionEntry[] = [
     discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
     facts: [
       { label: l("Kümülatif doğal uzunluklar"), value: l(sequenceFrom(arafAlmsCumulativeNaturalDigitLengths)) },
-      { label: l("Harf toplamları"), value: l(arafAlmsCountSequence) },
-      { label: l("Kümülatif harf toplamları"), value: l(sequenceFrom(arafAlmsCumulativeCounts)) }
+      { label: l("Harf frekansları"), value: l(arafAlmsCountSequence) },
+      { label: l("Kümülatif harf frekansları"), value: l(sequenceFrom(arafAlmsCumulativeCounts)) }
     ],
     tests: [
       {
         id: "criterion-elms-16-sequence",
-        label: l("Kümülatif doğal uzunluklar / harf toplamları / kümülatif toplamlar"),
+        label: l("Kümülatif doğal uzunluklar / harf frekansları / kümülatif frekanslar"),
         sequence: arafAlmsCumulativeLengthsCountsAndCumulativeCountsSequence,
         mods: [19, 7]
       }
     ],
-    tags: ["elif-lam-mim-sad", "kümülatif", "doğal uzunluk", "harf toplamı", "19", "7"]
+    tags: ["elif-lam-mim-sad", "kümülatif", "doğal uzunluk", "harf frekansı", "19", "7"]
   },
   {
     id: "criterion-elms-9",
@@ -1761,8 +1862,228 @@ const almsCriteria: CriterionEntry[] = [
   }
 ];
 
+const almsFamilyCriteria: CriterionEntry[] = [
+  {
+    id: "criterion-alms-family-1",
+    code: "ALMSF-1",
+    groupId: "alms-family",
+    bucket: "core-ebced-main",
+    title: l("2, 3, 7, 29, 30, 31 ve 32. surelerde Elif-Lam-Mim(-Sad) harflerinin aile toplam frekansları"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerde Elif-Lam-Mim(-Sad) harflerinin aile toplam frekansları 10714-8024-5600-98 olarak oluşur. Bu frekansların kümülatif ilerleyişi 10714-18738-24338-24436 dizisini verir ve bu dizi hem 19 hem 7 modunda doğrulanır.",
+      "Across surahs 2, 3, 7, 29, 30, 31, and 32, the family frequency totals of Alif-Lam-Mim(-Sad) are 10714-8024-5600-98. Their cumulative progression yields the sequence 10714-18738-24338-24436, which verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Aile frekansları"), value: l(almsFamilyCountSequence) },
+      { label: l("Kümülatif aile frekansları"), value: l(almsFamilyCumulativeCountSequence) }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-1-sequence",
+        label: l("Kümülatif aile frekansları"),
+        sequence: almsFamilyCumulativeCountSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "harf frekansı", "kümülatif", "19", "7"]
+  },
+  {
+    id: "criterion-alms-family-2",
+    code: "ALMSF-2",
+    groupId: "alms-family",
+    bucket: "core-ebced-summary",
+    title: l("Sure bazlı frekans toplamları ile çekirdek Ebced"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerin hedef harf frekansı toplamları 9614-5495-5139-1613-1207-810-558 dizisini verir. Bu sure bazlı toplamlar, çekirdek Ebced dizisi 1-30-40-90 ile doğal sırada birleştirildiğinde sonuç hem 19 hem 7 modunda doğrulanır.",
+      "The target-letter frequency totals of surahs 2, 3, 7, 29, 30, 31, and 32 form the sequence 9614-5495-5139-1613-1207-810-558. When these per-surah totals are followed in natural order by the core abjad sequence 1-30-40-90, the result verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sure bazlı frekans toplamları"), value: l(almsFamilyPerSurahTotalCountSequence) },
+      { label: l("Çekirdek Ebced"), value: l(sequenceFrom(arafAlmsEbcedValues)) }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-2-sequence",
+        label: l("Sure bazlı frekans toplamları / çekirdek Ebced"),
+        sequence: almsFamilyPerSurahCountsThenEbcedSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "sure bazlı", "harf frekansı", "ebced", "19", "7"]
+  },
+  {
+    id: "criterion-alms-family-3",
+    code: "ALMSF-3",
+    groupId: "alms-family",
+    bucket: "core-ebced-main",
+    title: l("Sure bazlı doğal akışların kümülatif basamak uzunlukları"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerdeki doğal Elif-Lam-Mim(-Sad) akışlarının basamak uzunlukları sure sırasıyla biriktirildiğinde 15011-23647-31578-34089-36007-37287-38158 dizisi oluşur. Bu dizi 19 modunda doğrulanır.",
+      "When the digit lengths of the natural Alif-Lam-Mim(-Sad) streams in surahs 2, 3, 7, 29, 30, 31, and 32 are accumulated in surah order, the sequence 15011-23647-31578-34089-36007-37287-38158 is obtained. This sequence verifies modulo 19."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sure bazlı doğal uzunluklar"), value: l(sequenceFrom(almsFamilyData.perSurah.map((entry) => entry.digitLength))) },
+      { label: l("Kümülatif doğal uzunluklar"), value: l(almsFamilyCumulativeSurahLengthSequence) }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-3-sequence",
+        label: l("Kümülatif sure uzunlukları"),
+        sequence: almsFamilyCumulativeSurahLengthSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "doğal uzunluk", "kümülatif", "19"]
+  },
+  {
+    id: "criterion-alms-family-4",
+    code: "ALMSF-4",
+    groupId: "alms-family",
+    bucket: "supporting",
+    title: l("Aile kümülatif doğal uzunlukları ile çekirdek Ebced katmanları"),
+    summary: l(
+      "Aile düzeyinde kümülatif doğal uzunluklar 10714-26762-37962-38158 olarak oluşur. Bu katman, kümülatif Ebced dizisi 1-31-71-161 ve çekirdek Ebced dizisi 1-30-40-90 ile birlikte doğal sırada yazıldığında ortaya çıkan birleşik dizi hem 19 hem 7 modunda doğrulanır.",
+      "At the family level, the cumulative natural lengths form 10714-26762-37962-38158. When this layer is followed in natural order by the cumulative abjad sequence 1-31-71-161 and the core abjad sequence 1-30-40-90, the resulting combined sequence verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Kümülatif aile doğal uzunlukları"), value: l(sequenceFrom(almsFamilyData.familyCumulativeDigitLengths)) },
+      { label: l("Kümülatif Ebced"), value: l(sequenceFrom(arafAlmsCumulativeEbced)) },
+      { label: l("Çekirdek Ebced"), value: l(sequenceFrom(arafAlmsEbcedValues)) }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-4-sequence",
+        label: l("Kümülatif aile doğal uzunlukları / kümülatif Ebced / çekirdek Ebced"),
+        sequence: almsFamilyCumulativeLengthsThenCumEbcedThenEbcedSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "doğal uzunluk", "ebced", "kümülatif", "19", "7"]
+  }
+];
+
+const buildSpineEntry = (entry: CriterionEntry, id: string): CriterionEntry => ({
+  ...entry,
+  id,
+  groupId: "spine",
+  bucket: "core-ebced-main",
+  tags: [...new Set([...(entry.tags ?? []), "bütünsel omurga"])]
+});
+
+const buildExperimentalEntry = (entry: CriterionEntry, id: string): CriterionEntry => ({
+  ...entry,
+  id,
+  groupId: "experimental-archive",
+  bucket: "experimental",
+  tags: [...new Set([...(entry.tags ?? []), "deneysel"])]
+});
+
+const almsSpineCriteria: CriterionEntry[] = [
+  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-1")!, "criterion-spine-elms-1"),
+  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-2")!, "criterion-spine-elms-2"),
+  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-6")!, "criterion-spine-elms-6"),
+  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-12")!, "criterion-spine-elms-12"),
+  buildSpineEntry(almsFamilyCriteria.find((entry) => entry.code === "ALMSF-1")!, "criterion-spine-almsf-1"),
+  buildSpineEntry(almsFamilyCriteria.find((entry) => entry.code === "ALMSF-3")!, "criterion-spine-almsf-3"),
+  {
+    id: "criterion-spine-1",
+    code: "SPINE-1",
+    groupId: "spine",
+    bucket: "core-ebced-main",
+    title: l("A'râf kilit zinciri ile aile kümülatif frekansları"),
+    summary: l(
+      "A'râf içindeki kümülatif doğal uzunluklar, harf frekansları ve kümülatif frekanslardan oluşan tek-sure kilit zinciri; Elif-Lam-Mim(-Sad) ailesinin kümülatif frekans omurgası ile doğal sırada birleştiğinde sonuç hem 19 hem 7 modunda doğrulanır.",
+      "When the single-surah lock chain in Al-A'raf formed by cumulative natural lengths, letter frequencies, and cumulative frequencies is followed in natural order by the cumulative family-frequency spine of Alif-Lam-Mim(-Sad), the result verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("A'râf kilit zinciri"), value: l(arafAlmsCumulativeLengthsCountsAndCumulativeCountsSequence) },
+      { label: l("Aile kümülatif frekansları"), value: l(almsFamilyCumulativeCountSequence) }
+    ],
+    tests: [
+      {
+        id: "criterion-spine-1-sequence",
+        label: l("A'râf kilit zinciri / aile kümülatif frekansları"),
+        sequence: spineCrossSequence1,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["bütünsel omurga", "elif-lam-mim-sad", "aile", "harf frekansı", "19", "7"]
+  },
+  {
+    id: "criterion-spine-2",
+    code: "SPINE-2",
+    groupId: "spine",
+    bucket: "core-ebced-main",
+    title: l("A'râf frekans-uzunluk omurgası ile aile uzunluk omurgası"),
+    summary: l(
+      "A'râf içindeki Elif-Lam-Mim-Sad harf frekansları, büyük doğal akışın basamak uzunluğu ile toplam frekansı ve ardından Elif-Lam-Mim(-Sad) ailesinin sure bazlı kümülatif doğal uzunlukları doğal sırada yazıldığında ortaya çıkan dizi hem 19 hem 7 modunda doğrulanır.",
+      "When the Alif-Lam-Mim-Sad letter frequencies in Al-A'raf are followed by the digit length and total frequency of its large natural stream, and then by the per-surah cumulative natural lengths of the Alif-Lam-Mim(-Sad) family, the resulting sequence verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("A'râf frekansları"), value: l(arafAlmsCountSequence) },
+      { label: l("A'râf uzunluk / toplam frekans"), value: l(arafAlmsLengthTotalSequence) },
+      { label: l("Aile kümülatif doğal uzunlukları"), value: l(almsFamilyCumulativeSurahLengthSequence) }
+    ],
+    tests: [
+      {
+        id: "criterion-spine-2-sequence",
+        label: l("A'râf frekansları / A'râf uzunluk-toplamı / aile uzunlukları"),
+        sequence: spineCrossSequence2,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["bütünsel omurga", "elif-lam-mim-sad", "aile", "doğal uzunluk", "harf frekansı", "19", "7"]
+  },
+  {
+    id: "criterion-spine-3",
+    code: "SPINE-3",
+    groupId: "experimental-archive",
+    bucket: "experimental",
+    title: l("Bütünsel omurganın birleşik dizilimi"),
+    summary: l(
+      "Odak setindeki tek-sure frekansları, büyük akışın uzunluk-toplam katmanı, A'râf kilit zinciri, aile kümülatif frekansları ve aile kümülatif doğal uzunlukları doğal sırada tek bir birleşik diziye dönüştürüldüğünde sonuç hem 19 hem 7 modunda doğrulanır.",
+      "When the focus-set layers consisting of single-surah frequencies, the large-stream length-total layer, the Al-A'raf lock chain, the cumulative family frequencies, and the cumulative family natural lengths are written in natural order as one combined sequence, the result verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("A'râf frekansları"), value: l(arafAlmsCountSequence) },
+      { label: l("A'râf uzunluk / toplam frekans"), value: l(arafAlmsLengthTotalSequence) },
+      { label: l("A'râf kilit zinciri"), value: l(arafAlmsCumulativeLengthsCountsAndCumulativeCountsSequence) },
+      { label: l("Aile kümülatif frekansları"), value: l(almsFamilyCumulativeCountSequence) },
+      { label: l("Aile kümülatif doğal uzunlukları"), value: l(almsFamilyCumulativeSurahLengthSequence) }
+    ],
+    tests: [
+      {
+        id: "criterion-spine-3-sequence",
+        label: l("Odak setinin birleşik dizilimi"),
+        sequence: spineCrossSequence3,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["bütünsel omurga", "elif-lam-mim-sad", "aile", "doğal uzunluk", "harf frekansı", "kümülatif", "19", "7", "deneysel"]
+  }
+];
+
+const holisticSpineCodes = new Set(["ELMS-1", "ELMS-2", "ELMS-6", "ELMS-12", "ALMSF-1", "ALMSF-3"]);
+
+const almsExperimentalCriteria: CriterionEntry[] = [
+  ...almsCriteria
+    .filter((entry) => !holisticSpineCodes.has(entry.code))
+    .map((entry) => buildExperimentalEntry(entry, `criterion-experimental-${entry.code.toLowerCase()}`)),
+  ...almsFamilyCriteria
+    .filter((entry) => !holisticSpineCodes.has(entry.code))
+    .map((entry) => buildExperimentalEntry(entry, `criterion-experimental-${entry.code.toLowerCase()}`))
+];
+
 export const criteriaArchive: CriterionEntry[] = [
-  ...almsCriteria,
+  ...almsSpineCriteria,
+  ...almsExperimentalCriteria,
   ...earlyHaMimCriteria,
   ...extendedHaMimCriteria,
   ...supplementaryFihristCriteria,

@@ -4,20 +4,27 @@ import { uiCopy } from "../data/i18n";
 import { criteriaArchive, criteriaGroups } from "../data/criteriaArchive";
 
 const groupMap = new Map(criteriaGroups.map((group) => [group.id, group]));
-const bucketOrder = {
+const displayBucketMap = {
+  "core-ebced-main": "focus",
+  "core-ebced-summary": "secondary",
+  "core-position": "secondary",
+  supporting: "secondary",
+  experimental: "experimental"
+};
+const displayBucketOrder = { focus: 0, secondary: 1, experimental: 2 };
+const rawBucketOrder = {
   "core-ebced-main": 0,
   "core-ebced-summary": 1,
   "core-position": 2,
   supporting: 3,
   experimental: 4
 };
-const bucketLabels = {
-  "core-ebced-main": { tr: "Ebced Temelli Çekirdek · Ana Omurga", en: "Abjad-based core · Main spine" },
-  "core-ebced-summary": { tr: "Ebced Temelli Çekirdek · Çekirdek Özetler", en: "Abjad-based core · Core summaries" },
-  "core-position": { tr: "Konum Temelli Çekirdek", en: "Position-based core" },
-  supporting: { tr: "Yardımcı Türevler", en: "Supporting derivatives" },
-  experimental: { tr: "Deneysel Alt Taramalar", en: "Experimental sub-scans" }
+const displayBucketLabels = {
+  focus: { tr: "Ana Omurga", en: "Main spine" },
+  secondary: { tr: "İkincil Katmanlar", en: "Secondary layers" },
+  experimental: { tr: "Deneysel", en: "Experimental" }
 };
+const resolveDisplayBucket = (bucket) => (bucket ? displayBucketMap[bucket] ?? "secondary" : "secondary");
 
 const parseCodeTokens = (code) =>
   code
@@ -68,8 +75,8 @@ const shorten = (value, max = 160) => (value.length > max ? `${value.slice(0, ma
 const searchIndex = (entry) =>
   [
     entry.code,
-    entry.bucket ? bucketLabels[entry.bucket].tr : "",
-    entry.bucket ? bucketLabels[entry.bucket].en : "",
+    displayBucketLabels[resolveDisplayBucket(entry.bucket)].tr,
+    displayBucketLabels[resolveDisplayBucket(entry.bucket)].en,
     entry.title.tr,
     entry.title.en,
     entry.summary.tr,
@@ -86,13 +93,18 @@ const groupedCriteria = criteriaGroups.map((group) => ({
   entries: criteriaArchive
     .filter((entry) => entry.groupId === group.id)
     .sort((left, right) => {
-      const leftBucket = left.bucket ? bucketOrder[left.bucket] : 999;
-      const rightBucket = right.bucket ? bucketOrder[right.bucket] : 999;
+      const leftDisplayBucket = displayBucketOrder[resolveDisplayBucket(left.bucket)] ?? 999;
+      const rightDisplayBucket = displayBucketOrder[resolveDisplayBucket(right.bucket)] ?? 999;
+
+      if (leftDisplayBucket !== rightDisplayBucket) return leftDisplayBucket - rightDisplayBucket;
+
+      const leftBucket = left.bucket ? rawBucketOrder[left.bucket] : 999;
+      const rightBucket = right.bucket ? rawBucketOrder[right.bucket] : 999;
 
       if (leftBucket !== rightBucket) return leftBucket - rightBucket;
       return compareCodes(left, right);
     })
-}));
+})).filter((group) => group.entries.length > 0);
 
 const groupCounts = groupedCriteria.map((group) => ({
   ...group,
@@ -143,7 +155,8 @@ const resultBlocks = (entry) => {
 };
 
 const groupToneClass = {
-  alms: "tone-alms",
+  spine: "tone-alms",
+  "experimental-archive": "tone-special",
   hamim: "tone-hamim",
   fihrist: "tone-fihrist",
   special: "tone-special",
@@ -279,17 +292,19 @@ const groupToneClass = {
                   const preview = previewBlocks(entry);
                   const results = resultBlocks(entry);
                   const previousEntry = group.entries[index - 1];
-                  const showBucketHeading = entry.bucket && entry.bucket !== previousEntry?.bucket;
+                  const displayBucket = resolveDisplayBucket(entry.bucket);
+                  const previousDisplayBucket = previousEntry ? resolveDisplayBucket(previousEntry.bucket) : null;
+                  const showBucketHeading = displayBucket !== previousDisplayBucket;
 
                   return (
                     [
                       showBucketHeading ? (
-                        <div class="lab-table__subgroup" data-archive-subgroup={entry.bucket}>
+                        <div class="lab-table__subgroup" data-archive-subgroup={displayBucket}>
                           <LocalizedText
                             as="h3"
                             class="lab-table__subgroup-title"
-                            tr={bucketLabels[entry.bucket].tr}
-                            en={bucketLabels[entry.bucket].en}
+                            tr={displayBucketLabels[displayBucket].tr}
+                            en={displayBucketLabels[displayBucket].en}
                           />
                         </div>
                       ) : null,
@@ -297,7 +312,7 @@ const groupToneClass = {
                         class="lab-table__row"
                         data-archive-card
                         data-group={entry.groupId}
-                        data-bucket={entry.bucket ?? ""}
+                        data-bucket={displayBucket}
                         data-search={searchIndex(entry)}
                       >
                         <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
