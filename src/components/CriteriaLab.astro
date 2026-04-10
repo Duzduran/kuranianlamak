@@ -4,6 +4,20 @@ import { uiCopy } from "../data/i18n";
 import { criteriaArchive, criteriaGroups } from "../data/criteriaArchive";
 
 const groupMap = new Map(criteriaGroups.map((group) => [group.id, group]));
+const bucketOrder = {
+  "core-ebced-main": 0,
+  "core-ebced-summary": 1,
+  "core-position": 2,
+  supporting: 3,
+  experimental: 4
+};
+const bucketLabels = {
+  "core-ebced-main": { tr: "Ebced Temelli Çekirdek · Ana Omurga", en: "Abjad-based core · Main spine" },
+  "core-ebced-summary": { tr: "Ebced Temelli Çekirdek · Çekirdek Özetler", en: "Abjad-based core · Core summaries" },
+  "core-position": { tr: "Konum Temelli Çekirdek", en: "Position-based core" },
+  supporting: { tr: "Yardımcı Türevler", en: "Supporting derivatives" },
+  experimental: { tr: "Deneysel Alt Taramalar", en: "Experimental sub-scans" }
+};
 
 const parseCodeTokens = (code) =>
   code
@@ -54,6 +68,8 @@ const shorten = (value, max = 160) => (value.length > max ? `${value.slice(0, ma
 const searchIndex = (entry) =>
   [
     entry.code,
+    entry.bucket ? bucketLabels[entry.bucket].tr : "",
+    entry.bucket ? bucketLabels[entry.bucket].en : "",
     entry.title.tr,
     entry.title.en,
     entry.summary.tr,
@@ -67,7 +83,15 @@ const searchIndex = (entry) =>
 
 const groupedCriteria = criteriaGroups.map((group) => ({
   ...group,
-  entries: criteriaArchive.filter((entry) => entry.groupId === group.id).sort(compareCodes)
+  entries: criteriaArchive
+    .filter((entry) => entry.groupId === group.id)
+    .sort((left, right) => {
+      const leftBucket = left.bucket ? bucketOrder[left.bucket] : 999;
+      const rightBucket = right.bucket ? bucketOrder[right.bucket] : 999;
+
+      if (leftBucket !== rightBucket) return leftBucket - rightBucket;
+      return compareCodes(left, right);
+    })
 }));
 
 const groupCounts = groupedCriteria.map((group) => ({
@@ -251,72 +275,87 @@ const groupToneClass = {
 
             <div class="lab-table__body">
               {
-                group.entries.map((entry) => {
+                group.entries.map((entry, index) => {
                   const preview = previewBlocks(entry);
                   const results = resultBlocks(entry);
+                  const previousEntry = group.entries[index - 1];
+                  const showBucketHeading = entry.bucket && entry.bucket !== previousEntry?.bucket;
 
                   return (
-                    <article
-                      class="lab-table__row"
-                      data-archive-card
-                      data-group={entry.groupId}
-                      data-search={searchIndex(entry)}
-                    >
-                      <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
-                        <span class="lab-cell__mobile-label">
-                          <span data-copy-lang="tr">No</span>
-                          <span data-copy-lang="en">No</span>
-                        </span>
-                        <strong>{entry.code}</strong>
-                      </div>
+                    [
+                      showBucketHeading ? (
+                        <div class="lab-table__subgroup" data-archive-subgroup={entry.bucket}>
+                          <LocalizedText
+                            as="h3"
+                            class="lab-table__subgroup-title"
+                            tr={bucketLabels[entry.bucket].tr}
+                            en={bucketLabels[entry.bucket].en}
+                          />
+                        </div>
+                      ) : null,
+                      <article
+                        class="lab-table__row"
+                        data-archive-card
+                        data-group={entry.groupId}
+                        data-bucket={entry.bucket ?? ""}
+                        data-search={searchIndex(entry)}
+                      >
+                        <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
+                          <span class="lab-cell__mobile-label">
+                            <span data-copy-lang="tr">No</span>
+                            <span data-copy-lang="en">No</span>
+                          </span>
+                          <strong>{entry.code}</strong>
+                        </div>
 
-                      <div class="lab-cell lab-cell--summary">
-                        <span class="lab-cell__mobile-label">
-                          <span data-copy-lang="tr">Açıklama</span>
-                          <span data-copy-lang="en">Description</span>
-                        </span>
-                        <LocalizedText as="h3" class="lab-cell__title" tr={entry.title.tr} en={entry.title.en} />
-                        <LocalizedText as="p" class="lab-cell__text" tr={entry.summary.tr} en={entry.summary.en} />
-                      </div>
+                        <div class="lab-cell lab-cell--summary">
+                          <span class="lab-cell__mobile-label">
+                            <span data-copy-lang="tr">Açıklama</span>
+                            <span data-copy-lang="en">Description</span>
+                          </span>
+                          <LocalizedText as="h3" class="lab-cell__title" tr={entry.title.tr} en={entry.title.en} />
+                          <LocalizedText as="p" class="lab-cell__text" tr={entry.summary.tr} en={entry.summary.en} />
+                        </div>
 
-                      <div class="lab-cell lab-cell--sequence">
-                        <span class="lab-cell__mobile-label">
-                          <span data-copy-lang="tr">Kodlama</span>
-                          <span data-copy-lang="en">Coding</span>
-                        </span>
-                        {preview.map((item) => (
-                          <div class="lab-seq">
-                            <strong class="lab-seq__label">{item.label}</strong>
-                            <span class="lab-seq__value">{item.value}</span>
-                          </div>
-                        ))}
-                      </div>
+                        <div class="lab-cell lab-cell--sequence">
+                          <span class="lab-cell__mobile-label">
+                            <span data-copy-lang="tr">Kodlama</span>
+                            <span data-copy-lang="en">Coding</span>
+                          </span>
+                          {preview.map((item) => (
+                            <div class="lab-seq">
+                              <strong class="lab-seq__label">{item.label}</strong>
+                              <span class="lab-seq__value">{item.value}</span>
+                            </div>
+                          ))}
+                        </div>
 
-                      <div class="lab-cell lab-cell--result">
-                        <span class="lab-cell__mobile-label">
-                          <span data-copy-lang="tr">Ölçüt</span>
-                          <span data-copy-lang="en">Measure</span>
-                        </span>
-                        {results.map((item) => (
-                          <div class="lab-resultline">
-                            <strong class="lab-resultline__label">{item.label}</strong>
-                            <span class="lab-resultline__value">{item.value}</span>
-                          </div>
-                        ))}
-                      </div>
+                        <div class="lab-cell lab-cell--result">
+                          <span class="lab-cell__mobile-label">
+                            <span data-copy-lang="tr">Ölçüt</span>
+                            <span data-copy-lang="en">Measure</span>
+                          </span>
+                          {results.map((item) => (
+                            <div class="lab-resultline">
+                              <strong class="lab-resultline__label">{item.label}</strong>
+                              <span class="lab-resultline__value">{item.value}</span>
+                            </div>
+                          ))}
+                        </div>
 
-                      <div class="lab-cell lab-cell--detail">
-                        <span class="lab-cell__mobile-label">
-                          <span data-copy-lang="tr">Kayıt</span>
-                          <span data-copy-lang="en">Record</span>
-                        </span>
-                        <p class="lab-cell__record">{discoveryLine(entry)}</p>
-                        <button type="button" class="lab-card__button" data-archive-open={entry.id}>
-                          <span data-copy-lang="tr">Detay</span>
-                          <span data-copy-lang="en">Detail</span>
-                        </button>
-                      </div>
-                    </article>
+                        <div class="lab-cell lab-cell--detail">
+                          <span class="lab-cell__mobile-label">
+                            <span data-copy-lang="tr">Kayıt</span>
+                            <span data-copy-lang="en">Record</span>
+                          </span>
+                          <p class="lab-cell__record">{discoveryLine(entry)}</p>
+                          <button type="button" class="lab-card__button" data-archive-open={entry.id}>
+                            <span data-copy-lang="tr">Detay</span>
+                            <span data-copy-lang="en">Detail</span>
+                          </button>
+                        </div>
+                      </article>
+                    ]
                   );
                 })
               }
@@ -513,6 +552,7 @@ const groupToneClass = {
 
         const sectionId = section.dataset.groupSection ?? "";
         const sectionCards = Array.from(section.querySelectorAll("[data-archive-card]"));
+        const subgroupHeadings = Array.from(section.querySelectorAll("[data-archive-subgroup]"));
         let sectionVisibleCount = 0;
 
         sectionCards.forEach((card) => {
@@ -538,6 +578,15 @@ const groupToneClass = {
         if (sectionCountTarget instanceof HTMLElement) {
           sectionCountTarget.textContent = String(sectionVisibleCount);
         }
+
+        subgroupHeadings.forEach((heading) => {
+          if (!(heading instanceof HTMLElement)) return;
+          const bucket = heading.dataset.archiveSubgroup ?? "";
+          const bucketCards = sectionCards.filter(
+            (card) => card instanceof HTMLElement && card.dataset.bucket === bucket && !card.hidden
+          );
+          heading.hidden = hideSection || bucketCards.length === 0;
+        });
       });
 
       if (emptyState instanceof HTMLElement) {
@@ -1002,6 +1051,21 @@ const groupToneClass = {
     grid-template-columns: 6.2rem minmax(16rem, 1.15fr) minmax(18rem, 1.65fr) 12.5rem minmax(15rem, 1fr);
   }
 
+  .lab-table__subgroup {
+    padding: 0.8rem 0.8rem 0.45rem;
+    border-top: 1px solid var(--lab-border);
+    background: var(--lab-surface);
+  }
+
+  .lab-table__subgroup-title {
+    margin: 0;
+    color: var(--lab-heading);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
   .lab-table__head {
     background: var(--lab-surface-muted);
     color: var(--lab-body);
@@ -1464,6 +1528,10 @@ const groupToneClass = {
 
     .lab-table__body {
       display: grid;
+    }
+
+    .lab-table__subgroup {
+      padding: 0.8rem 0.75rem 0.35rem;
     }
 
     .lab-table__row {

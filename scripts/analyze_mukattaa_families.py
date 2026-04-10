@@ -18,6 +18,11 @@ from query_cairo_quran import DEFAULT_XML, NS, XML_NS
 BASMALA_TEXT = "بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ"
 
 FAMILIES = {
+    "ALM7_FAMILY": {
+        "surahs": [2, 3, 7, 29, 30, 31, 32],
+        "base_letters": "الم",
+        "extensions": {7: "ص"},
+    },
     "ALM_FAMILY": {
         "surahs": [2, 3, 7, 13, 29, 30, 31, 32],
         "base_letters": "الم",
