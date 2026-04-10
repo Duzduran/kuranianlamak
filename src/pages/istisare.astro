@@ -1,0 +1,165 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LocalizedText from "../components/LocalizedText.astro";
+
+const items = [
+  {
+    tr: "Kayıtlı kullanıcı yapısı",
+    en: "Registered user structure"
+  },
+  {
+    tr: "İstişare ve tartışma başlıkları",
+    en: "Consultation and discussion threads"
+  },
+  {
+    tr: "Ortak notlar ve katkı akışı",
+    en: "Shared notes and contribution flow"
+  }
+];
+---
+
+<Layout
+  title="İstişare"
+  description="Within19 için planlanan istişare alanı. Topluluk, kayıt, ortak notlar ve tartışma katmanı için hazırlık sayfası."
+>
+  <section class="consultation">
+    <header class="consultation__topbar">
+      <a class="consultation__back" href="/">
+        <span data-copy-lang="tr">Ana girişe dön</span>
+        <span data-copy-lang="en">Back to main entry</span>
+      </a>
+    </header>
+
+    <LocalizedText as="p" class="consultation__eyebrow" tr="Yakında açılıyor" en="Opening soon" />
+    <LocalizedText
+      as="h1"
+      class="consultation__title"
+      tr="İstişare alanı, Within19 platformunun topluluk katmanı olarak hazırlanıyor."
+      en="The consultation area is being prepared as the community layer of the Within19 platform."
+    />
+    <LocalizedText
+      as="p"
+      class="consultation__lead"
+      tr="Bu bölümde kayıtlı kullanıcılar araştırma başlıkları açabilecek, ortak notlar tutabilecek ve belirli bulgular üzerine daha düzenli biçimde istişare edebilecek."
+      en="In this section, registered users will be able to open research threads, keep shared notes, and consult more systematically on specific findings."
+    />
+
+    <div class="consultation__list">
+      {
+        items.map((item, index) => (
+          <div class="consultation__row">
+            <span class="consultation__index">{String(index + 1).padStart(2, "0")}</span>
+            <LocalizedText as="p" class="consultation__text" tr={item.tr} en={item.en} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .consultation {
+    width: min(980px, calc(100vw - 2rem));
+    margin: 0 auto;
+    padding: 2rem 0 4.2rem;
+    color: #18212a;
+  }
+
+  .consultation__topbar {
+    margin-bottom: 3.8rem;
+  }
+
+  .consultation__back {
+    color: rgba(24, 33, 42, 0.58);
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .consultation__back:hover {
+    color: #111922;
+  }
+
+  .consultation__eyebrow {
+    margin: 0 0 0.9rem;
+    color: rgba(24, 33, 42, 0.45);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .consultation__title {
+    margin: 0;
+    max-width: 15ch;
+    font-family: var(--font-serif);
+    color: #111922;
+    font-size: clamp(2.45rem, 5vw, 4.9rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .consultation__lead,
+  .consultation__text {
+    margin: 0;
+    color: rgba(24, 33, 42, 0.72);
+    font-size: 1rem;
+    line-height: 1.78;
+  }
+
+  .consultation__lead {
+    max-width: 62ch;
+    margin-top: 1.35rem;
+  }
+
+  .consultation__list {
+    margin-top: 2.4rem;
+  }
+
+  .consultation__row {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1.15rem 0;
+    border-top: 1px solid rgba(24, 33, 42, 0.1);
+  }
+
+  .consultation__row:last-child {
+    border-bottom: 1px solid rgba(24, 33, 42, 0.1);
+  }
+
+  .consultation__index {
+    color: rgba(24, 33, 42, 0.45);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 760px) {
+    .consultation {
+      width: min(100vw - 1rem, 100%);
+      padding-bottom: 3.5rem;
+    }
+
+    .consultation__topbar {
+      margin-bottom: 3rem;
+    }
+
+    .consultation__title {
+      max-width: 9ch;
+    }
+
+    .consultation__lead,
+    .consultation__text {
+      font-size: 0.95rem;
+      line-height: 1.68;
+    }
+
+    .consultation__row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+</style>

@@ -13,7 +13,7 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 ---
 
 <!doctype html>
-<html lang={defaultLocale} data-locale={defaultLocale}>
+<html lang={defaultLocale} data-locale={defaultLocale} data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,7 +21,7 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
     <link rel="apple-touch-icon" href="/favicon-circle.png" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} data-site-meta="description" />
-    <meta name="theme-color" content="#17202d" />
+    <meta name="theme-color" content="#ffffff" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} data-site-meta="og:title" />
     <meta property="og:description" content={description} data-site-meta="og:description" />
@@ -31,63 +31,86 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
     <title>{pageTitle}</title>
     <script is:inline define:vars={{ defaultLocale }}>
       (() => {
-        const STORAGE_KEY = "within19-locale";
+        const LOCALE_KEY = "within19-locale";
+        const THEME_KEY = "within19-theme";
         const normalizeLocale = (value) => {
           const lower = String(value || "").toLowerCase();
           return lower.startsWith("tr") ? "tr" : "en";
         };
+        const normalizeTheme = (value) => (String(value || "").toLowerCase() === "dark" ? "dark" : "light");
 
         try {
-          const saved = window.localStorage.getItem(STORAGE_KEY);
+          const savedLocale = window.localStorage.getItem(LOCALE_KEY);
           const browserLocale = navigator.language || navigator.languages?.[0] || defaultLocale;
-          const locale = normalizeLocale(saved || browserLocale || defaultLocale);
+          const locale = normalizeLocale(savedLocale || browserLocale || defaultLocale);
+          const savedTheme = window.localStorage.getItem(THEME_KEY);
+          const systemTheme = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          const theme = normalizeTheme(savedTheme || systemTheme);
           document.documentElement.dataset.locale = locale;
           document.documentElement.lang = locale;
+          document.documentElement.dataset.theme = theme;
         } catch {
           document.documentElement.dataset.locale = defaultLocale;
           document.documentElement.lang = defaultLocale;
+          document.documentElement.dataset.theme = "light";
         }
       })();
     </script>
   </head>
   <body class="min-h-screen">
     <div class="page-shell">
-      <div
-        class="locale-switcher"
-        role="group"
-        aria-label={uiCopy.tr.switcherLabel}
-        data-locale-switcher
-        data-locale-label-tr={uiCopy.tr.switcherLabel}
-        data-locale-label-en={uiCopy.en.switcherLabel}
-      >
-        <button type="button" class="locale-switcher__current" data-locale-toggle aria-haspopup="true" aria-expanded="false">
-          <span data-locale-current>Türkçe</span>
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path d="m4.25 6.25 3.75 3.5 3.75-3.5" />
-          </svg>
+      <div class="site-controls">
+        <button
+          type="button"
+          class="theme-switcher"
+          data-theme-toggle
+          aria-label="Theme toggle"
+        >
+          <span data-theme-current>Gece</span>
         </button>
-        <div class="locale-switcher__menu" data-locale-menu hidden>
-          <button type="button" class="locale-switcher__button" data-locale-button="tr" aria-pressed="true">
-            Türkçe
+
+        <div
+          class="locale-switcher"
+          role="group"
+          aria-label={uiCopy.tr.switcherLabel}
+          data-locale-switcher
+          data-locale-label-tr={uiCopy.tr.switcherLabel}
+          data-locale-label-en={uiCopy.en.switcherLabel}
+        >
+          <button type="button" class="locale-switcher__current" data-locale-toggle aria-haspopup="true" aria-expanded="false">
+            <span data-locale-current>Türkçe</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="m4.25 6.25 3.75 3.5 3.75-3.5" />
+            </svg>
           </button>
-          <button type="button" class="locale-switcher__button" data-locale-button="en" aria-pressed="false">
-            English
-          </button>
+          <div class="locale-switcher__menu" data-locale-menu hidden>
+            <button type="button" class="locale-switcher__button" data-locale-button="tr" aria-pressed="true">
+              Türkçe
+            </button>
+            <button type="button" class="locale-switcher__button" data-locale-button="en" aria-pressed="false">
+              English
+            </button>
+          </div>
         </div>
       </div>
+
       <main>
         <slot />
       </main>
     </div>
+
     <script is:inline define:vars={{ defaultLocale, siteMeta }}>
       (() => {
-        const STORAGE_KEY = "within19-locale";
+        const LOCALE_KEY = "within19-locale";
+        const THEME_KEY = "within19-theme";
         const root = document.documentElement;
 
         const normalizeLocale = (value) => {
           const lower = String(value || "").toLowerCase();
           return lower.startsWith("tr") ? "tr" : "en";
         };
+
+        const normalizeTheme = (value) => (String(value || "").toLowerCase() === "dark" ? "dark" : "light");
 
         const setMeta = (locale) => {
           const meta = siteMeta[locale];
@@ -144,18 +167,50 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
           });
         };
 
+        const syncThemeButton = (theme, locale) => {
+          const label =
+            locale === "tr"
+              ? theme === "dark"
+                ? "Gündüz"
+                : "Gece"
+              : theme === "dark"
+                ? "Light"
+                : "Dark";
+
+          document.querySelectorAll("[data-theme-current]").forEach((node) => {
+            if (!(node instanceof HTMLElement)) return;
+            node.textContent = label;
+          });
+        };
+
+        const setThemeMeta = (theme) => {
+          const metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (metaTheme instanceof HTMLMetaElement) {
+            metaTheme.content = theme === "dark" ? "#0f1419" : "#ffffff";
+          }
+        };
+
         const applyLocale = (locale) => {
           root.dataset.locale = locale;
           root.lang = locale;
           setMeta(locale);
           syncLocaleButtons(locale);
           syncLocaleLabels(locale);
+          syncThemeButton(normalizeTheme(root.dataset.theme), locale);
           window.dispatchEvent(new CustomEvent("site:locale-change", { detail: { locale } }));
+        };
+
+        const applyTheme = (theme) => {
+          const normalized = normalizeTheme(theme);
+          root.dataset.theme = normalized;
+          setThemeMeta(normalized);
+          syncThemeButton(normalized, normalizeLocale(root.dataset.locale || defaultLocale));
+          window.dispatchEvent(new CustomEvent("site:theme-change", { detail: { theme: normalized } }));
         };
 
         const getInitialLocale = () => {
           try {
-            const saved = window.localStorage.getItem(STORAGE_KEY);
+            const saved = window.localStorage.getItem(LOCALE_KEY);
             const browserLocale = navigator.language || navigator.languages?.[0] || defaultLocale;
             return normalizeLocale(saved || browserLocale || defaultLocale);
           } catch {
@@ -163,18 +218,40 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
           }
         };
 
+        const getInitialTheme = () => {
+          try {
+            const saved = window.localStorage.getItem(THEME_KEY);
+            const systemTheme = window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            return normalizeTheme(saved || systemTheme);
+          } catch {
+            return "light";
+          }
+        };
+
         const setLocale = (locale) => {
           const normalized = normalizeLocale(locale);
           try {
-            window.localStorage.setItem(STORAGE_KEY, normalized);
+            window.localStorage.setItem(LOCALE_KEY, normalized);
           } catch {
-            // Ignore storage failures and keep the in-memory locale.
+            // Ignore storage failures.
           }
 
           applyLocale(normalized);
         };
 
+        const setTheme = (theme) => {
+          const normalized = normalizeTheme(theme);
+          try {
+            window.localStorage.setItem(THEME_KEY, normalized);
+          } catch {
+            // Ignore storage failures.
+          }
+
+          applyTheme(normalized);
+        };
+
         applyLocale(normalizeLocale(root.dataset.locale || getInitialLocale()));
+        applyTheme(normalizeTheme(root.dataset.theme || getInitialTheme()));
 
         const closeSwitcher = () => {
           document.querySelectorAll("[data-locale-switcher]").forEach((switcher) => {
@@ -235,7 +312,16 @@ const pageTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
           closeSwitcher();
         });
 
+        document.querySelectorAll("[data-theme-toggle]").forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) return;
+          button.addEventListener("click", () => {
+            const nextTheme = normalizeTheme(root.dataset.theme) === "dark" ? "light" : "dark";
+            setTheme(nextTheme);
+          });
+        });
+
         window.setSiteLocale = setLocale;
+        window.setSiteTheme = setTheme;
       })();
     </script>
   </body>

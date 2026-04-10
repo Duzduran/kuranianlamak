@@ -1,0 +1,421 @@
+---
+import LocalizedText from "./LocalizedText.astro";
+import { uiCopy } from "../data/i18n";
+import { criteriaArchive, criteriaGroups } from "../data/criteriaArchive";
+
+const groupMap = new Map(criteriaGroups.map((group) => [group.id, group]));
+
+const uniqueMods = (entry) => [...new Set((entry.tests ?? []).flatMap((test) => test.mods))];
+const discoveryLine = (entry) => [entry.discovery.name, entry.discovery.date, entry.discovery.place].filter(Boolean).join(" · ");
+const searchIndex = (entry) =>
+  [
+    entry.code,
+    entry.title.tr,
+    entry.title.en,
+    entry.summary.tr,
+    entry.discovery.name,
+    entry.discovery.place ?? "",
+    ...(entry.tags ?? [])
+  ]
+    .join(" ")
+    .toLowerCase();
+---
+
+<div class="archive-section" data-archive-root>
+  <header class="archive-intro reveal-step" data-reveal>
+    <LocalizedText as="p" class="journey-label" tr="Kriter arşivi" en="Criteria archive" />
+    <LocalizedText
+      as="h2"
+      class="journey-title journey-title--descent"
+      tr="Referans kriterleri kartlara ayrıldı."
+      en="Reference criteria are split into cards."
+    />
+    <LocalizedText
+      as="p"
+      class="archive-intro__text"
+      tr="Burada referans sitedeki fihrist, Ha-Mim ve (Sure + Ayet) ≡ 0 (mod 19) bloklarının çekirdek kriterleri filtrelenebilir kartlar halinde sunuluyor. Uygun olan kriterlerde dizilimi değiştirip mod 7 / mod 19 sonucunu anında test edebilirsiniz."
+      en="This layer presents the core reference criteria from the index, Ha-Mim, and (surah + verse) ≡ 0 (mod 19) blocks as filterable cards. For the criteria that support it, you can alter the sequence and test the mod 7 / mod 19 result instantly."
+    />
+    <LocalizedText
+      as="p"
+      class="archive-intro__note"
+      tr="Keşif sahibi, tarih ve yer bilgisi her kartın detayında ayrıca gösterilir."
+      en="The discoverer, date, and place are shown in each card's detail pane."
+    />
+  </header>
+
+  <div class="archive-toolbar reveal-step" data-reveal>
+    <label
+      class="archive-search"
+      data-placeholder-tr="Kriter kodu, başlık veya kişi ara"
+      data-placeholder-en="Search by code, title, or person"
+    >
+      <span class="archive-search__label">
+        <span data-copy-lang="tr">Ara</span>
+        <span data-copy-lang="en">Search</span>
+      </span>
+      <input type="search" data-archive-search />
+    </label>
+
+    <div class="archive-filters" role="tablist" aria-label="Kriter grupları">
+      <button type="button" class="archive-filter is-active" data-archive-filter="all">
+        <span data-copy-lang="tr">Hepsi</span>
+        <span data-copy-lang="en">All</span>
+      </button>
+      {
+        criteriaGroups.map((group) => (
+          <button type="button" class="archive-filter" data-archive-filter={group.id}>
+            <span data-copy-lang="tr">{group.title.tr}</span>
+            <span data-copy-lang="en">{group.title.en}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="archive-grid">
+    {
+      criteriaArchive.map((entry) => {
+        const group = groupMap.get(entry.groupId);
+        const mods = uniqueMods(entry);
+
+        return (
+          <article
+            class="archive-card reveal-step"
+            data-reveal
+            data-archive-card
+            data-group={entry.groupId}
+            data-search={searchIndex(entry)}
+          >
+            <div class="archive-card__top">
+              <span class="archive-card__code">{entry.code}</span>
+              <span class="archive-card__group">
+                <span data-copy-lang="tr">{group?.title.tr}</span>
+                <span data-copy-lang="en">{group?.title.en}</span>
+              </span>
+            </div>
+
+            <LocalizedText as="h3" class="archive-card__title" tr={entry.title.tr} en={entry.title.en} />
+            <LocalizedText as="p" class="archive-card__summary" tr={entry.summary.tr} en={entry.summary.en} />
+
+            <div class="archive-card__meta">
+              <span>{discoveryLine(entry)}</span>
+            </div>
+
+            <div class="archive-card__badges">
+              {mods.length ? (
+                mods.map((mod) => <span class="archive-badge">{`mod ${mod}`}</span>)
+              ) : (
+                <span class="archive-badge">
+                  <span data-copy-lang="tr">özet</span>
+                  <span data-copy-lang="en">summary</span>
+                </span>
+              )}
+              {entry.tests?.length ? (
+                <span class="archive-badge archive-badge--interactive">
+                  <span data-copy-lang="tr">test</span>
+                  <span data-copy-lang="en">test</span>
+                </span>
+              ) : null}
+            </div>
+
+            <button type="button" class="archive-card__button" data-archive-open={entry.id}>
+              <span data-copy-lang="tr">{uiCopy.tr.explore}</span>
+              <span data-copy-lang="en">{uiCopy.en.explore}</span>
+            </button>
+          </article>
+        );
+      })
+    }
+  </div>
+
+  <p class="archive-empty" data-archive-empty hidden>
+    <span data-copy-lang="tr">Bu filtre için eşleşen kriter bulunamadı.</span>
+    <span data-copy-lang="en">No criteria matched this filter.</span>
+  </p>
+
+  {
+    criteriaArchive.map((entry) => (
+      <dialog class="number-dialog archive-dialog" data-archive-dialog={entry.id}>
+        <div class="number-dialog__panel archive-dialog__panel">
+          <div class="number-dialog__top">
+            <div>
+              <div class="archive-dialog__meta">
+                <span class="archive-card__code">{entry.code}</span>
+                <span class="archive-card__group">
+                  <span data-copy-lang="tr">{groupMap.get(entry.groupId)?.title.tr}</span>
+                  <span data-copy-lang="en">{groupMap.get(entry.groupId)?.title.en}</span>
+                </span>
+              </div>
+              <LocalizedText as="h2" class="number-dialog__title" tr={entry.title.tr} en={entry.title.en} />
+              <LocalizedText as="p" class="number-dialog__text" tr={entry.summary.tr} en={entry.summary.en} />
+            </div>
+            <button type="button" class="number-dialog__close" data-archive-close={entry.id}>
+              <span data-copy-lang="tr">{uiCopy.tr.close}</span>
+              <span data-copy-lang="en">{uiCopy.en.close}</span>
+            </button>
+          </div>
+
+          <div class="archive-detail-grid">
+            {entry.facts?.length ? (
+              <div class="archive-facts">
+                {entry.facts.map((fact) => (
+                  <article class="archive-fact">
+                    <LocalizedText as="h3" class="archive-fact__label" tr={fact.label.tr} en={fact.label.en} />
+                    <LocalizedText as="p" class="archive-fact__value" tr={fact.value.tr} en={fact.value.en} />
+                  </article>
+                ))}
+              </div>
+            ) : null}
+
+            {entry.tests?.length ? (
+              <div class="archive-tests">
+                <LocalizedText
+                  as="p"
+                  class="archive-tests__intro"
+                  tr="Aşağıdaki alanlarda boşluklar ve noktalama yok sayılır; yalnızca rakamlar mod hesabına girer."
+                  en="Spaces and punctuation are ignored below; only digits are used in the modular calculation."
+                />
+
+                {entry.tests.map((test) => (
+                  <article class="archive-test" data-mod-tester data-mods={test.mods.join(",")}>
+                    <div class="archive-test__head">
+                      <LocalizedText as="h3" class="archive-test__title" tr={test.label.tr} en={test.label.en} />
+                      <div class="archive-test__mods">
+                        {test.mods.map((mod) => (
+                          <span class="archive-badge">{`mod ${mod}`}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {test.note ? <LocalizedText as="p" class="archive-test__note" tr={test.note.tr} en={test.note.en} /> : null}
+
+                    <textarea class="archive-test__textarea" data-mod-input data-default-sequence={test.sequence}>{test.sequence}</textarea>
+
+                    <div class="archive-test__actions">
+                      <button type="button" class="archive-test__action" data-mod-analyze>
+                        <span data-copy-lang="tr">{uiCopy.tr.analyze}</span>
+                        <span data-copy-lang="en">{uiCopy.en.analyze}</span>
+                      </button>
+                      <button type="button" class="archive-test__action archive-test__action--muted" data-mod-reset>
+                        <span data-copy-lang="tr">{uiCopy.tr.reset}</span>
+                        <span data-copy-lang="en">{uiCopy.en.reset}</span>
+                      </button>
+                    </div>
+
+                    <div class="archive-test__results">
+                      <p class="archive-result">
+                        <span class="archive-result__label">
+                          <span data-copy-lang="tr">Basamak sayısı</span>
+                          <span data-copy-lang="en">Digit count</span>
+                        </span>
+                        <strong class="archive-result__value" data-result-digits>0</strong>
+                      </p>
+
+                      {test.mods.map((mod) => (
+                        <p class="archive-result" data-result-row data-mod-row={mod}>
+                          <span class="archive-result__label">{`mod ${mod}`}</span>
+                          <strong class="archive-result__value" data-result-mod={mod}>
+                            0
+                          </strong>
+                        </p>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="archive-tests archive-tests--empty">
+                <LocalizedText
+                  as="p"
+                  class="archive-tests__intro"
+                  tr="Bu kartta odak, bir mod hesabından çok eşitlik ve simetri ilişkilerinin gösterilmesidir."
+                  en="This card focuses on structural equalities and symmetries rather than a direct mod calculation."
+                />
+              </div>
+            )}
+          </div>
+
+          <div class="archive-source">
+            <div class="archive-source__row">
+              <span class="archive-source__label">
+                <span data-copy-lang="tr">Keşif</span>
+                <span data-copy-lang="en">Discovery</span>
+              </span>
+              <span class="archive-source__value">{discoveryLine(entry)}</span>
+            </div>
+            <div class="archive-source__row">
+              <span class="archive-source__label">
+                <span data-copy-lang="tr">Kaynak</span>
+                <span data-copy-lang="en">Source</span>
+              </span>
+              <a class="archive-source__link" href={entry.sourceUrl} target="_blank" rel="noreferrer">
+                <span data-copy-lang="tr">{entry.sourceLabel.tr}</span>
+                <span data-copy-lang="en">{entry.sourceLabel.en}</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    ))
+  }
+</div>
+
+<script>
+  const archiveRoot = document.querySelector("[data-archive-root]");
+
+  if (archiveRoot instanceof HTMLElement) {
+    const localeAwarePlaceholder = () => {
+      const search = archiveRoot.querySelector("[data-archive-search]");
+      if (!(search instanceof HTMLInputElement)) return;
+
+      const locale = document.documentElement.dataset.locale === "en" ? "en" : "tr";
+      search.placeholder =
+        locale === "en" ? search.parentElement?.getAttribute("data-placeholder-en") ?? "" : search.parentElement?.getAttribute("data-placeholder-tr") ?? "";
+    };
+
+    localeAwarePlaceholder();
+    window.addEventListener("site:locale-change", localeAwarePlaceholder);
+
+    const cards = Array.from(archiveRoot.querySelectorAll("[data-archive-card]"));
+    const filterButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-filter]"));
+    const searchInput = archiveRoot.querySelector("[data-archive-search]");
+    const emptyState = archiveRoot.querySelector("[data-archive-empty]");
+    let activeFilter = "all";
+
+    const updateArchiveCards = () => {
+      const query =
+        searchInput instanceof HTMLInputElement ? searchInput.value.trim().toLowerCase() : "";
+
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        if (!(card instanceof HTMLElement)) return;
+        const matchesFilter = activeFilter === "all" || card.dataset.group === activeFilter;
+        const matchesSearch = !query || (card.dataset.search ?? "").includes(query);
+        const visible = matchesFilter && matchesSearch;
+        card.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+
+      if (emptyState instanceof HTMLElement) {
+        emptyState.hidden = visibleCount > 0;
+      }
+    };
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!(button instanceof HTMLButtonElement)) return;
+        activeFilter = button.dataset.archiveFilter ?? "all";
+
+        filterButtons.forEach((candidate) => {
+          if (!(candidate instanceof HTMLButtonElement)) return;
+          candidate.classList.toggle("is-active", candidate === button);
+        });
+
+        updateArchiveCards();
+      });
+    });
+
+    searchInput?.addEventListener("input", updateArchiveCards);
+    updateArchiveCards();
+
+    const openButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-open]"));
+    const closeButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-close]"));
+    const dialogs = Array.from(archiveRoot.querySelectorAll("[data-archive-dialog]"));
+
+    openButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-archive-open");
+        const dialog = archiveRoot.querySelector(`[data-archive-dialog="${id}"]`);
+        if (dialog instanceof HTMLDialogElement) {
+          dialog.showModal();
+        }
+      });
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-archive-close");
+        const dialog = archiveRoot.querySelector(`[data-archive-dialog="${id}"]`);
+        if (dialog instanceof HTMLDialogElement) {
+          dialog.close();
+        }
+      });
+    });
+
+    dialogs.forEach((dialog) => {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) {
+          dialog.close();
+        }
+      });
+    });
+
+    const computeMod = (value, mod) => {
+      let remainder = 0;
+      let digits = 0;
+
+      for (const character of value) {
+        const code = character.charCodeAt(0);
+        if (code < 48 || code > 57) continue;
+        remainder = (remainder * 10 + (code - 48)) % mod;
+        digits += 1;
+      }
+
+      return { remainder, digits };
+    };
+
+    const testers = Array.from(archiveRoot.querySelectorAll("[data-mod-tester]"));
+
+    testers.forEach((tester) => {
+      if (!(tester instanceof HTMLElement)) return;
+
+      const input = tester.querySelector("[data-mod-input]");
+      const analyzeButton = tester.querySelector("[data-mod-analyze]");
+      const resetButton = tester.querySelector("[data-mod-reset]");
+      const digitsTarget = tester.querySelector("[data-result-digits]");
+      const mods = (tester.dataset.mods ?? "")
+        .split(",")
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value));
+
+      const render = () => {
+        if (!(input instanceof HTMLTextAreaElement)) return;
+
+        let digitCount = 0;
+
+        mods.forEach((mod) => {
+          const result = computeMod(input.value, mod);
+          digitCount = result.digits;
+          const valueTarget = tester.querySelector(`[data-result-mod="${mod}"]`);
+          const rowTarget = tester.querySelector(`[data-mod-row="${mod}"]`);
+
+          if (valueTarget instanceof HTMLElement) {
+            valueTarget.textContent = String(result.remainder);
+          }
+
+          if (rowTarget instanceof HTMLElement) {
+            rowTarget.dataset.pass = String(result.remainder === 0);
+          }
+        });
+
+        if (digitsTarget instanceof HTMLElement) {
+          digitsTarget.textContent = String(digitCount);
+        }
+      };
+
+      analyzeButton?.addEventListener("click", render);
+
+      resetButton?.addEventListener("click", () => {
+        if (input instanceof HTMLTextAreaElement) {
+          input.value = input.dataset.defaultSequence ?? "";
+          render();
+        }
+      });
+
+      input?.addEventListener("input", render);
+      render();
+    });
+  }
+</script>

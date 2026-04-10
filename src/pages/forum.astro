@@ -1,0 +1,130 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LocalizedText from "../components/LocalizedText.astro";
+
+const items = [
+  {
+    tr: "Kayıtlı kullanıcı altyapısı",
+    en: "Registered user infrastructure"
+  },
+  {
+    tr: "Araştırma başlıkları ve tartışma akışı",
+    en: "Research threads and discussion flow"
+  },
+  {
+    tr: "Ortak notlar ve katkı alanı",
+    en: "Shared notes and contribution area"
+  }
+];
+---
+
+<Layout
+  title="Forum"
+  description="Within19 forum alanı için hazırlık sayfası. Topluluk, notlar ve tartışma katmanı burada şekillenecek."
+>
+  <section class="forum-page">
+    <header class="forum-page__topbar">
+      <a class="forum-page__back" href="/">
+        <span data-copy-lang="tr">Ana girişe dön</span>
+        <span data-copy-lang="en">Back to main entry</span>
+      </a>
+    </header>
+
+    <LocalizedText as="p" class="forum-page__eyebrow" tr="Yakında" en="Soon" />
+    <div class="forum-page__list">
+      {
+        items.map((item, index) => (
+          <div class="forum-page__row">
+            <span class="forum-page__index">{String(index + 1).padStart(2, "0")}</span>
+            <LocalizedText as="p" class="forum-page__text" tr={item.tr} en={item.en} />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .forum-page {
+    width: min(980px, calc(100vw - 2rem));
+    margin: 0 auto;
+    padding: 2rem 0 4.2rem;
+    color: var(--theme-ink);
+  }
+
+  .forum-page__topbar {
+    margin-bottom: 3.8rem;
+  }
+
+  .forum-page__back {
+    color: var(--theme-muted);
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .forum-page__back:hover {
+    color: var(--theme-ink-strong);
+  }
+
+  .forum-page__eyebrow {
+    margin: 0 0 0.9rem;
+    color: var(--theme-muted);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .forum-page__text {
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 1rem;
+    line-height: 1.78;
+  }
+
+  .forum-page__list {
+    margin-top: 1.4rem;
+  }
+
+  .forum-page__row {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1.15rem 0;
+    border-top: 1px solid var(--theme-border);
+  }
+
+  .forum-page__row:last-child {
+    border-bottom: 1px solid var(--theme-border);
+  }
+
+  .forum-page__index {
+    color: var(--theme-muted-soft);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 760px) {
+    .forum-page {
+      width: min(100vw - 1rem, 100%);
+      padding-bottom: 3.5rem;
+    }
+
+    .forum-page__topbar {
+      margin-bottom: 3rem;
+    }
+
+    .forum-page__text {
+      font-size: 0.95rem;
+      line-height: 1.68;
+    }
+
+    .forum-page__row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,747 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LocalizedText from "../components/LocalizedText.astro";
+import ScrollCue from "../components/ScrollCue.astro";
+import HeroRive from "../components/HeroRive.astro";
+import { uiCopy } from "../data/i18n";
+
+const l = (tr, en) => ({ tr, en });
+
+const besmeleCriteriaGroups = [
+  {
+    id: "temel",
+    range: "B1-B2",
+    title: l("Temel ölçüler", "Core measures"),
+    intro: l("İlk bakışta görünen ana ölçüler burada toplanır.", "The main measures visible at first glance gather here."),
+    items: [
+      ["B1", l("Harf sayısı", "Letter count"), "19", l("mod 19 = 0", "mod 19 = 0")],
+      ["B2", l("Kelime, harf ve ebced dizilimi", "Word, letter, and abjad sequence"), "4 19 786", l("mod 19 = 0", "mod 19 = 0")]
+    ]
+  },
+  {
+    id: "harf",
+    range: "B3-B4",
+    title: l("Harf dizilimleri", "Letter sequences"),
+    intro: l("Kelime sırası ve harf düzeni birlikte okunur.", "Word order and letter structure are read together."),
+    items: [
+      [
+        "B3",
+        l("Kelime sırası ve harf sayıları", "Word order and letter counts"),
+        l("1 3 / 2 4 / 3 6 / 4 6 ve tersi", "1 3 / 2 4 / 3 6 / 4 6 and its reverse"),
+        l("iki yönde mod 19 = 0", "mod 19 = 0 in both directions")
+      ],
+      [
+        "B4",
+        l("Kelime numarası ve kümülatif harf toplamları", "Word number and cumulative letter totals"),
+        "1 3 / 2 7 / 3 13 / 4 19",
+        l("mod 19 = 0", "mod 19 = 0")
+      ]
+    ]
+  },
+  {
+    id: "ebced",
+    range: "B5-B6.1",
+    title: l("Ebced dizilimleri", "Abjad sequences"),
+    intro: l("Ebced değerleri tek tek ve kümülatif biçimde izlenir.", "Abjad values are traced one by one and cumulatively."),
+    items: [
+      ["B5", l("Kelime sırası ve ebced değerleri", "Word order and abjad values"), "1 102 / 2 66 / 3 329 / 4 289", l("mod 19 = 0", "mod 19 = 0")],
+      ["B6", l("Kelime numarası ve kümülatif ebced toplamları", "Word number and cumulative abjad totals"), "1 102 / 2 168 / 3 497 / 4 786", l("mod 19 = 0", "mod 19 = 0")],
+      ["B6.1", l("Asal çarpan toplamları dizilimi", "Prime factor sum sequence"), "0 22 2 16 3 78 4 136", l("mod 19 = 0", "mod 19 = 0")]
+    ]
+  },
+  {
+    id: "ileri",
+    range: "B7-B9",
+    title: l("İleri ölçütler", "Advanced measures"),
+    intro: l("Daha yoğun dizilimler ve birleşik yapılar bu katmanda yer alır.", "Denser sequences and composite structures appear in this layer."),
+    items: [
+      [
+        "B7",
+        l("Kelime ve harf ebced dizilimi", "Word and letter abjad sequence"),
+        l("Düz, ters, basamak toplamı ve kayan pencere", "Forward, reverse, digit sum, and sliding window"),
+        l("hepsi mod 19 = 0", "all give mod 19 = 0")
+      ],
+      ["B8", l("Harf ebcedlerinin kümülatif dizilimi", "Cumulative sequence of letter abjads"), "1 2 62 102 ... 4 786", l("mod 19 = 0", "mod 19 = 0")],
+      [
+        "B9",
+        l("Kelime sıra no, harf sıra no ve harf ebced dizilimi", "Word no, letter no, and letter abjad sequence"),
+        "1 1 2 2 60 ... 4 1 30 200 8 10 40",
+        l("mod 19 = 0", "mod 19 = 0")
+      ]
+    ]
+  }
+];
+
+const escapeHtml = (value) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+
+const highlightNumericText = (value) =>
+  escapeHtml(value).replace(/(\d+(?:\.\d+)?|mod|x|=)/g, '<span class="criteria-number">$1</span>');
+---
+
+<Layout
+  title="Kur'an'ı Anlamak"
+  description="Kur'an'ı anlamaya açılan yolculuk sayfası: meydan okuma, 19 örüntüleri, Besmele ölçütleri ve ayrıntılı okuma eşikleri."
+>
+  <section class="understanding-page-topbar">
+    <a class="understanding-page-back" href="/">
+      <span data-copy-lang="tr">Ana girişe dön</span>
+      <span data-copy-lang="en">Back to main entry</span>
+    </a>
+  </section>
+
+  <section class="home-hero">
+    <div class="mx-auto max-w-4xl px-5 py-18 text-center md:px-8 md:py-28">
+      <LocalizedText
+        as="h1"
+        class="mx-auto mt-6 max-w-4xl font-serif text-4xl leading-[1.08] text-balance text-[var(--c-ink)] md:text-7xl"
+        tr="Kur'an'ı anlamak."
+        en="Understanding the Qur'an."
+      />
+      <figure class="mx-auto mt-7 max-w-xl">
+        <LocalizedText
+          as="blockquote"
+          class="font-serif text-xl leading-9 text-[var(--c-ink-soft)] md:text-2xl md:leading-10"
+          tr="“Rabbim, ilmimi artır.”"
+          en="“My Rabb, increase me in knowledge.”"
+        />
+        <figcaption class="mt-3 text-[0.74rem] font-semibold uppercase tracking-[0.24em] text-[var(--c-accent)]">
+          Tâhâ 20:114
+        </figcaption>
+      </figure>
+
+      <div class="home-hero__cue flex justify-center">
+        <ScrollCue href="#ilk-esik" labelTr={uiCopy.tr.goDeeper} labelEn={uiCopy.en.goDeeper} class="scroll-cue--hero" />
+      </div>
+    </div>
+  </section>
+
+  <section
+    class="home-journey"
+    aria-label="Derinleşen akış"
+    data-locale-label-tr="Derinleşen akış"
+    data-locale-label-en="Descending journey"
+  >
+    <article id="ilk-esik" class="journey-stage journey-stage--light">
+      <div class="journey-shell">
+        <LocalizedText as="p" class="journey-label" tr="İlk durak" en="First threshold" />
+        <LocalizedText
+          as="blockquote"
+          class="journey-quote"
+          tr="“Bu kitap, mutlak gerçeğin ta kendisidir.”"
+          en="“This Book is the very truth itself.”"
+        />
+        <p class="journey-reference">Bakara 2:2</p>
+        <LocalizedText
+          as="h2"
+          class="journey-title journey-title--subtle"
+          tr="Metin önce kendini tanıtır."
+          en="The text first introduces itself."
+        />
+        <div class="mt-10 flex justify-center">
+          <ScrollCue href="#ikinci-esik" />
+        </div>
+      </div>
+    </article>
+
+    <article id="ikinci-esik" class="journey-stage journey-stage--mid">
+      <div class="journey-shell">
+        <LocalizedText as="p" class="journey-label" tr="İkinci durak" en="Second threshold" />
+        <LocalizedText
+          as="blockquote"
+          class="journey-quote"
+          tr="“Eğer kulumuza indirdiğimizden yana şüphede iseniz, haydi onun benzeri bir sure getirin.”"
+          en="“If you are in doubt about what We have sent down to Our servant, then bring a surah like it.”"
+        />
+        <p class="journey-reference">Bakara 2:23-24</p>
+        <LocalizedText
+          as="h2"
+          class="journey-title journey-title--subtle"
+          tr="Burada çağrı açılır."
+          en="Here the challenge opens."
+        />
+        <div class="mt-10 flex justify-center">
+          <ScrollCue href="#ucuncu-esik" />
+        </div>
+      </div>
+    </article>
+
+    <article id="ucuncu-esik" class="journey-stage journey-stage--deep">
+      <div class="journey-shell">
+        <LocalizedText as="p" class="journey-label" tr="Şüphe konuşur" en="Doubt speaks" />
+        <LocalizedText
+          as="blockquote"
+          class="journey-quote journey-quote--deep"
+          tr="“Bu, insan sözünden başka bir şey değildir.”"
+          en="“This is nothing but human speech.”"
+        />
+        <p class="journey-reference journey-reference--deep">Müddessir 74:24-25</p>
+        <LocalizedText
+          as="h2"
+          class="journey-title journey-title--subtle"
+          tr="Burada itiraz görünür olur."
+          en="Here the objection becomes visible."
+        />
+        <div class="mt-10 flex justify-center">
+          <ScrollCue href="#dorduncu-esik" />
+        </div>
+      </div>
+    </article>
+
+    <article id="dorduncu-esik" class="journey-stage journey-stage--deeper">
+      <div class="journey-shell">
+        <LocalizedText as="p" class="journey-label" tr="Cevap gelir" en="The answer comes" />
+        <LocalizedText
+          as="blockquote"
+          class="journey-quote journey-quote--deep"
+          tr="“Onun üzerinde on dokuz vardır.”"
+          en="“Over it are nineteen.”"
+        />
+        <p class="journey-reference journey-reference--deep">Müddessir 74:30-31</p>
+        <LocalizedText
+          as="h2"
+          class="journey-title journey-title--subtle"
+          tr="Buradan sonra örüntüler başlar."
+          en="From here, patterns begin."
+        />
+        <div class="mt-10 flex justify-center">
+          <ScrollCue href="#kod-19" />
+        </div>
+      </div>
+    </article>
+
+    <article id="kod-19" class="journey-stage journey-stage--code">
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <LocalizedText as="p" class="journey-label" tr="19 ile ilk temas" en="First contact with 19" />
+          <LocalizedText
+            as="h2"
+            class="journey-title journey-title--descent"
+            tr="İlk işaretler görünür olur."
+            en="The first signs come into view."
+          />
+        </header>
+
+        <div class="descent-rail">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <LocalizedText as="p" class="descent-panel__eyebrow" tr="İlk ayet" en="First verse" />
+                <LocalizedText as="p" class="descent-panel__value" tr="19 harf" en="19 letters" />
+                <LocalizedText as="h3" class="descent-panel__title" tr="Besmele" en="Basmala" />
+                <LocalizedText
+                  as="p"
+                  class="descent-panel__text"
+                  tr="Kur'an'ın ilk ayeti Besmele 19 harftir."
+                  en="The Qur'an's opening verse, the Basmala, contains 19 letters."
+                />
+              </div>
+            </div>
+          </article>
+
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <LocalizedText as="p" class="descent-panel__eyebrow" tr="Bütün" en="Whole" />
+                <LocalizedText as="p" class="descent-panel__value" tr="114 sure" en="114 surahs" />
+                <LocalizedText as="h3" class="descent-panel__title" tr="Kur'an" en="The Qur'an" />
+                <LocalizedText
+                  as="p"
+                  class="descent-panel__text"
+                  tr="Kur'an 114 sureden oluşur. 114 = 19 x 6."
+                  en="The Qur'an consists of 114 surahs. 114 = 19 x 6."
+                />
+              </div>
+            </div>
+          </article>
+
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <LocalizedText as="p" class="descent-panel__eyebrow" tr="İlk vahiy" en="First revelation" />
+                <p class="descent-panel__value">96 / 19</p>
+                <LocalizedText as="h3" class="descent-panel__title" tr="Alak suresi" en="Surah Al-Alaq" />
+                <LocalizedText
+                  as="p"
+                  class="descent-panel__text"
+                  tr="İlk vahyedilen 96. sure, sondan 19. suredir."
+                  en="The first revealed surah is number 96, and it is the 19th from the end."
+                />
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#kod-19-derin" />
+        </div>
+      </div>
+    </article>
+
+    <article id="kod-19-derin" class="journey-stage journey-stage--code-layer">
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <LocalizedText as="p" class="journey-label" tr="19 derinleşir" en="19 deepens" />
+          <LocalizedText
+            as="h2"
+            class="journey-title journey-title--descent"
+            tr="Aşağı indikçe bağlar çoğalır."
+            en="As you descend, the connections multiply."
+          />
+        </header>
+
+        <div class="descent-rail">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+            <div class="descent-step__inner">
+              <article class="descent-panel descent-panel--trigger">
+                <button type="button" class="descent-panel__button" data-detail-open="kayip-besmele">
+                  <LocalizedText as="p" class="descent-panel__eyebrow" tr="Eksik ve tamam" en="Missing and complete" />
+                  <p class="descent-panel__value">27 + 30 = 57</p>
+                  <LocalizedText as="h3" class="descent-panel__title" tr="Kayıp Besmele" en="Missing Basmala" />
+                  <LocalizedText
+                    as="p"
+                    class="descent-panel__text"
+                    tr="9. surenin başındaki eksik Besmele, 27. surenin 30. ayetindeki Besmele ile tamamlanır. 57 = 19 x 3."
+                    en="The missing Basmala at the start of Surah 9 is completed by the Basmala in verse 30 of Surah 27. 57 = 19 x 3."
+                  />
+                  <LocalizedText as="span" class="descent-panel__cta" tr={uiCopy.tr.explore} en={uiCopy.en.explore} />
+                </button>
+              </article>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#yedi-on-dokuz" />
+        </div>
+      </div>
+    </article>
+
+    <article id="yedi-on-dokuz" class="journey-stage journey-stage--method">
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <LocalizedText as="p" class="journey-label" tr="Daha derin bulgular" en="Deeper findings" />
+          <LocalizedText
+            as="h2"
+            class="journey-title journey-title--descent"
+            tr="Şimdi örnekler yoğunlaşır."
+            en="Now the examples grow denser."
+          />
+        </header>
+
+        <div class="descent-rail descent-rail--dense">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <LocalizedText as="p" class="descent-panel__eyebrow" tr="İlk inen sure" en="First revealed surah" />
+                <LocalizedText as="p" class="descent-panel__value" tr="285 harf" en="285 letters" />
+                <LocalizedText as="h3" class="descent-panel__title" tr="19 ayet" en="19 verses" />
+                <LocalizedText
+                  as="p"
+                  class="descent-panel__text"
+                  tr="96. sure 19 ayettir. Bu 19 ayet 285 harf taşır ve 285 = 19 x 15'tir."
+                  en="Surah 96 has 19 verses. Those 19 verses contain 285 letters, and 285 = 19 x 15."
+                />
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="descent-outro reveal-step" data-reveal>
+          <p class="journey-note">
+            <span data-copy-lang="tr">
+              Devam için
+              <a href="https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/" target="_blank" rel="noreferrer">
+                kodlama kuralları
+              </a>
+              ,
+              <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
+                insanın yapamayacağı şey
+              </a>
+              .
+            </span>
+            <span data-copy-lang="en">
+              For further reading:
+              <a href="https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/" target="_blank" rel="noreferrer">
+                coding rules
+              </a>
+              ,
+              <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
+                what a human cannot do
+              </a>
+              .
+            </span>
+          </p>
+
+          <LocalizedText
+            as="p"
+            class="journey-note journey-note--question"
+            tr="Soru artık şudur: Bu kadar çok uyum, gerçekten tesadüf ile açıklanabilir mi?"
+            en="The question now is this: can so much alignment really be explained by coincidence?"
+          />
+        </div>
+
+        <dialog class="number-dialog" data-detail-dialog="kayip-besmele">
+          <div class="number-dialog__panel">
+            <div class="number-dialog__top">
+              <div>
+                <LocalizedText as="p" class="journey-label" tr="Kayıp Besmele" en="Missing Basmala" />
+                <LocalizedText as="h2" class="number-dialog__title" tr="Eksik olan burada tamamlanır" en="What is missing is completed here" />
+              </div>
+              <button type="button" class="number-dialog__close" data-detail-close="kayip-besmele">
+                <span data-copy-lang="tr">{uiCopy.tr.close}</span>
+                <span data-copy-lang="en">{uiCopy.en.close}</span>
+              </button>
+            </div>
+
+            <div class="pattern-list">
+              <article class="pattern-item">
+                <LocalizedText as="h3" tr="Eksik başlangıç" en="Missing beginning" />
+                <LocalizedText
+                  as="p"
+                  tr="Normalde sure başlarında görülen Besmele, 9. surenin başında yer almaz."
+                  en="The Basmala normally seen at the start of surahs does not appear at the beginning of surah 9."
+                />
+              </article>
+
+              <article class="pattern-item">
+                <LocalizedText as="h3" tr="Tamamlanan sayı" en="The completed total" />
+                <LocalizedText
+                  as="p"
+                  tr="Bu eksik, Neml suresinin 30. ayetindeki Besmele ile tamamlanır; toplam böylece 114 olur. 114 = 19 x 6."
+                  en="This absence is completed by the Basmala in verse 30 of Surah Al-Naml; the total thus becomes 114. 114 = 19 x 6."
+                />
+              </article>
+
+              <article class="pattern-item">
+                <LocalizedText as="h3" tr="19 ilişkisi" en="The 19 relation" />
+                <LocalizedText
+                  as="p"
+                  tr="Eksik Besmele'nin tamamlandığı yer Neml suresinin 30. ayetidir. Burada 27 sure numarası, 30 ise ayet numarasıdır. Bu iki sayı toplandığında 57 elde edilir. 57 = 19 x 3."
+                  en="The place where the missing Basmala is completed is verse 30 of Surah Al-Naml. Here, 27 is the surah number and 30 is the verse number. When these two numbers are added, the result is 57. 57 = 19 x 3."
+                />
+              </article>
+            </div>
+          </div>
+        </dialog>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#besmele-olcutleri" />
+        </div>
+      </div>
+    </article>
+
+    <article id="besmele-olcutleri" class="journey-stage journey-stage--criteria">
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <LocalizedText as="p" class="journey-label" tr="Besmele ölçütleri" en="Basmala criteria" />
+          <LocalizedText
+            as="h2"
+            class="journey-title journey-title--descent"
+            tr="Burada Besmele daha yakından okunur."
+            en="Here the Basmala is read more closely."
+          />
+        </header>
+
+        <div class="descent-rail descent-rail--criteria">
+          {
+            besmeleCriteriaGroups.map((group, index) => (
+              <article class="descent-step reveal-step" data-reveal style={`--step-depth: ${index};`}>
+                <div class="descent-step__inner">
+                  <article class="descent-panel descent-panel--trigger descent-panel--gate">
+                    <button type="button" class="descent-panel__button" data-criteria-open={group.id}>
+                      <p class="descent-panel__eyebrow">{group.range}</p>
+                      <LocalizedText as="h3" class="descent-panel__title" tr={group.title.tr} en={group.title.en} />
+                      <LocalizedText as="p" class="descent-panel__text" tr={group.intro.tr} en={group.intro.en} />
+                      <LocalizedText as="span" class="descent-panel__cta" tr={uiCopy.tr.explore} en={uiCopy.en.explore} />
+                    </button>
+                  </article>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+
+        <p class="journey-note reveal-step" data-reveal>
+          <span data-copy-lang="tr">
+            Tam kodlamayı görmek için
+            <a href="https://kod.7ve19.com/Besmele_Tr.asp" target="_blank" rel="noreferrer">
+              kod.7ve19.com/Besmele_Tr.asp
+            </a>
+            .
+          </span>
+          <span data-copy-lang="en">
+            For the full encoding, see
+            <a href="https://kod.7ve19.com/Besmele_Tr.asp" target="_blank" rel="noreferrer">
+              kod.7ve19.com/Besmele_Tr.asp
+            </a>
+            .
+          </span>
+        </p>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#meydan-okuma" />
+        </div>
+
+        {
+          besmeleCriteriaGroups.map((group) => (
+            <dialog class="number-dialog" data-criteria-dialog={group.id}>
+              <div class="number-dialog__panel">
+                <div class="number-dialog__top">
+                  <div>
+                    <p class="journey-label">{group.range}</p>
+                    <LocalizedText as="h2" class="number-dialog__title" tr={group.title.tr} en={group.title.en} />
+                  </div>
+                  <button type="button" class="number-dialog__close" data-criteria-close={group.id}>
+                    <span data-copy-lang="tr">{uiCopy.tr.close}</span>
+                    <span data-copy-lang="en">{uiCopy.en.close}</span>
+                  </button>
+                </div>
+
+                <LocalizedText as="p" class="signal-card__text number-dialog__text" tr={group.intro.tr} en={group.intro.en} />
+
+                <div class="criteria-list criteria-list--dialog">
+                  {
+                    group.items.map(([code, label, data, result]) => (
+                      <article class="criteria-item">
+                        <div class="criteria-item__head">
+                          <span class="criteria-item__code">{code}</span>
+                          <LocalizedText as="h3" tr={label.tr} en={label.en} />
+                        </div>
+                        <p class="criteria-item__data">
+                          <span data-copy-lang="tr" set:html={highlightNumericText(typeof data === "string" ? data : data.tr)} />
+                          <span data-copy-lang="en" set:html={highlightNumericText(typeof data === "string" ? data : data.en)} />
+                        </p>
+                        <p class="criteria-item__result">
+                          <span data-copy-lang="tr" set:html={highlightNumericText(result.tr)} />
+                          <span data-copy-lang="en" set:html={highlightNumericText(result.en)} />
+                        </p>
+                      </article>
+                    ))
+                  }
+                </div>
+
+                {
+                  group.id === "ileri" && (
+                    <div class="criteria-transform">
+                      <LocalizedText
+                        as="h3"
+                        class="criteria-transform__title"
+                        tr="Sola kayan pencere basamak toplamı"
+                        en="Sliding window digit sum"
+                      />
+                      <LocalizedText
+                        as="p"
+                        class="criteria-transform__text"
+                        tr="Bu dönüşümde sayı basamakları soldan değil, basamak komşulukları üzerinden yeniden okunur. Birler basamağından başlayarak her basamak bir sonraki basamakla toplanır."
+                        en="In this transformation, the number is reread through neighboring digits rather than as a flat sequence. Starting from the ones place, each digit is added to the next digit."
+                      />
+                      <LocalizedText
+                        as="p"
+                        class="criteria-transform__formula"
+                        tr="D = { d1, d2, d3, ..., dk }  →  D' = { (0+d1), (d1+d2), (d2+d3), ..., (d{k-1}+dk) }"
+                        en="D = { d1, d2, d3, ..., dk }  →  D' = { (0+d1), (d1+d2), (d2+d3), ..., (d{k-1}+dk) }"
+                      />
+                    </div>
+                  )
+                }
+              </div>
+            </dialog>
+          ))
+        }
+      </div>
+    </article>
+
+    <article id="meydan-okuma" class="journey-stage journey-stage--next">
+      <div class="journey-shell">
+        <LocalizedText as="p" class="journey-label" tr="Bir sonraki eşik" en="The next threshold" />
+        <blockquote class="journey-quote journey-quote--arabic journey-quote--next" dir="rtl" lang="ar">
+          قُل لَّئِنِ ٱجْتَمَعَتِ ٱلْإِنسُ وَٱلْجِنُّ عَلَىٰٓ أَن يَأْتُوا۟ بِمِثْلِ هَٰذَا
+          ٱلْقُرْءَانِ لَا يَأْتُونَ بِمِثْلِهِۦ وَلَوْ كَانَ بَعْضُهُمْ لِبَعْضٍ ظَهِيرًا
+        </blockquote>
+        <p class="journey-reference">İsrâ 17:88</p>
+        <LocalizedText
+          as="p"
+          class="journey-text journey-text--subtle journey-text--next"
+          tr="De ki: Bilinen ve bilinmeyen bütün varlıklar bu Kur'an'ın bir benzerini getirmek için toplansa da yine onun benzerini getiremez."
+          en="Say: Even if all known and unknown beings gathered to bring forth the like of this Qur'an, they still could not produce its like."
+        />
+
+        <div class="next-metrics">
+          <article class="next-metric">
+            <LocalizedText as="p" class="next-metric__value" tr="19 kelime" en="19 words" />
+            <p class="next-metric__result">mod 19 = 0</p>
+          </article>
+        </div>
+
+        <p class="journey-note journey-note--next">
+          <span data-copy-lang="tr">
+            Ayrıntılı çalışma için
+            <a href="https://www.7ve19.com/000-sunum/" target="_blank" rel="noreferrer">
+              7ve19 sunumu
+            </a>
+            ve
+            <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
+              ilgili yazı
+            </a>
+            .
+          </span>
+          <span data-copy-lang="en">
+            For a more detailed study, see the
+            <a href="https://www.7ve19.com/000-sunum/" target="_blank" rel="noreferrer">
+              7ve19 presentation
+            </a>
+            and the
+            <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
+              related article
+            </a>
+            .
+          </span>
+        </p>
+      </div>
+    </article>
+
+    <article class="journey-stage journey-stage--future">
+      <div class="journey-shell">
+        <LocalizedText as="p" class="journey-label" tr="Sıradaki adım" en="Next step" />
+        <LocalizedText
+          as="h2"
+          class="journey-title journey-title--subtle"
+          tr="Geliştirme aşamasında"
+          en="In development"
+        />
+        <div class="future-rive-slot">
+          <HeroRive />
+        </div>
+      </div>
+    </article>
+  </section>
+</Layout>
+
+<script>
+  document.documentElement.classList.add("has-reveal");
+
+  const detailDialogs = Array.from(document.querySelectorAll("[data-detail-dialog]"));
+  const detailOpenButtons = Array.from(document.querySelectorAll("[data-detail-open]"));
+  const detailCloseButtons = Array.from(document.querySelectorAll("[data-detail-close]"));
+  const criteriaDialogs = Array.from(document.querySelectorAll("[data-criteria-dialog]"));
+  const criteriaOpenButtons = Array.from(document.querySelectorAll("[data-criteria-open]"));
+  const criteriaCloseButtons = Array.from(document.querySelectorAll("[data-criteria-close]"));
+  const revealItems = Array.from(document.querySelectorAll("[data-reveal]"));
+
+  if (revealItems.length && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -10% 0px"
+      }
+    );
+
+    revealItems.forEach((item, index) => {
+      if (index === 0) {
+        item.classList.add("is-visible");
+      }
+
+      revealObserver.observe(item);
+    });
+  } else {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+  }
+
+  detailOpenButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-detail-open");
+      const target = document.querySelector(`[data-detail-dialog="${id}"]`);
+      target?.showModal();
+    });
+  });
+
+  detailCloseButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-detail-close");
+      const target = document.querySelector(`[data-detail-dialog="${id}"]`);
+      target?.close();
+    });
+  });
+
+  detailDialogs.forEach((detailDialog) => {
+    detailDialog.addEventListener("click", (event) => {
+      if (event.target === detailDialog) {
+        detailDialog.close();
+      }
+    });
+  });
+
+  criteriaOpenButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-criteria-open");
+      const target = document.querySelector(`[data-criteria-dialog="${id}"]`);
+      target?.showModal();
+    });
+  });
+
+  criteriaCloseButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-criteria-close");
+      const target = document.querySelector(`[data-criteria-dialog="${id}"]`);
+      target?.close();
+    });
+  });
+
+  criteriaDialogs.forEach((criteriaDialog) => {
+    criteriaDialog.addEventListener("click", (event) => {
+      if (event.target === criteriaDialog) {
+        criteriaDialog.close();
+      }
+    });
+  });
+</script>
+
+<style>
+  .understanding-page-topbar {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 6;
+    width: min(1200px, calc(100vw - 1.5rem));
+    margin: 0 auto;
+    padding-top: 1.35rem;
+  }
+
+  .understanding-page-back {
+    display: inline-flex;
+    align-items: center;
+    padding-bottom: 0.18rem;
+    border-bottom: 1px solid rgba(24, 50, 57, 0.22);
+    color: rgba(24, 50, 57, 0.76);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .understanding-page-back:hover {
+    color: #18212b;
+    border-color: rgba(24, 50, 57, 0.38);
+  }
+
+  @media (max-width: 780px) {
+    .understanding-page-topbar {
+      width: min(100vw - 1rem, 100%);
+      padding-top: 1rem;
+    }
+  }
+</style>

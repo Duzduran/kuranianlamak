@@ -1,0 +1,1520 @@
+---
+import LocalizedText from "./LocalizedText.astro";
+import { uiCopy } from "../data/i18n";
+import { criteriaArchive, criteriaGroups } from "../data/criteriaArchive";
+
+const groupMap = new Map(criteriaGroups.map((group) => [group.id, group]));
+
+const parseCodeTokens = (code) =>
+  code
+    .split(".")
+    .flatMap((part) =>
+      Array.from(part.matchAll(/[0-9]+|[A-Za-z]+/g), (match) => {
+        const value = match[0];
+        return /^[0-9]+$/.test(value) ? Number(value) : value.toUpperCase();
+      })
+    );
+
+const compareCodes = (left, right) => {
+  const a = parseCodeTokens(left.code);
+  const b = parseCodeTokens(right.code);
+  const length = Math.max(a.length, b.length);
+
+  for (let index = 0; index < length; index += 1) {
+    const leftToken = a[index];
+    const rightToken = b[index];
+
+    if (leftToken === undefined) return -1;
+    if (rightToken === undefined) return 1;
+
+    if (typeof leftToken === "number" && typeof rightToken === "number") {
+      if (leftToken !== rightToken) return leftToken - rightToken;
+      continue;
+    }
+
+    if (typeof leftToken === "string" && typeof rightToken === "string") {
+      const order = leftToken.localeCompare(rightToken, "tr");
+      if (order !== 0) return order;
+      continue;
+    }
+
+    if (typeof leftToken === "string") return -1;
+    if (typeof rightToken === "string") return 1;
+  }
+
+  return left.code.localeCompare(right.code, "tr");
+};
+
+const uniqueMods = (entry) => [...new Set((entry.tests ?? []).flatMap((test) => test.mods))];
+const discoveryLine = (entry) => {
+  const tail = [entry.discovery.date, entry.discovery.place].filter(Boolean).join(" ");
+  return tail ? `${entry.discovery.name} - ${tail}` : entry.discovery.name;
+};
+const shorten = (value, max = 160) => (value.length > max ? `${value.slice(0, max).trim()}…` : value);
+const searchIndex = (entry) =>
+  [
+    entry.code,
+    entry.title.tr,
+    entry.title.en,
+    entry.summary.tr,
+    entry.summary.en,
+    entry.discovery.name,
+    entry.discovery.place ?? "",
+    ...(entry.tags ?? [])
+  ]
+    .join(" ")
+    .toLowerCase();
+
+const groupedCriteria = criteriaGroups.map((group) => ({
+  ...group,
+  entries: criteriaArchive.filter((entry) => entry.groupId === group.id).sort(compareCodes)
+}));
+
+const groupCounts = groupedCriteria.map((group) => ({
+  ...group,
+  count: group.entries.length
+}));
+
+const totalCriteria = criteriaArchive.length;
+const totalInteractive = criteriaArchive.filter((entry) => entry.tests?.length).length;
+const totalResearchers = new Set(criteriaArchive.map((entry) => entry.discovery.name)).size;
+const totalProtocols = criteriaArchive.reduce((total, entry) => total + (entry.tests?.length ?? 0), 0);
+const previewBlocks = (entry) => {
+  if (entry.tests?.length) {
+    return entry.tests.slice(0, 2).map((test) => ({
+      label: test.label.tr,
+      value: shorten(test.sequence, 170)
+    }));
+  }
+
+  if (entry.facts?.length) {
+    return entry.facts.slice(0, 2).map((fact) => ({
+      label: fact.label.tr,
+      value: shorten(fact.value.tr, 170)
+    }));
+  }
+
+  return [{ label: "Özet", value: shorten(entry.summary.tr, 170) }];
+};
+
+const resultBlocks = (entry) => {
+  if (entry.tests?.length) {
+    return entry.tests.slice(0, 2).map((test) => ({
+      label: test.label.tr,
+      value: test.mods.map((mod) => `≡ 0 (mod ${mod})`).join(" · ")
+    }));
+  }
+
+  const factResult = entry.facts?.find((fact) => /sonuç|ölçüt|kriter/i.test(fact.label.tr));
+  if (factResult) {
+    return [{ label: factResult.label.tr, value: factResult.value.tr }];
+  }
+
+  const mods = uniqueMods(entry);
+  if (mods.length) {
+    return mods.map((mod) => ({ label: "Mod", value: `≡ 0 (mod ${mod})` }));
+  }
+
+  return [{ label: "Kayıt", value: "Yapısal eşitlik" }];
+};
+
+const groupToneClass = {
+  hamim: "tone-hamim",
+  fihrist: "tone-fihrist",
+  special: "tone-special",
+  "surah-ayah-19": "tone-surah-ayah-19"
+};
+---
+
+<section class="lab-shell" data-archive-root>
+  <header class="lab-header">
+    <div class="lab-header__bar">
+      <LocalizedText
+        as="h1"
+        class="lab-header__title"
+        tr="Kur'an Yapısal Kodlamaları ve Mod 19 Bulguları"
+        en="Quran structural codings and mod 19 findings"
+      />
+    </div>
+
+    <div class="lab-header__meta">
+      <div class="lab-header__stats">
+        <span class="lab-header__stat">
+          <span data-copy-lang="tr">Kriter</span>
+          <strong>{totalCriteria}</strong>
+        </span>
+        <span class="lab-header__stat">
+          <span data-copy-lang="tr">Test</span>
+          <strong>{totalInteractive}</strong>
+        </span>
+        <span class="lab-header__stat">
+          <span data-copy-lang="tr">Araştırmacı</span>
+          <strong>{totalResearchers}</strong>
+        </span>
+        <span class="lab-header__stat">
+          <span data-copy-lang="tr">Protokol</span>
+          <strong>{totalProtocols}</strong>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <div class="lab-controls">
+    <div class="lab-filters" role="tablist" aria-label="Kriter grupları">
+      <button type="button" class="lab-filter is-active" data-archive-filter="all">
+        <span class="lab-filter__copy">
+          <span data-copy-lang="tr">Tümü</span>
+          <span data-copy-lang="en">All</span>
+        </span>
+        <strong class="lab-filter__count">{totalCriteria}</strong>
+      </button>
+
+      {
+        groupCounts.map((group) => (
+          <button type="button" class="lab-filter" data-archive-filter={group.id}>
+            <span class="lab-filter__copy">
+              <span data-copy-lang="tr">{group.title.tr}</span>
+              <span data-copy-lang="en">{group.title.en}</span>
+            </span>
+            <strong class="lab-filter__count">{group.count}</strong>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="lab-controls__searchline">
+      <label
+        class="lab-search"
+        data-placeholder-tr="Kriter kodu, başlık, kişi veya etiket ara"
+        data-placeholder-en="Search by code, title, person, or tag"
+      >
+        <span class="lab-search__label">
+          <span data-copy-lang="tr">Arama</span>
+          <span data-copy-lang="en">Search</span>
+        </span>
+        <input type="search" data-archive-search />
+      </label>
+
+      <div class="lab-toolbar__status">
+        <span class="lab-toolbar__caption">
+          <span data-copy-lang="tr">Gösterilen kayıt</span>
+          <span data-copy-lang="en">Visible entries</span>
+        </span>
+        <strong class="lab-toolbar__value" data-archive-count>{totalCriteria}</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="lab-catalogue">
+    {
+      groupedCriteria.map((group) => (
+        <details class="lab-section" data-group-section={group.id} open>
+          <summary class={`lab-section__banner ${groupToneClass[group.id] ?? ""}`}>
+            <div class="lab-section__banner-copy">
+              <LocalizedText as="h2" class="lab-section__title" tr={group.title.tr} en={group.title.en} />
+              <LocalizedText as="p" class="lab-section__intro" tr={group.intro.tr} en={group.intro.en} />
+            </div>
+
+            <div class="lab-section__count">
+              <span class="lab-section__count-copy">
+                <span data-copy-lang="tr">Kayıt</span>
+                <span data-copy-lang="en">Entries</span>
+              </span>
+              <strong data-group-visible-count>{group.entries.length}</strong>
+            </div>
+          </summary>
+
+          <div class="lab-table">
+            <div class="lab-table__head">
+              <div class="lab-col lab-col--code">
+                <span data-copy-lang="tr">No</span>
+                <span data-copy-lang="en">No</span>
+              </div>
+              <div class="lab-col lab-col--summary">
+                <span data-copy-lang="tr">Açıklama</span>
+                <span data-copy-lang="en">Description</span>
+              </div>
+              <div class="lab-col lab-col--sequence">
+                <span data-copy-lang="tr">Kodlama</span>
+                <span data-copy-lang="en">Coding</span>
+              </div>
+              <div class="lab-col lab-col--result">
+                <span data-copy-lang="tr">Ölçüt</span>
+                <span data-copy-lang="en">Measure</span>
+              </div>
+              <div class="lab-col lab-col--detail">
+                <span data-copy-lang="tr">Kayıt</span>
+                <span data-copy-lang="en">Record</span>
+              </div>
+            </div>
+
+            <div class="lab-table__body">
+              {
+                group.entries.map((entry) => {
+                  const preview = previewBlocks(entry);
+                  const results = resultBlocks(entry);
+
+                  return (
+                    <article
+                      class="lab-table__row"
+                      data-archive-card
+                      data-group={entry.groupId}
+                      data-search={searchIndex(entry)}
+                    >
+                      <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
+                        <span class="lab-cell__mobile-label">
+                          <span data-copy-lang="tr">No</span>
+                          <span data-copy-lang="en">No</span>
+                        </span>
+                        <strong>{entry.code}</strong>
+                      </div>
+
+                      <div class="lab-cell lab-cell--summary">
+                        <span class="lab-cell__mobile-label">
+                          <span data-copy-lang="tr">Açıklama</span>
+                          <span data-copy-lang="en">Description</span>
+                        </span>
+                        <LocalizedText as="h3" class="lab-cell__title" tr={entry.title.tr} en={entry.title.en} />
+                        <LocalizedText as="p" class="lab-cell__text" tr={entry.summary.tr} en={entry.summary.en} />
+                      </div>
+
+                      <div class="lab-cell lab-cell--sequence">
+                        <span class="lab-cell__mobile-label">
+                          <span data-copy-lang="tr">Kodlama</span>
+                          <span data-copy-lang="en">Coding</span>
+                        </span>
+                        {preview.map((item) => (
+                          <div class="lab-seq">
+                            <strong class="lab-seq__label">{item.label}</strong>
+                            <span class="lab-seq__value">{item.value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div class="lab-cell lab-cell--result">
+                        <span class="lab-cell__mobile-label">
+                          <span data-copy-lang="tr">Ölçüt</span>
+                          <span data-copy-lang="en">Measure</span>
+                        </span>
+                        {results.map((item) => (
+                          <div class="lab-resultline">
+                            <strong class="lab-resultline__label">{item.label}</strong>
+                            <span class="lab-resultline__value">{item.value}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div class="lab-cell lab-cell--detail">
+                        <span class="lab-cell__mobile-label">
+                          <span data-copy-lang="tr">Kayıt</span>
+                          <span data-copy-lang="en">Record</span>
+                        </span>
+                        <p class="lab-cell__record">{discoveryLine(entry)}</p>
+                        <button type="button" class="lab-card__button" data-archive-open={entry.id}>
+                          <span data-copy-lang="tr">Detay</span>
+                          <span data-copy-lang="en">Detail</span>
+                        </button>
+                      </div>
+                    </article>
+                  );
+                })
+              }
+            </div>
+          </div>
+        </details>
+      ))
+    }
+
+    <p class="lab-empty" data-archive-empty hidden>
+      <span data-copy-lang="tr">Bu filtre ve arama için eşleşen kriter bulunamadı.</span>
+      <span data-copy-lang="en">No criteria matched this filter and search.</span>
+    </p>
+  </div>
+
+  {
+    criteriaArchive.map((entry) => {
+      const tags = entry.tags ?? [];
+      const group = groupMap.get(entry.groupId);
+
+      return (
+        <dialog class="lab-dialog" data-archive-dialog={entry.id}>
+          <div class="lab-dialog__panel">
+            <div class="lab-dialog__top">
+              <div class="lab-dialog__intro">
+                <div class="lab-dialog__meta">
+                  <span class="lab-card__code">{`Kriter ${entry.code}`}</span>
+                  <span class="lab-card__group">
+                    <span data-copy-lang="tr">{group?.title.tr}</span>
+                    <span data-copy-lang="en">{group?.title.en}</span>
+                  </span>
+                </div>
+                <LocalizedText as="h2" class="lab-dialog__title" tr={entry.title.tr} en={entry.title.en} />
+                <LocalizedText as="p" class="lab-dialog__text" tr={entry.summary.tr} en={entry.summary.en} />
+              </div>
+
+              <button type="button" class="lab-dialog__close" data-archive-close={entry.id}>
+                <span data-copy-lang="tr">{uiCopy.tr.close}</span>
+                <span data-copy-lang="en">{uiCopy.en.close}</span>
+              </button>
+            </div>
+
+            <div class="lab-dialog__columns">
+              <section class="lab-overview">
+                {entry.facts?.length ? (
+                  <div class="lab-overview__facts">
+                    {entry.facts.map((fact) => (
+                      <article class="lab-overview__fact">
+                        <LocalizedText as="h3" class="lab-overview__label" tr={fact.label.tr} en={fact.label.en} />
+                        <LocalizedText as="p" class="lab-overview__value" tr={fact.value.tr} en={fact.value.en} />
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
+
+                {tags.length ? (
+                  <div class="lab-overview__tags">
+                    {tags.map((tag) => (
+                      <span class="lab-tag">{tag}</span>
+                    ))}
+                  </div>
+                ) : null}
+
+                <div class="lab-source">
+                  <div class="lab-source__row">
+                    <span class="lab-source__label">
+                      <span data-copy-lang="tr">Keşif kaydı</span>
+                      <span data-copy-lang="en">Discovery record</span>
+                    </span>
+                    <span class="lab-source__value">{discoveryLine(entry)}</span>
+                  </div>
+                  <div class="lab-source__row">
+                    <span class="lab-source__label">
+                      <span data-copy-lang="tr">Kaynak sayfa</span>
+                      <span data-copy-lang="en">Source page</span>
+                    </span>
+                    <a class="lab-source__link" href={entry.sourceUrl} target="_blank" rel="noreferrer">
+                      <span data-copy-lang="tr">{entry.sourceLabel.tr}</span>
+                      <span data-copy-lang="en">{entry.sourceLabel.en}</span>
+                    </a>
+                  </div>
+                </div>
+              </section>
+
+              <section class="lab-workbench">
+                {entry.tests?.length ? (
+                  <>
+                    <LocalizedText
+                      as="p"
+                      class="lab-workbench__intro"
+                      tr="Aşağıdaki alanlarda boşluklar ve noktalama yok sayılır; sadece rakamlar mod hesabına katılır."
+                      en="Spaces and punctuation are ignored below; only digits are included in the modular calculation."
+                    />
+
+                    {entry.tests.map((test) => (
+                      <article class="lab-test" data-mod-tester data-mods={test.mods.join(",")}>
+                        <div class="lab-test__head">
+                          <LocalizedText as="h3" class="lab-test__title" tr={test.label.tr} en={test.label.en} />
+                          <div class="lab-badges">
+                            {test.mods.map((mod) => (
+                              <span class="lab-badge">{`mod ${mod}`}</span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {test.note ? <LocalizedText as="p" class="lab-test__note" tr={test.note.tr} en={test.note.en} /> : null}
+
+                        <textarea class="lab-test__textarea" data-mod-input data-default-sequence={test.sequence}>{test.sequence}</textarea>
+
+                        <div class="lab-test__actions">
+                          <button type="button" class="lab-test__action" data-mod-analyze>
+                            <span data-copy-lang="tr">{uiCopy.tr.analyze}</span>
+                            <span data-copy-lang="en">{uiCopy.en.analyze}</span>
+                          </button>
+                          <button type="button" class="lab-test__action lab-test__action--muted" data-mod-reset>
+                            <span data-copy-lang="tr">{uiCopy.tr.reset}</span>
+                            <span data-copy-lang="en">{uiCopy.en.reset}</span>
+                          </button>
+                        </div>
+
+                        <div class="lab-test__results">
+                          <p class="lab-result">
+                            <span class="lab-result__label">
+                              <span data-copy-lang="tr">Basamak sayısı</span>
+                              <span data-copy-lang="en">Digit count</span>
+                            </span>
+                            <strong class="lab-result__value" data-result-digits>0</strong>
+                          </p>
+
+                          {test.mods.map((mod) => (
+                            <p class="lab-result" data-mod-row={mod}>
+                              <span class="lab-result__label">{`mod ${mod}`}</span>
+                              <strong class="lab-result__value" data-result-mod={mod}>
+                                0
+                              </strong>
+                            </p>
+                          ))}
+                        </div>
+                      </article>
+                    ))}
+                  </>
+                ) : (
+                  <div class="lab-workbench__empty">
+                    <LocalizedText
+                      as="p"
+                      class="lab-workbench__intro"
+                      tr="Bu kartta doğrudan mod testi yerine eşitlik, simetri ya da özet bir yapısal kayıt öne çıkıyor."
+                      en="This card emphasizes an equality, symmetry, or structural summary rather than a direct modular test."
+                    />
+                  </div>
+                )}
+              </section>
+            </div>
+          </div>
+        </dialog>
+      );
+    })
+  }
+</section>
+
+<script>
+  const archiveRoot = document.querySelector("[data-archive-root]");
+
+  if (archiveRoot instanceof HTMLElement) {
+    const localeAwarePlaceholder = () => {
+      const search = archiveRoot.querySelector("[data-archive-search]");
+      if (!(search instanceof HTMLInputElement)) return;
+
+      const locale = document.documentElement.dataset.locale === "en" ? "en" : "tr";
+      search.placeholder =
+        locale === "en" ? search.parentElement?.getAttribute("data-placeholder-en") ?? "" : search.parentElement?.getAttribute("data-placeholder-tr") ?? "";
+    };
+
+    localeAwarePlaceholder();
+    window.addEventListener("site:locale-change", localeAwarePlaceholder);
+
+    const groupSections = Array.from(archiveRoot.querySelectorAll("[data-group-section]"));
+    const filterButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-filter]"));
+    const searchInput = archiveRoot.querySelector("[data-archive-search]");
+    const emptyState = archiveRoot.querySelector("[data-archive-empty]");
+    const countTarget = archiveRoot.querySelector("[data-archive-count]");
+    let activeFilter = "all";
+
+    const updateArchiveCards = () => {
+      const query =
+        searchInput instanceof HTMLInputElement ? searchInput.value.trim().toLowerCase() : "";
+
+      let visibleCount = 0;
+
+      groupSections.forEach((section) => {
+        if (!(section instanceof HTMLElement)) return;
+
+        const sectionId = section.dataset.groupSection ?? "";
+        const sectionCards = Array.from(section.querySelectorAll("[data-archive-card]"));
+        let sectionVisibleCount = 0;
+
+        sectionCards.forEach((card) => {
+          if (!(card instanceof HTMLElement)) return;
+          const matchesFilter = activeFilter === "all" || card.dataset.group === activeFilter;
+          const matchesSearch = !query || (card.dataset.search ?? "").includes(query);
+          const visible = matchesFilter && matchesSearch;
+          card.hidden = !visible;
+          if (visible) {
+            visibleCount += 1;
+            sectionVisibleCount += 1;
+          }
+        });
+
+        const hideSection = sectionVisibleCount === 0 || (activeFilter !== "all" && sectionId !== activeFilter);
+        section.hidden = hideSection;
+
+        if (!hideSection && section instanceof HTMLDetailsElement && (activeFilter !== "all" || query)) {
+          section.open = true;
+        }
+
+        const sectionCountTarget = section.querySelector("[data-group-visible-count]");
+        if (sectionCountTarget instanceof HTMLElement) {
+          sectionCountTarget.textContent = String(sectionVisibleCount);
+        }
+      });
+
+      if (emptyState instanceof HTMLElement) {
+        emptyState.hidden = visibleCount > 0;
+      }
+
+      if (countTarget instanceof HTMLElement) {
+        countTarget.textContent = String(visibleCount);
+      }
+    };
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!(button instanceof HTMLButtonElement)) return;
+        activeFilter = button.dataset.archiveFilter ?? "all";
+
+        filterButtons.forEach((candidate) => {
+          if (!(candidate instanceof HTMLButtonElement)) return;
+          candidate.classList.toggle("is-active", candidate === button);
+        });
+
+        updateArchiveCards();
+      });
+    });
+
+    searchInput?.addEventListener("input", updateArchiveCards);
+    updateArchiveCards();
+
+    const openButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-open]"));
+    const closeButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-close]"));
+    const dialogs = Array.from(archiveRoot.querySelectorAll("[data-archive-dialog]"));
+
+    openButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-archive-open");
+        const dialog = archiveRoot.querySelector(`[data-archive-dialog="${id}"]`);
+        if (dialog instanceof HTMLDialogElement) {
+          dialog.showModal();
+        }
+      });
+    });
+
+    closeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-archive-close");
+        const dialog = archiveRoot.querySelector(`[data-archive-dialog="${id}"]`);
+        if (dialog instanceof HTMLDialogElement) {
+          dialog.close();
+        }
+      });
+    });
+
+    dialogs.forEach((dialog) => {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) {
+          dialog.close();
+        }
+      });
+    });
+
+    const computeMod = (value, mod) => {
+      let remainder = 0;
+      let digits = 0;
+
+      for (const character of value) {
+        const code = character.charCodeAt(0);
+        if (code < 48 || code > 57) continue;
+        remainder = (remainder * 10 + (code - 48)) % mod;
+        digits += 1;
+      }
+
+      return { remainder, digits };
+    };
+
+    const testers = Array.from(archiveRoot.querySelectorAll("[data-mod-tester]"));
+
+    testers.forEach((tester) => {
+      if (!(tester instanceof HTMLElement)) return;
+
+      const input = tester.querySelector("[data-mod-input]");
+      const analyzeButton = tester.querySelector("[data-mod-analyze]");
+      const resetButton = tester.querySelector("[data-mod-reset]");
+      const digitsTarget = tester.querySelector("[data-result-digits]");
+      const mods = (tester.dataset.mods ?? "")
+        .split(",")
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value));
+
+      const render = () => {
+        if (!(input instanceof HTMLTextAreaElement)) return;
+
+        let digitCount = 0;
+
+        mods.forEach((mod) => {
+          const result = computeMod(input.value, mod);
+          digitCount = result.digits;
+          const valueTarget = tester.querySelector(`[data-result-mod="${mod}"]`);
+          const rowTarget = tester.querySelector(`[data-mod-row="${mod}"]`);
+
+          if (valueTarget instanceof HTMLElement) {
+            valueTarget.textContent = String(result.remainder);
+          }
+
+          if (rowTarget instanceof HTMLElement) {
+            rowTarget.dataset.pass = String(result.remainder === 0);
+          }
+        });
+
+        if (digitsTarget instanceof HTMLElement) {
+          digitsTarget.textContent = String(digitCount);
+        }
+      };
+
+      analyzeButton?.addEventListener("click", render);
+
+      resetButton?.addEventListener("click", () => {
+        if (input instanceof HTMLTextAreaElement) {
+          input.value = input.dataset.defaultSequence ?? "";
+          render();
+        }
+      });
+
+      input?.addEventListener("input", render);
+      render();
+    });
+  }
+</script>
+
+<style>
+  .lab-shell {
+    --lab-text: var(--theme-ink);
+    --lab-heading: var(--theme-ink-strong);
+    --lab-body: var(--theme-ink-soft);
+    --lab-muted: var(--theme-muted);
+    --lab-muted-soft: var(--theme-muted-soft);
+    --lab-border: var(--theme-border-strong);
+    --lab-border-soft: var(--theme-border);
+    --lab-surface: var(--theme-surface);
+    --lab-surface-soft: var(--theme-surface-soft);
+    --lab-surface-muted: var(--theme-surface-muted);
+    --lab-header: var(--theme-header);
+    --lab-link: var(--theme-link);
+    --lab-success: var(--theme-success);
+    --lab-pass-bg: var(--theme-success-soft);
+    --lab-pass-border: #2b8b2b;
+    --lab-fail-bg: var(--theme-fail-soft);
+    --lab-fail-border: #b66a54;
+    --lab-overlay: var(--theme-overlay);
+    --lab-dialog-shadow: 0 14px 32px rgba(18, 26, 36, 0.14);
+    display: grid;
+    gap: 1rem;
+    color: var(--lab-text);
+  }
+
+  html[data-theme="dark"] .lab-shell {
+    --lab-pass-border: #4da766;
+    --lab-fail-border: #d18272;
+    --lab-dialog-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  .lab-header,
+  .lab-controls,
+  .lab-section {
+    border: 1px solid var(--lab-border);
+    background: var(--lab-surface);
+  }
+
+  .lab-header__bar {
+    padding: 0.35rem 1rem;
+    border-bottom: 1px solid var(--lab-border);
+    background: var(--lab-header);
+  }
+
+  .lab-header__title {
+    margin: 0;
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .lab-header__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: flex-start;
+    gap: 0.9rem 1.2rem;
+    padding: 0.75rem 1rem 0.9rem;
+  }
+
+  .lab-header__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .lab-header__stat {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    color: var(--lab-muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .lab-header__stat strong {
+    color: var(--lab-heading);
+    font-size: 1rem;
+    letter-spacing: normal;
+  }
+
+  .lab-controls {
+    display: grid;
+    gap: 0.7rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .lab-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .lab-filter {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.28rem 0.55rem;
+    border: 1px solid var(--lab-border-soft);
+    background: var(--lab-surface-soft);
+    color: var(--lab-body);
+    text-align: left;
+    cursor: pointer;
+    transition: background 160ms ease;
+  }
+
+  .lab-filter.is-active {
+    border-color: var(--lab-border);
+    background: var(--lab-surface-muted);
+  }
+
+  .lab-filter__copy {
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .lab-filter__count {
+    color: var(--lab-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .lab-controls__searchline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .lab-search {
+    display: grid;
+    gap: 0.35rem;
+    flex: 1 1 26rem;
+  }
+
+  .lab-search__label {
+    color: var(--lab-muted);
+    font-size: 0.69rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .lab-search input {
+    min-height: 2.5rem;
+    width: 100%;
+    padding: 0 0.75rem;
+    border: 1px solid var(--lab-border-soft);
+    border-radius: 0;
+    background: var(--lab-surface);
+    color: var(--lab-heading);
+    font-size: 0.95rem;
+    outline: none;
+  }
+
+  .lab-search input::placeholder {
+    color: var(--lab-muted-soft);
+  }
+
+  .lab-search input:focus {
+    border-color: var(--lab-border);
+  }
+
+  .lab-toolbar__status {
+    display: grid;
+    gap: 0.1rem;
+    min-width: 9rem;
+    text-align: right;
+  }
+
+  .lab-toolbar__caption {
+    color: var(--lab-muted);
+    font-size: 0.69rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .lab-toolbar__value {
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1.45rem;
+    line-height: 1;
+  }
+
+  .lab-catalogue {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .lab-section {
+    overflow: hidden;
+  }
+
+  .lab-section__banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--lab-border);
+    background: var(--tone-soft, #dce8f4);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .lab-section__banner::-webkit-details-marker {
+    display: none;
+  }
+
+  .lab-section__banner::after {
+    content: "▾";
+    margin-left: 0.6rem;
+    color: var(--lab-body);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .lab-section:not([open]) .lab-section__banner::after {
+    content: "▸";
+  }
+
+  .lab-section__banner-copy {
+    display: grid;
+    gap: 0.18rem;
+    min-width: 0;
+  }
+
+  .lab-section__title {
+    margin: 0;
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    line-height: 1.2;
+  }
+
+  .lab-section__intro {
+    margin: 0;
+    color: var(--lab-body);
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .lab-section__count {
+    display: grid;
+    justify-items: end;
+    gap: 0.12rem;
+    margin-left: auto;
+    color: var(--lab-body);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lab-section__count-copy {
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+
+  .lab-section__count strong {
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    letter-spacing: normal;
+  }
+
+  .tone-hamim {
+    --tone-strong: #d7b24e;
+    --tone-soft: #f4e7bd;
+  }
+
+  .tone-fihrist {
+    --tone-strong: #8db7de;
+    --tone-soft: #ddebf8;
+  }
+
+  .tone-special {
+    --tone-strong: #dab27b;
+    --tone-soft: #f4e6d3;
+  }
+
+  .tone-surah-ayah-19 {
+    --tone-strong: #98c0a0;
+    --tone-soft: #e3efe5;
+  }
+
+  html[data-theme="dark"] .tone-hamim {
+    --tone-strong: #6a571f;
+    --tone-soft: #2c2617;
+  }
+
+  html[data-theme="dark"] .tone-fihrist {
+    --tone-strong: #3a6587;
+    --tone-soft: #18232f;
+  }
+
+  html[data-theme="dark"] .tone-special {
+    --tone-strong: #7a5a32;
+    --tone-soft: #261d15;
+  }
+
+  html[data-theme="dark"] .tone-surah-ayah-19 {
+    --tone-strong: #466f4d;
+    --tone-soft: #162118;
+  }
+
+  .lab-table {
+    overflow-x: auto;
+  }
+
+  .lab-table__head,
+  .lab-table__row {
+    display: grid;
+    grid-template-columns: 6.2rem minmax(16rem, 1.15fr) minmax(18rem, 1.65fr) 12.5rem minmax(15rem, 1fr);
+  }
+
+  .lab-table__head {
+    background: var(--lab-surface-muted);
+    color: var(--lab-body);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lab-table__row {
+    border-top: 1px solid var(--lab-border);
+    background: var(--lab-surface);
+  }
+
+  .lab-col,
+  .lab-cell {
+    min-width: 0;
+    padding: 0.55rem 0.65rem;
+    border-left: 1px solid var(--lab-border-soft);
+  }
+
+  .lab-cell__mobile-label {
+    display: none;
+  }
+
+  .lab-col:first-child,
+  .lab-cell:first-child {
+    border-left: 0;
+  }
+
+  .lab-cell--code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--tone-strong, #8db7de);
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .lab-cell--summary {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .lab-cell__title,
+  .lab-dialog__title {
+    margin: 0;
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.28;
+  }
+
+  .lab-cell__text,
+  .lab-dialog__text,
+  .lab-overview__value,
+  .lab-workbench__intro,
+  .lab-test__note,
+  .lab-source__value,
+  .lab-cell__record {
+    margin: 0;
+    color: var(--lab-body);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .lab-cell--sequence {
+    display: grid;
+    gap: 0.45rem;
+    align-content: center;
+  }
+
+  .lab-seq {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .lab-seq__label,
+  .lab-resultline__label {
+    color: var(--lab-muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lab-seq__value {
+    color: var(--lab-heading);
+    font-family: "SFMono-Regular", ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .lab-cell--result {
+    display: grid;
+    gap: 0.45rem;
+    align-content: center;
+    background: var(--lab-success);
+    color: #ffffff;
+  }
+
+  .lab-resultline {
+    display: grid;
+    gap: 0.1rem;
+  }
+
+  .lab-resultline__label {
+    color: rgba(255, 255, 255, 0.82);
+  }
+
+  .lab-resultline__value {
+    color: #ffffff;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .lab-cell--detail {
+    display: grid;
+    align-content: start;
+    gap: 0.42rem;
+  }
+
+  .lab-cell__source {
+    color: var(--lab-link);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .lab-card__button,
+  .lab-test__action,
+  .lab-dialog__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    padding: 0 0.55rem;
+    border: 1px solid var(--lab-border-soft);
+    border-radius: 0;
+    background: var(--lab-surface-soft);
+    color: var(--lab-heading);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .lab-card__button {
+    justify-self: start;
+    margin-top: 0.15rem;
+  }
+
+  .lab-card__button:hover,
+  .lab-test__action:hover,
+  .lab-dialog__close:hover {
+    background: var(--lab-surface-muted);
+  }
+
+  .lab-empty {
+    margin: 0;
+    padding: 1rem 1.1rem;
+    border: 1px dashed var(--lab-border-soft);
+    background: var(--lab-surface);
+    color: var(--lab-body);
+  }
+
+  .lab-card__code,
+  .lab-card__group,
+  .lab-tags,
+  .lab-badges,
+  .lab-overview__tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+
+  .lab-card__code,
+  .lab-card__group {
+    color: var(--lab-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lab-tag,
+  .lab-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.12rem 0.32rem;
+    border: 1px solid var(--lab-border-soft);
+    color: var(--lab-body);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .lab-badge--interactive {
+    border-color: var(--lab-border);
+  }
+
+  .lab-dialog {
+    width: min(1180px, calc(100vw - 2rem));
+    max-height: calc(100vh - 2rem);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 1rem;
+    background: transparent;
+  }
+
+  .lab-dialog::backdrop {
+    background: var(--lab-overlay);
+    backdrop-filter: blur(4px);
+  }
+
+  .lab-dialog__panel {
+    display: grid;
+    gap: 1.4rem;
+    padding: 1.35rem;
+    border: 1px solid var(--lab-border);
+    border-radius: 0;
+    background: var(--lab-surface);
+    box-shadow: var(--lab-dialog-shadow);
+  }
+
+  .lab-dialog__top {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .lab-dialog__intro {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .lab-dialog__columns {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .lab-overview,
+  .lab-workbench {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--lab-border-soft);
+  }
+
+  .lab-overview__facts {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .lab-overview__fact,
+  .lab-test {
+    display: grid;
+    gap: 0.72rem;
+    padding: 0.95rem 0 0;
+    border-top: 1px solid var(--lab-border-soft);
+    border-radius: 0;
+    background: none;
+  }
+
+  .lab-overview__label,
+  .lab-test__title,
+  .lab-source__label {
+    margin: 0;
+    color: var(--lab-heading);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .lab-source {
+    display: grid;
+    gap: 0.8rem;
+    padding-top: 0.2rem;
+  }
+
+  .lab-source__row {
+    display: grid;
+    gap: 0.2rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--lab-border-soft);
+  }
+
+  .lab-source__link {
+    color: var(--lab-link);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  .lab-test__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+  }
+
+  .lab-test__textarea {
+    width: 100%;
+    min-height: 8.6rem;
+    padding: 0.9rem 0.95rem;
+    border: 1px solid var(--lab-border-soft);
+    border-radius: 0;
+    background: var(--lab-surface);
+    color: var(--lab-heading);
+    font-family: "SFMono-Regular", ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+    font-size: 0.92rem;
+    line-height: 1.72;
+    resize: vertical;
+    outline: none;
+  }
+
+  .lab-test__textarea:focus {
+    border-color: var(--lab-border);
+  }
+
+  .lab-test__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .lab-test__action--muted {
+    color: var(--lab-body);
+  }
+
+  .lab-test__results {
+    display: grid;
+    gap: 0.55rem;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  }
+
+  .lab-result {
+    display: grid;
+    gap: 0.28rem;
+    padding: 0.7rem 0.75rem 0.7rem 0.95rem;
+    border-left: 2px solid var(--lab-border-soft);
+    background: var(--lab-surface-soft);
+  }
+
+  .lab-result[data-pass="true"] {
+    border-left-color: var(--lab-pass-border);
+    background: var(--lab-pass-bg);
+  }
+
+  .lab-result[data-pass="false"] {
+    border-left-color: var(--lab-fail-border);
+    background: var(--lab-fail-bg);
+  }
+
+  .lab-result__label {
+    color: var(--lab-muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .lab-result__value {
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+  }
+
+  .lab-workbench__empty {
+    padding: 1rem 0;
+    border-top: 1px dashed var(--lab-border-soft);
+  }
+
+  @media (min-width: 1080px) {
+    .lab-dialog__columns {
+      grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1.22fr);
+    }
+
+    .lab-overview {
+      padding-right: 1.2rem;
+      border-right: 1px solid var(--lab-border-soft);
+      border-top: 0;
+    }
+
+    .lab-workbench {
+      padding-left: 1.2rem;
+      border-top: 0;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    .lab-table__head,
+    .lab-table__row {
+      min-width: 1080px;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .lab-header__meta,
+    .lab-controls__searchline {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .lab-search {
+      gap: 0.22rem;
+      flex: 0 1 auto;
+    }
+
+    .lab-search__label {
+      font-size: 0.62rem;
+      letter-spacing: 0.11em;
+    }
+
+    .lab-search input {
+      min-height: 2.1rem;
+      padding: 0 0.62rem;
+      font-size: 0.88rem;
+    }
+
+    .lab-toolbar__status {
+      text-align: left;
+    }
+
+    .lab-header__stats,
+    .lab-filters {
+      gap: 0.45rem;
+    }
+
+    .lab-header__stat {
+      font-size: 0.72rem;
+    }
+
+    .lab-section__banner {
+      padding: 0.55rem 0.65rem;
+    }
+
+    .lab-section__count {
+      justify-items: start;
+      margin-left: 0;
+    }
+
+    .lab-table {
+      overflow-x: visible;
+    }
+
+    .lab-table__head {
+      display: none;
+    }
+
+    .lab-table__body {
+      display: grid;
+    }
+
+    .lab-table__row {
+      min-width: 0;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--lab-border);
+    }
+
+    .lab-cell {
+      border-left: 0;
+      border-top: 1px solid var(--lab-border-soft);
+      padding: 0.7rem 0.75rem;
+    }
+
+    .lab-cell:first-child {
+      border-top: 0;
+    }
+
+    .lab-cell__mobile-label {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: var(--lab-muted);
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .lab-cell--code {
+      justify-content: flex-start;
+      gap: 0.5rem;
+      font-size: 0.96rem;
+    }
+
+    .lab-cell--result {
+      gap: 0.55rem;
+    }
+
+    .lab-resultline__value {
+      font-size: 0.88rem;
+    }
+
+    .lab-seq__value,
+    .lab-cell__text,
+    .lab-cell__record {
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .lab-dialog {
+      width: min(100vw - 1rem, 100%);
+      max-height: calc(100vh - 1rem);
+    }
+
+    .lab-dialog__panel {
+      padding: 1rem;
+    }
+
+    .lab-dialog__top {
+      flex-direction: column;
+    }
+
+    .lab-dialog__close {
+      width: 100%;
+    }
+  }
+</style>

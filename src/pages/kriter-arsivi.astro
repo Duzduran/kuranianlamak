@@ -1,0 +1,66 @@
+---
+import Layout from "../layouts/Layout.astro";
+import CriteriaLab from "../components/CriteriaLab.astro";
+---
+
+<Layout
+  title="Kur'an Yapısal Kodlamaları ve Mod 19 Bulguları"
+  description="Kur'an yapısal kodlamalarını, Mod 19 bulgularını, Ha-Mim bağlantılarını, fihrist bulgularını ve ilgili kriter kümelerini ayrı bir araştırma sayfasında inceleyin."
+>
+  <section class="criteria-page">
+    <div class="criteria-page__topbar">
+      <a class="criteria-page__back" href="/">
+        <span data-copy-lang="tr">Ana sayfaya dön</span>
+        <span data-copy-lang="en">Back to homepage</span>
+      </a>
+    </div>
+
+    <CriteriaLab />
+  </section>
+</Layout>
+
+<style>
+  .criteria-page {
+    display: grid;
+    gap: 1.5rem;
+    width: min(1540px, calc(100vw - 1.5rem));
+    margin: 0 auto;
+    padding: 5.5rem 0 3rem;
+  }
+
+  .criteria-page__topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.85rem;
+  }
+
+  .criteria-page__back {
+    display: inline-flex;
+    align-items: center;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid var(--theme-border);
+    color: var(--theme-ink-soft);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+  }
+
+  .criteria-page__back:hover {
+    color: var(--theme-ink-strong);
+    border-color: var(--theme-border-strong);
+  }
+
+  @media (max-width: 780px) {
+    .criteria-page {
+      width: min(100vw - 1rem, 100%);
+      padding-top: 5rem;
+    }
+
+    .criteria-page__topbar {
+      align-items: start;
+    }
+  }
+</style>
