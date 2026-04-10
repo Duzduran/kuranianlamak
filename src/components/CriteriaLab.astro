@@ -208,7 +208,7 @@ const groupToneClass = {
   <div class="lab-catalogue">
     {
       groupedCriteria.map((group) => (
-        <details class="lab-section" data-group-section={group.id} open>
+        <details class="lab-section" data-group-section={group.id}>
           <summary class={`lab-section__banner ${groupToneClass[group.id] ?? ""}`}>
             <div class="lab-section__banner-copy">
               <LocalizedText as="h2" class="lab-section__title" tr={group.title.tr} en={group.title.en} />
