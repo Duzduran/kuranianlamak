@@ -118,12 +118,17 @@ const normalizeArabicLetterStream = (text: string) => {
   return normalized.join("");
 };
 
+const quranFffRows = readFileSync(resolve(process.cwd(), "scripts/fff.txt"), "utf8").trim().split(/\r?\n/u);
+const arafVerseRows = quranFffRows
+  .map((row) => row.split("|", 4))
+  .filter((parts) => parts[1] === "7")
+  .map((parts) => ({
+    ayah: Number(parts[2]),
+    text: parts[3] ?? ""
+  }));
+
 const buildArafAlmsNaturalSequence = () => {
-  const quranRows = readFileSync(resolve(process.cwd(), "scripts/fff.txt"), "utf8").trim().split(/\r?\n/u);
-  const arafText = quranRows
-    .filter((row) => row.split("|", 4)[1] === "7")
-    .map((row) => row.split("|", 4)[3] ?? "")
-    .join("");
+  const arafText = arafVerseRows.map((row) => row.text).join("");
   const normalizedStream = normalizeArabicLetterStream(`${BASMALA_TEXT}${arafText}`);
   const counts = {
     elif: [...normalizedStream].filter((character) => character === "ا").length,
@@ -140,6 +145,21 @@ const buildArafAlmsNaturalSequence = () => {
 };
 
 const arafAlmsNatural = buildArafAlmsNaturalSequence();
+const arafVerseLetterStats = arafVerseRows.map((row) => {
+  const normalized = normalizeArabicLetterStream(row.text);
+  const counts = {
+    elif: [...normalized].filter((character) => character === "ا").length,
+    lam: [...normalized].filter((character) => character === "ل").length,
+    mim: [...normalized].filter((character) => character === "م").length,
+    sad: [...normalized].filter((character) => character === "ص").length
+  };
+
+  return {
+    ayah: row.ayah,
+    counts,
+    total: counts.elif + counts.lam + counts.mim + counts.sad
+  };
+});
 const arafAlmsCountValues = [
   arafAlmsNatural.counts.elif,
   arafAlmsNatural.counts.lam,
@@ -153,6 +173,14 @@ const arafAlmsCumulativeEbced = cumulativeSums(arafAlmsEbcedValues);
 const arafAlmsCumulativeEbcedWithCounts = sequenceFrom(
   arafAlmsCumulativeEbced.flatMap((value, index) => [value, arafAlmsCountValues[index]])
 );
+const arafLamNaturalSequence = ELMS_ABJAD_DIGITS["ل"].repeat(arafAlmsNatural.counts.lam);
+const arafLam19Verses = arafVerseLetterStats.filter((row) => row.counts.lam === 19).map((row) => row.ayah);
+const arafLam19VerseThenCountSequence = sequenceFrom(arafLam19Verses.flatMap((ayah) => [ayah, 19]));
+const arafLam19CountThenVerseSequence = sequenceFrom(arafLam19Verses.flatMap((ayah) => [19, ayah]));
+const basmalaLamCount = normalizeArabicLetterStream(BASMALA_TEXT).split("").filter((character) => character === "ل").length;
+const arafLamPerVerseCountsWithBasmala = [basmalaLamCount, ...arafVerseLetterStats.map((row) => row.counts.lam)];
+const arafLamCumulativeCountsWithBasmala = cumulativeSums(arafLamPerVerseCountsWithBasmala);
+const arafLamCumulativeCountSequence = sequenceFrom(arafLamCumulativeCountsWithBasmala);
 
 const totalSurahSum = sum(surahNumbers);
 const totalAyahSum = sum(surahVerseCounts);
@@ -1462,6 +1490,117 @@ const almsCriteria: CriterionEntry[] = [
       }
     ],
     tags: ["elif-lam-mim-sad", "kümülatif", "harf toplamı", "7"]
+  },
+  {
+    id: "criterion-elms-9",
+    code: "LAM-1",
+    groupId: "alms",
+    title: l("Lam harfinin doğal Ebced akışı"),
+    summary: l(
+      "A'râf metninde, numarasız Besmele dahil yalnız Lam harfinin doğal sıradaki Ebced karşılığı yazıldığında oluşan büyük dizi hem 19 hem 7 modunda doğrulanır.",
+      "In the Al-A'raf text, when only the abjad value of Lam is written in natural order, including the unnumbered basmala, the resulting large sequence verifies modulo both 19 and 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Lam tekrar sayısı"), value: l(String(arafAlmsNatural.counts.lam)) },
+      { label: l("Basamak uzunluğu"), value: l(String(arafLamNaturalSequence.length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-9-sequence",
+        label: l("Lam doğal Ebced akışı"),
+        sequence: arafLamNaturalSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "lam", "ebced", "19", "7"]
+  },
+  {
+    id: "criterion-elms-10",
+    code: "LAM-2",
+    groupId: "alms",
+    title: l("Lam Ebced değeri ile toplam tekrar sayısı"),
+    summary: l(
+      "Lam harfinin Ebced değeri 30 ile, A'râf metninde numarasız Besmele dahil toplam tekrar sayısı 1530 doğal sırada birleştirildiğinde sonuç 19 modunda doğrulanır.",
+      "When Lam's abjad value 30 is concatenated in natural order with its total occurrence count 1530 in the Al-A'raf text including the unnumbered basmala, the result verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Lam Ebced değeri"), value: l("30") },
+      { label: l("Lam toplamı"), value: l(String(arafAlmsNatural.counts.lam)) }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-10-sequence",
+        label: l("Lam 30 / toplam 1530"),
+        sequence: `30 ${arafAlmsNatural.counts.lam}`,
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "lam", "toplam", "19"]
+  },
+  {
+    id: "criterion-elms-11",
+    code: "LAM-3",
+    groupId: "alms",
+    title: l("Lam harfinin 19 kez geçtiği ayetler"),
+    summary: l(
+      "1924 Kahire mushafı tabanı ve projedeki normalizasyon kuralı altında, A'râf suresinde Lam harfinin tam 19 kez geçtiği üç ayet vardır: 32, 43 ve 150. Ayet numaraları ile 19 sayısı doğal sırada birlikte yazıldığında iki yönlü dizilim de 19 modunda doğrulanır.",
+      "Under the 1924 Cairo muṣḥaf base text and the normalization rule used in this project, there are three verses in Surah Al-A'raf where the Lam letter occurs exactly 19 times: 32, 43, and 150. When the verse numbers are written together with 19 in natural order, both directional sequences verify modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Ayetler"), value: l(sequenceFrom(arafLam19Verses)) },
+      { label: l("Kayıt adedi"), value: l(String(arafLam19Verses.length)) },
+      { label: l("Lam tekrar sayısı"), value: l("19") }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-11-sequence-a",
+        label: l("Ayet no / 19"),
+        sequence: arafLam19VerseThenCountSequence,
+        mods: [19]
+      },
+      {
+        id: "criterion-elms-11-sequence-b",
+        label: l("19 / ayet no"),
+        sequence: arafLam19CountThenVerseSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "lam", "ayet", "19"]
+  },
+  {
+    id: "criterion-elms-12",
+    code: "LAM-4",
+    groupId: "alms",
+    title: l("Lam ayet sayımlarının kümülatif dizilimi"),
+    summary: l(
+      "Numarasız Besmele başlangıç satırı olarak dahil edilip Lam harfinin ayet bazlı tekrar sayıları kümülatif toplandığında oluşan ardışık dizilim 7 modunda doğrulanır.",
+      "When the unnumbered basmala is included as the opening row and the verse-level occurrence counts of Lam are cumulatively summed, the resulting sequential string verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Besmele Lam sayısı"), value: l(String(basmalaLamCount)) },
+      { label: l("Satır adedi"), value: l(String(arafLamPerVerseCountsWithBasmala.length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-12-sequence",
+        label: l("Lam kümülatif ayet toplamları"),
+        sequence: arafLamCumulativeCountSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "lam", "kümülatif", "7"]
   }
 ];
 
