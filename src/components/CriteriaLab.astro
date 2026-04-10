@@ -119,6 +119,7 @@ const resultBlocks = (entry) => {
 };
 
 const groupToneClass = {
+  alms: "tone-alms",
   hamim: "tone-hamim",
   fihrist: "tone-fihrist",
   special: "tone-special",
@@ -387,16 +388,18 @@ const groupToneClass = {
                     </span>
                     <span class="lab-source__value">{discoveryLine(entry)}</span>
                   </div>
-                  <div class="lab-source__row">
-                    <span class="lab-source__label">
-                      <span data-copy-lang="tr">Kaynak sayfa</span>
-                      <span data-copy-lang="en">Source page</span>
-                    </span>
-                    <a class="lab-source__link" href={entry.sourceUrl} target="_blank" rel="noreferrer">
-                      <span data-copy-lang="tr">{entry.sourceLabel.tr}</span>
-                      <span data-copy-lang="en">{entry.sourceLabel.en}</span>
-                    </a>
-                  </div>
+                  {entry.sourceUrl && entry.sourceLabel ? (
+                    <div class="lab-source__row">
+                      <span class="lab-source__label">
+                        <span data-copy-lang="tr">Kaynak sayfa</span>
+                        <span data-copy-lang="en">Source page</span>
+                      </span>
+                      <a class="lab-source__link" href={entry.sourceUrl} target="_blank" rel="noreferrer">
+                        <span data-copy-lang="tr">{entry.sourceLabel.tr}</span>
+                        <span data-copy-lang="en">{entry.sourceLabel.en}</span>
+                      </a>
+                    </div>
+                  ) : null}
                 </div>
               </section>
 
@@ -944,6 +947,11 @@ const groupToneClass = {
     --tone-soft: #f4e7bd;
   }
 
+  .tone-alms {
+    --tone-strong: #b59ccf;
+    --tone-soft: #eee5f7;
+  }
+
   .tone-fihrist {
     --tone-strong: #8db7de;
     --tone-soft: #ddebf8;
@@ -962,6 +970,11 @@ const groupToneClass = {
   html[data-theme="dark"] .tone-hamim {
     --tone-strong: #6a571f;
     --tone-soft: #2c2617;
+  }
+
+  html[data-theme="dark"] .tone-alms {
+    --tone-strong: #5d4d79;
+    --tone-soft: #201b2a;
   }
 
   html[data-theme="dark"] .tone-fihrist {

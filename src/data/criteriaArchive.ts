@@ -1,3 +1,6 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 export type LocalizedText = {
   tr: string;
   en: string;
@@ -22,8 +25,8 @@ export type CriterionEntry = {
   groupId: string;
   title: LocalizedText;
   summary: LocalizedText;
-  sourceLabel: LocalizedText;
-  sourceUrl: string;
+  sourceLabel?: LocalizedText;
+  sourceUrl?: string;
   discovery: {
     name: string;
     date?: string;
@@ -86,6 +89,70 @@ const cumulativeSums = (values: number[]) => {
     return runningTotal;
   });
 };
+
+const BASMALA_TEXT = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
+const ALEF_LIKE_MAP: Record<string, string> = {
+  "ٱ": "ا",
+  "أ": "ا",
+  "إ": "ا",
+  "آ": "ا",
+  "ٲ": "ا",
+  "ٳ": "ا",
+  "ٵ": "ا"
+};
+const IGNORED_ARABIC_CHARS = new Set(["ٰ", "ۡ", "ۖ", "۟", "ٓ", "ٔ", "ٕ", "ـ"]);
+const ELMS_ABJAD_DIGITS: Record<string, string> = {
+  ا: "1",
+  ل: "30",
+  م: "40",
+  ص: "90"
+};
+
+const normalizeArabicLetterStream = (text: string) => {
+  const normalized = Array.from(text.normalize("NFD")).flatMap((character) => {
+    if (ALEF_LIKE_MAP[character]) return [ALEF_LIKE_MAP[character]];
+    if (IGNORED_ARABIC_CHARS.has(character)) return [];
+    return /^\p{L}$/u.test(character) ? [character] : [];
+  });
+
+  return normalized.join("");
+};
+
+const buildArafAlmsNaturalSequence = () => {
+  const quranRows = readFileSync(resolve(process.cwd(), "scripts/fff.txt"), "utf8").trim().split(/\r?\n/u);
+  const arafText = quranRows
+    .filter((row) => row.split("|", 4)[1] === "7")
+    .map((row) => row.split("|", 4)[3] ?? "")
+    .join("");
+  const normalizedStream = normalizeArabicLetterStream(`${BASMALA_TEXT}${arafText}`);
+  const counts = {
+    elif: [...normalizedStream].filter((character) => character === "ا").length,
+    lam: [...normalizedStream].filter((character) => character === "ل").length,
+    mim: [...normalizedStream].filter((character) => character === "م").length,
+    sad: [...normalizedStream].filter((character) => character === "ص").length
+  };
+  const sequence = [...normalizedStream]
+    .filter((character) => character in ELMS_ABJAD_DIGITS)
+    .map((character) => ELMS_ABJAD_DIGITS[character])
+    .join("");
+
+  return { counts, sequence };
+};
+
+const arafAlmsNatural = buildArafAlmsNaturalSequence();
+const arafAlmsCountValues = [
+  arafAlmsNatural.counts.elif,
+  arafAlmsNatural.counts.lam,
+  arafAlmsNatural.counts.mim,
+  arafAlmsNatural.counts.sad
+];
+const arafAlmsCountSequence = sequenceFrom(arafAlmsCountValues);
+const arafAlmsCountTotal = sum(arafAlmsCountValues);
+const arafAlmsEbcedValues = [1, 30, 40, 90];
+const arafAlmsCumulativeEbced = cumulativeSums(arafAlmsEbcedValues);
+const arafAlmsCumulativeEbcedWithCounts = sequenceFrom(
+  arafAlmsCumulativeEbced.flatMap((value, index) => [value, arafAlmsCountValues[index]])
+);
 
 const totalSurahSum = sum(surahNumbers);
 const totalAyahSum = sum(surahVerseCounts);
@@ -285,6 +352,11 @@ const sourceHaMimDemo = {
   url: "https://kod.7ve19.com/Ha-Mim_Deneme_Text_Tr.asp"
 };
 
+const sourceWithin19Research = {
+  label: l("Within19 araştırma notu", "Within19 research note"),
+  url: ""
+};
+
 const criterionFacts = (coding: string, measure: string): CriterionFact[] => [
   { label: l("Kodlama türü"), value: l(coding) },
   { label: l("Ölçüt"), value: l(measure) }
@@ -324,6 +396,14 @@ const referenceCriterion = ({
 });
 
 export const criteriaGroups: CriterionGroup[] = [
+  {
+    id: "alms",
+    title: l("Elif-Lam-Mim-Sad Grubu", "Alif-Lam-Mim-Sad group"),
+    intro: l(
+      "A'râf 7:1 başındaki Elif-Lam-Mim-Sad harflerinden türetilen yeni aday kriterler.",
+      "New candidate criteria derived from the Alif-Lam-Mim-Sad letters at the opening of Al-A'raf 7:1."
+    )
+  },
   {
     id: "hamim",
     title: l("Ha-Mim bağlantıları", "Ha-Mim links"),
@@ -1171,7 +1251,222 @@ const supplementaryFihristCriteria: CriterionEntry[] = [
   })
 ];
 
+const almsCriteria: CriterionEntry[] = [
+  {
+    id: "criterion-elms-1",
+    code: "ELMS-1",
+    groupId: "alms",
+    title: l("A'râf metnindeki doğal Ebced akışının büyük dizilimi"),
+    summary: l(
+      "A'râf suresinde Elif, Lam, Mim ve Sad harflerinin metindeki doğal sırası Ebced değerleriyle ardışık yazıldığında 7931 basamaklı büyük bir sayı elde edilir; bu sayı 19 modunda doğrulanır.",
+      "When the Alif, Lam, Mim, and Sad letters in Surah Al-A'raf are written in their natural textual order using their abjad values, a 7931-digit number is obtained; this number verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "09.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Elif"), value: l(String(arafAlmsNatural.counts.elif)) },
+      { label: l("Lam"), value: l(String(arafAlmsNatural.counts.lam)) },
+      { label: l("Mim"), value: l(String(arafAlmsNatural.counts.mim)) },
+      { label: l("Sad"), value: l(String(arafAlmsNatural.counts.sad)) },
+      { label: l("Basamak uzunluğu"), value: l(String(arafAlmsNatural.sequence.length)) },
+      { label: l("Ölçüt"), value: l("≡ 0 (mod 19)") }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-1-sequence",
+        label: l("Doğal Ebced akışı"),
+        sequence: arafAlmsNatural.sequence,
+        mods: [19],
+        note: l(
+          "Bu dizilim, numarasız Besmele ile birlikte A'râf suresi metnindeki Elif, Lam, Mim ve Sad harflerinin doğal sıradaki Ebced karşılıklarından oluşur.",
+          "This sequence is formed from the abjad equivalents of the Alif, Lam, Mim, and Sad letters in the natural order of Surah Al-A'raf, together with the unnumbered basmala."
+        )
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "a'raf", "huruf-u mukattaa", "7931", "19"]
+  },
+  {
+    id: "criterion-elms-2",
+    code: "ELMS-2",
+    groupId: "alms",
+    title: l("Harf sayısı ile toplam Ebced birleşimi"),
+    summary: l(
+      "Elif-Lam-Mim-Sad grubundaki harf sayısı 4, toplam Ebced değeri ise 161'dir. Bu iki sayı doğal sırada birleştirildiğinde 19 modunda doğrulanır.",
+      "The letter count in the Alif-Lam-Mim-Sad group is 4 and the total abjad value is 161. When these are concatenated in natural order, the result verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Harf sayısı"), value: l("4") },
+      { label: l("Toplam Ebced"), value: l("161") }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-2-sequence",
+        label: l("4 + 161"),
+        sequence: "4161",
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "harf sayısı", "toplam ebced", "19"]
+  },
+  {
+    id: "criterion-elms-3",
+    code: "ELMS-3",
+    groupId: "alms",
+    title: l("Kümülatif Ebced dizilimi"),
+    summary: l(
+      "Elif=1, Lam=30, Mim=40 ve Sad=90 değerlerinin kümülatif toplamları 1, 31, 71 ve 161 olarak ilerler. Bu dizilim ardışık yazıldığında 19 modunda doğrulanır.",
+      "The cumulative sums of Alif=1, Lam=30, Mim=40, and Sad=90 proceed as 1, 31, 71, and 161. When written consecutively, this sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    tests: [
+      {
+        id: "criterion-elms-3-sequence",
+        label: l("1, 31, 71, 161"),
+        sequence: "1 31 71 161",
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "kümülatif", "ebced", "19"]
+  },
+  {
+    id: "criterion-elms-4",
+    code: "ELMS-4",
+    groupId: "alms",
+    title: l("Ebced değerlerinin basamak toplamları"),
+    summary: l(
+      "1, 30, 40 ve 90 Ebced değerlerinin basamak toplamları sırasıyla 1, 3, 4 ve 9 eder. Bu yeni dizilim ardışık yazıldığında 19 modunda doğrulanır.",
+      "The digit sums of the abjad values 1, 30, 40, and 90 are 1, 3, 4, and 9 respectively. When this new sequence is written consecutively, it verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    tests: [
+      {
+        id: "criterion-elms-4-sequence",
+        label: l("1, 3, 4, 9"),
+        sequence: "1 3 4 9",
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "basamak toplamı", "ebced", "19"]
+  },
+  {
+    id: "criterion-elms-5",
+    code: "ELMS-5",
+    groupId: "alms",
+    title: l("Sure no + ayet no + harf sayısı + Ebced dizilimi"),
+    summary: l(
+      "A'râf suresi 7:1 bağlamında sure no 7, ayet no 1, harf sayısı 4 ve Ebced dizilimi 1-30-40-90 doğal sırada birleştirildiğinde 19 modunda doğrulanır.",
+      "Within the Al-A'raf 7:1 context, when surah number 7, verse number 1, letter count 4, and the abjad sequence 1-30-40-90 are concatenated in natural order, the result verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sure no"), value: l("7") },
+      { label: l("Ayet no"), value: l("1") },
+      { label: l("Harf sayısı"), value: l("4") }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-5-sequence",
+        label: l(
+          "Sure 7 / Ayet 1 / Harf 4 / Ebced 1-30-40-90",
+          "Surah 7 / Verse 1 / Letters 4 / Abjad 1-30-40-90"
+        ),
+        sequence: "7 1 4 1 30 40 90",
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "a'raf", "7:1", "ebced", "19"]
+  },
+  {
+    id: "criterion-elms-6",
+    code: "ELMS-6",
+    groupId: "alms",
+    title: l("A'râf içi harf toplamları dizilimi"),
+    summary: l(
+      "A'râf suresinde, numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin toplam tekrar sayıları doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "In Surah Al-A'raf, when the total occurrence counts of Alif, Lam, Mim, and Sad are written in natural order, including the unnumbered basmala, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Toplam harf sayısı"), value: l(String(arafAlmsCountTotal)) },
+      { label: l("Ölçüt"), value: l("≡ 0 (mod 19)") }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-6-sequence",
+        label: l("Elif / Lam / Mim / Sad toplamları"),
+        sequence: arafAlmsCountSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "a'raf", "harf toplamı", "19"]
+  },
+  {
+    id: "criterion-elms-7",
+    code: "ELMS-7",
+    groupId: "alms",
+    title: l("Basamak uzunluğu ile toplam harf sayısı birleşimi"),
+    summary: l(
+      "Büyük doğal Ebced diziliminin basamak uzunluğu 7931 ile, A'râf metninde numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin toplam tekrar sayısı olan 5139 doğal sırada birleştirildiğinde sonuç 19 modunda doğrulanır.",
+      "When the digit length 7931 of the large natural abjad sequence is concatenated in natural order with 5139, the total occurrence count of Alif, Lam, Mim, and Sad in the Al-A'raf text including the unnumbered basmala, the result verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Basamak uzunluğu"), value: l(String(arafAlmsNatural.sequence.length)) },
+      { label: l("Elif + Lam + Mim + Sad toplamı"), value: l(String(arafAlmsCountTotal)) }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-7-sequence",
+        label: l(
+          "7931 / Elif+Lam+Mim+Sad toplamı 5139",
+          "7931 / Alif+Lam+Mim+Sad total 5139"
+        ),
+        sequence: `${arafAlmsNatural.sequence.length} ${arafAlmsCountTotal}`,
+        mods: [19]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "basamak uzunluğu", "harf toplamı", "19"]
+  },
+  {
+    id: "criterion-elms-8",
+    code: "ELMS-8",
+    groupId: "alms",
+    title: l("Kümülatif Ebced ile harf toplamlarının paralel dizilimi"),
+    summary: l(
+      "Elif-Lam-Mim-Sad grubunun kümülatif Ebced toplamları ile A'râf içindeki toplam tekrar sayıları doğal sıra korunarak eşleştirildiğinde ortaya çıkan dizilim 7 modunda doğrulanır.",
+      "When the cumulative abjad totals of the Alif-Lam-Mim-Sad group are paired with their total occurrences in Al-A'raf while preserving natural order, the resulting sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "10.04.2026", "Türkiye/İstanbul"),
+    tests: [
+      {
+        id: "criterion-elms-8-sequence",
+        label: l("Kümülatif Ebced / harf toplamları"),
+        sequence: arafAlmsCumulativeEbcedWithCounts,
+        mods: [7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "kümülatif", "harf toplamı", "7"]
+  }
+];
+
 export const criteriaArchive: CriterionEntry[] = [
+  ...almsCriteria,
   ...earlyHaMimCriteria,
   ...extendedHaMimCriteria,
   ...supplementaryFihristCriteria,

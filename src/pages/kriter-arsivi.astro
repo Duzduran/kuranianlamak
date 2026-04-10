@@ -15,6 +15,33 @@ import CriteriaLab from "../components/CriteriaLab.astro";
       </a>
     </div>
 
+    <section class="criteria-page__method" aria-label="Metodoloji notu">
+      <p class="criteria-page__method-kicker">
+        <span data-copy-lang="tr">Metin temeli</span>
+        <span data-copy-lang="en">Text basis</span>
+      </p>
+
+      <p class="criteria-page__method-text">
+        <span data-copy-lang="tr">
+          Bu sayfadaki harf ve ayet temelli hesaplamalarda esas alınan metin tabanı, Corpus Coranicum TEI aktarımı içindeki
+          1924 Kahire Mushafı'dır (Kral Fuad / Bulak baskısı).
+        </span>
+        <span data-copy-lang="en">
+          The primary textual basis used for the letter- and verse-level calculations on this page is the 1924 Cairo muṣḥaf
+          (King Fuad / Bulaq edition) as represented in the Corpus Coranicum TEI transcription.
+        </span>
+      </p>
+
+      <p class="criteria-page__method-text criteria-page__method-text--subtle">
+        <span data-copy-lang="tr">
+          Fihrist dizilimleri ve bazı arşiv testleri repo içindeki doğrulama çıktılarıyla sunulur; metodolojik referans yine aynı mushaf tabanıdır.
+        </span>
+        <span data-copy-lang="en">
+          Fihrist sequences and some archive tests are surfaced through repository snapshots and verification outputs; the methodological reference remains the same muṣḥaf base.
+        </span>
+      </p>
+    </section>
+
     <CriteriaLab />
   </section>
 </Layout>
@@ -53,6 +80,35 @@ import CriteriaLab from "../components/CriteriaLab.astro";
     border-color: var(--theme-border-strong);
   }
 
+  .criteria-page__method {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.15rem 0 0.95rem;
+    border-bottom: 1px solid var(--theme-border);
+  }
+
+  .criteria-page__method-kicker {
+    margin: 0;
+    color: var(--theme-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .criteria-page__method-text {
+    max-width: 76rem;
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .criteria-page__method-text--subtle {
+    color: var(--theme-muted);
+    font-size: 0.86rem;
+  }
+
   @media (max-width: 780px) {
     .criteria-page {
       width: min(100vw - 1rem, 100%);
@@ -61,6 +117,15 @@ import CriteriaLab from "../components/CriteriaLab.astro";
 
     .criteria-page__topbar {
       align-items: start;
+    }
+
+    .criteria-page__method {
+      padding-bottom: 0.8rem;
+    }
+
+    .criteria-page__method-text {
+      font-size: 0.9rem;
+      line-height: 1.65;
     }
   }
 </style>
