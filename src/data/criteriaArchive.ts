@@ -284,6 +284,39 @@ const quranLamSurahLamCumulativeDigitLengthSequence = sequenceFrom(quranLamSurah
 const quranLamCumulativeCountValues = cumulativeSums(quranLamCounts);
 const quranLamCumulativeCountSequence = sequenceFrom(quranLamCumulativeCountValues);
 
+const buildQuranSadRows = () =>
+  surahNumbers.map((surahNo) => {
+    const prefix = surahNo === 1 || surahNo === 9 ? "" : normalizedBasmala;
+    const fullText = `${prefix}${quranVerseRows
+      .filter((row) => row.surah === surahNo)
+      .map((row) => normalizeArabicLetterStream(row.text))
+      .join("")}`;
+    const sadCount = [...fullText].filter((character) => character === "ص").length;
+    const verseCount = quranVerseRows.filter((row) => row.surah === surahNo).length;
+
+    return {
+      surahNo,
+      sadCount,
+      digitLength: sadCount * 2,
+      verseCount,
+      lineCount: verseCount + (surahNo === 1 || surahNo === 9 ? 0 : 1)
+    };
+  });
+
+const quranSadRows = buildQuranSadRows();
+const quranSadTotalCount = sum(quranSadRows.map((row) => row.sadCount));
+const quranSadVerseLineRowSequence = sequenceFrom(
+  quranSadRows.flatMap((row) => [row.sadCount, row.verseCount, row.lineCount])
+);
+const quranSadLineRowSequence = sequenceFrom(quranSadRows.flatMap((row) => [row.sadCount, row.lineCount]));
+const arafSadCount = arafAlmsNatural.counts.sad;
+const sad38Row = quranSadRows.find((row) => row.surahNo === 38)!;
+const arafSadSequence = sequenceFrom([7, arafSadCount]);
+const arafSadSad38LineVerseSequence = sequenceFrom([arafSadCount, sad38Row.lineCount, sad38Row.verseCount]);
+const arafSadSad38SurahSequence = sequenceFrom([7, arafSadCount, 38]);
+const sad38SurahCountSequence = sequenceFrom([38, sad38Row.sadCount]);
+const arafSadSad38LengthLineSequence = sequenceFrom([7, 38, sad38Row.digitLength, sad38Row.lineCount]);
+
 const ALMS_FAMILY_SURAHS = [2, 3, 7, 29, 30, 31, 32];
 const buildAlmsFamilyData = () => {
   const basmalaNormalized = normalizeArabicLetterStream(BASMALA_TEXT);
@@ -593,14 +626,23 @@ const sourceWithin19Research = {
 };
 
 const spineSubsection = l(
-  "A'râf ve Elif-Lam-Mim(-Sad) Omurgası [Yeni bulgular araştırılıyor]",
-  "Al-A'raf and Alif-Lam-Mim(-Sad) spine [New findings are being researched]"
+  "Ana Omurga Araştırması · A'râf ve Elif-Lam-Mim(-Sad)",
+  "Main spine research · Al-A'raf and Alif-Lam-Mim(-Sad)"
 );
 const spineSubsectionIntro = l(
-  "Ham temeller, aşağı katmanlar, kontrol kayıtları ve meşru türevler üzerinden A'râf tek-sure hattı ile Elif-Lam-Mim(-Sad) aile hattını birlikte okuyan omurga.",
-  "A spine that reads the single-surah Al-A'raf line together with the Alif-Lam-Mim(-Sad) family line through raw foundations, lower layers, control records, and legitimate derivatives."
+  "Bu alt başlık, A'râf tek-sure hattı ile Elif-Lam-Mim(-Sad) aile hattı üzerinden daha bütünsel bir ana omurga arayışını toplar. Buradaki kayıtlar, tek-harf deneysel hatlardan ayrı okunmalıdır.",
+  "This subsection gathers the search for a more holistic main spine through the single-surah Al-A'raf line and the Alif-Lam-Mim(-Sad) family line. The records here should be read separately from the single-letter experimental lines."
 );
-const lamSubsection = l("Lam Hattı", "Lam line");
+const lamSubsection = l("Tek-Harf Deneysel Hatlar · Lam", "Single-letter experimental lines · Lam");
+const lamSubsectionIntro = l(
+  "Lam kayıtları, kapsamı daraltan tek-harf incelemeleri olduğu için ana omurga yerine geçmez; ayrı bir deneysel hat olarak izlenir.",
+  "Lam records do not replace the main spine because they narrow the scope to a single-letter analysis; they are tracked as a separate experimental line."
+);
+const sadSubsection = l("Tek-Harf Deneysel Hatlar · Sad", "Single-letter experimental lines · Sad");
+const sadSubsectionIntro = l(
+  "Sad kayıtları, kapsamı daraltan tek-harf incelemeleri olarak Kur'an geneli Sad frekansları ile A'râf 7 ve Sâd 38 arasında görülen yapısal bağları toplar; ana omurga yerine geçmez.",
+  "As a scope-narrowing single-letter analysis, the Sad records collect structural links between whole-Quran Sad frequencies and the connection between Al-A'raf 7 and Sad 38; they do not replace the main spine."
+);
 
 const criterionFacts = (coding: string, measure: string): CriterionFact[] => [
   { label: l("Kodlama türü"), value: l(coding) },
@@ -688,8 +730,8 @@ export const criteriaGroups: CriterionGroup[] = [
     id: "experimental-archive",
     title: l("Deneysel", "Experimental"),
     intro: l(
-      "Ana omurga dışında bırakılan Elif-Lam-Mim-Sad ve aile türevleri bu bölümde arşivlenir.",
-      "Alif-Lam-Mim-Sad and family derivatives kept outside the main spine are archived in this section."
+      "Bu bölüm iki ayrı hatta ayrılır: daha bütünsel ana omurga araştırması ve kapsamı daraltan tek-harf deneysel hatlar. Lam ve Sad kayıtları ana omurga yerine geçmez; seçilmiş alt-küme incelemeleri olarak burada tutulur.",
+      "This section is split into two lines: the search for a more holistic main spine and the scope-narrowing single-letter experimental lines. Lam and Sad records do not replace the main spine; they are kept here as selected subset analyses."
     )
   }
 ];
@@ -1874,6 +1916,7 @@ const almsCriteria: CriterionEntry[] = [
     code: "LAM-1",
     groupId: "alms",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 20,
     bucket: "experimental",
@@ -1904,6 +1947,7 @@ const almsCriteria: CriterionEntry[] = [
     code: "LAM-2",
     groupId: "alms",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 21,
     bucket: "experimental",
@@ -1934,6 +1978,7 @@ const almsCriteria: CriterionEntry[] = [
     code: "LAM-3",
     groupId: "alms",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 22,
     bucket: "experimental",
@@ -1971,6 +2016,7 @@ const almsCriteria: CriterionEntry[] = [
     code: "LAM-4",
     groupId: "alms",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 23,
     bucket: "experimental",
@@ -2379,13 +2425,14 @@ const lamExperimentalCriteria: CriterionEntry[] = [
     code: "LAM-5",
     groupId: "experimental-archive",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 0,
     bucket: "experimental",
     title: l("Kur'an geneli sure sıralı Lam frekansları"),
     summary: l(
-      "1924 Kahire mushafı tabanı ve projedeki normalizasyon kuralı altında, 1 ve 9 hariç numarasız Besmele dahil tüm 114 surede Lam harfinin frekansları doğal sure sırasıyla yazıldığında oluşan ham dizi 7 modunda doğrulanır.",
-      "Under the 1924 Cairo muṣḥaf base text and the project's normalization rule, when the Lam frequencies across all 114 surahs are written in natural surah order, including the unnumbered basmala except in surahs 1 and 9, the resulting raw sequence verifies modulo 7."
+      "1924 Kahire mushafı tabanı ve projedeki normalizasyon kuralı altında, 1. sureye ayrıca numarasız Besmele eklenmeden ve 9. surenin başında Besmele bulunmadığı için +1 yapılmadan, diğer surelerde baştaki numarasız Besmele satıra dahil edilerek Lam harfinin frekansları doğal sure sırasıyla yazıldığında oluşan ham dizi 7 modunda doğrulanır.",
+      "Under the 1924 Cairo muṣḥaf base text and the project's normalization rule, with no extra unnumbered basmala added to surah 1, no +1 applied to surah 9 because it does not open with the basmala, and the opening unnumbered basmala included for the other surahs, the raw sequence formed by the Lam frequencies in natural surah order verifies modulo 7."
     ),
     sourceLabel: sourceWithin19Research.label,
     sourceUrl: sourceWithin19Research.url,
@@ -2409,6 +2456,7 @@ const lamExperimentalCriteria: CriterionEntry[] = [
     code: "LAM-6",
     groupId: "experimental-archive",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 1,
     bucket: "experimental",
@@ -2439,6 +2487,7 @@ const lamExperimentalCriteria: CriterionEntry[] = [
     code: "LAM-7",
     groupId: "experimental-archive",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 2,
     bucket: "experimental",
@@ -2469,6 +2518,7 @@ const lamExperimentalCriteria: CriterionEntry[] = [
     code: "LAM-8",
     groupId: "experimental-archive",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 3,
     bucket: "experimental",
@@ -2499,6 +2549,7 @@ const lamExperimentalCriteria: CriterionEntry[] = [
     code: "LAM-9",
     groupId: "experimental-archive",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 4,
     bucket: "experimental",
@@ -2529,6 +2580,7 @@ const lamExperimentalCriteria: CriterionEntry[] = [
     code: "LAM-10",
     groupId: "experimental-archive",
     subsection: lamSubsection,
+    subsectionIntro: lamSubsectionIntro,
     subsectionOrder: 0,
     subsectionEntryOrder: 5,
     bucket: "experimental",
@@ -2556,6 +2608,224 @@ const lamExperimentalCriteria: CriterionEntry[] = [
   }
 ];
 
+const sadExperimentalCriteria: CriterionEntry[] = [
+  {
+    id: "criterion-sad-1",
+    code: "SAD-1",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 0,
+    bucket: "experimental",
+    title: l("Kur'an geneli Sad / ayet / satır satır dizisi"),
+    summary: l(
+      "1924 Kahire mushafı tabanı ve projedeki normalizasyon kuralı altında, 1. sureye ayrıca numarasız Besmele eklenmeden ve 9. surenin başında Besmele bulunmadığı için +1 yapılmadan, diğer surelerde baştaki numarasız Besmele satıra dahil edilerek Sad frekansı, ayet sayısı ve satır sayısı satır bazında doğal sırayla yazıldığında oluşan ham dizi hem 19 hem 7 modunda doğrulanır.",
+      "Under the 1924 Cairo muṣḥaf base text and the project's normalization rule, with no extra unnumbered basmala added to surah 1, no +1 applied to surah 9 because it does not open with the basmala, and the opening unnumbered basmala included for the other surahs, the raw sequence formed by the Sad frequency, verse count, and line count of each surah in natural row order verifies modulo both 19 and 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Toplam Sad sayısı"), value: l(String(quranSadTotalCount)) },
+      { label: l("Dizilim yapısı"), value: l("Sad / ayet / satır") }
+    ],
+    tests: [
+      {
+        id: "criterion-sad-1-sequence",
+        label: l("Sad / ayet / satır"),
+        sequence: quranSadVerseLineRowSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["sad", "sad hattı", "kuran geneli", "ham veri", "ayet", "satır", "19", "7"]
+  },
+  {
+    id: "criterion-sad-2",
+    code: "SAD-2",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 1,
+    bucket: "experimental",
+    title: l("A'râf 7 sure no ile Sad frekansı"),
+    summary: l(
+      "A'râf suresinin numarası 7 ile aynı suredeki Sad frekansı 98 doğal sırada yazıldığında oluşan kısa dizi hem 19 hem 7 modunda doğrulanır.",
+      "When the number 7 of Surah Al-A'raf is written in natural order with the Sad frequency 98 in the same surah, the resulting short sequence verifies modulo both 19 and 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("A'râf sure no"), value: l("7") },
+      { label: l("A'râf Sad frekansı"), value: l(String(arafSadCount)) }
+    ],
+    tests: [
+      {
+        id: "criterion-sad-2-sequence",
+        label: l("7 / 98"),
+        sequence: arafSadSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["sad", "sad hattı", "araf", "ham veri", "19", "7"]
+  },
+  {
+    id: "criterion-sad-3",
+    code: "SAD-3",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 2,
+    bucket: "experimental",
+    title: l("A'râf Sad frekansı ile Sâd 38 satır ve ayet sayısı"),
+    summary: l(
+      "A'râf içindeki Sad frekansı 98 ile Sâd suresinin satır sayısı 89 ve ayet sayısı 88 doğal sırada yazıldığında oluşan dizi hem 19 hem 7 modunda doğrulanır.",
+      "When the Sad frequency 98 in Al-A'raf is followed in natural order by the line count 89 and verse count 88 of Surah Sad, the resulting sequence verifies modulo both 19 and 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("A'râf Sad frekansı"), value: l(String(arafSadCount)) },
+      { label: l("Sâd satır sayısı"), value: l(String(sad38Row.lineCount)) },
+      { label: l("Sâd ayet sayısı"), value: l(String(sad38Row.verseCount)) }
+    ],
+    tests: [
+      {
+        id: "criterion-sad-3-sequence",
+        label: l("98 / 89 / 88"),
+        sequence: arafSadSad38LineVerseSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["sad", "sad hattı", "araf", "sad-38", "ham veri", "19", "7"]
+  },
+  {
+    id: "criterion-sad-4",
+    code: "SAD-4",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 3,
+    bucket: "experimental",
+    title: l("A'râf no, Sad frekansı ve Sâd sure no"),
+    summary: l(
+      "A'râf sure no 7, A'râf içi Sad frekansı 98 ve Sâd sure no 38 doğal sırayla yazıldığında oluşan dizi 19 modunda doğrulanır.",
+      "When Al-A'raf 7, the Sad frequency 98 in Al-A'raf, and the surah number 38 of Sad are written in natural order, the resulting sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: criterionFacts("7 / 98 / 38", "≡ 0 (mod 19)"),
+    tests: [
+      {
+        id: "criterion-sad-4-sequence",
+        label: l("7 / 98 / 38"),
+        sequence: arafSadSad38SurahSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["sad", "sad hattı", "araf", "sad-38", "19"]
+  },
+  {
+    id: "criterion-sad-5",
+    code: "SAD-5",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 4,
+    bucket: "experimental",
+    title: l("Sâd 38 sure no ile Sad frekansı"),
+    summary: l(
+      "Sâd suresinin numarası 38 ile aynı suredeki Sad frekansı 29 doğal sırayla yazıldığında oluşan dizi 7 modunda doğrulanır.",
+      "When the number 38 of Surah Sad is written in natural order with the Sad frequency 29 in the same surah, the resulting sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sâd sure no"), value: l("38") },
+      { label: l("Sâd Sad frekansı"), value: l(String(sad38Row.sadCount)) }
+    ],
+    tests: [
+      {
+        id: "criterion-sad-5-sequence",
+        label: l("38 / 29"),
+        sequence: sad38SurahCountSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["sad", "sad hattı", "sad-38", "7"]
+  },
+  {
+    id: "criterion-sad-6",
+    code: "SAD-6",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 5,
+    bucket: "experimental",
+    title: l("Kur'an geneli Sad / satır satır dizisi"),
+    summary: l(
+      "Kur'an genelinde her sure için Sad frekansı ile satır sayısı satır bazında doğal sırayla yazıldığında oluşan ham dizi 7 modunda doğrulanır.",
+      "Across the whole Quran, when the Sad frequency and line count of each surah are written row-wise in natural order, the resulting raw sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Dizilim yapısı"), value: l("Sad / satır") },
+      { label: l("Toplam Sad sayısı"), value: l(String(quranSadTotalCount)) }
+    ],
+    tests: [
+      {
+        id: "criterion-sad-6-sequence",
+        label: l("Sad / satır"),
+        sequence: quranSadLineRowSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["sad", "sad hattı", "kuran geneli", "ham veri", "satır", "7"]
+  },
+  {
+    id: "criterion-sad-7",
+    code: "SAD-7",
+    groupId: "experimental-archive",
+    subsection: sadSubsection,
+    subsectionIntro: sadSubsectionIntro,
+    subsectionOrder: 1,
+    subsectionEntryOrder: 6,
+    bucket: "experimental",
+    title: l("A'râf no, Sâd no, Sâd doğal uzunluğu ve satır sayısı"),
+    summary: l(
+      "A'râf sure no 7 ile Sâd sure no 38, Sâd içindeki Sad doğal akış uzunluğu 58 ve Sâd satır sayısı 89 doğal sırada yazıldığında oluşan dizi hem 19 hem 7 modunda doğrulanır.",
+      "When Al-A'raf 7 is followed in natural order by Sad 38, the Sad-only natural-stream length 58 within Surah Sad, and its line count 89, the resulting sequence verifies modulo both 19 and 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sâd doğal uzunluğu"), value: l(String(sad38Row.digitLength)) },
+      { label: l("Sâd satır sayısı"), value: l(String(sad38Row.lineCount)) }
+    ],
+    tests: [
+      {
+        id: "criterion-sad-7-sequence",
+        label: l("7 / 38 / 58 / 89"),
+        sequence: arafSadSad38LengthLineSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["sad", "sad hattı", "araf", "sad-38", "doğal uzunluk", "19", "7"]
+  }
+];
+
 const holisticSpineCodes = new Set(["ELMS-1", "ELMS-2", "ALMSF-5", "ALMSF-6", "ALMSF-7", "ALMSF-8"]);
 
 const almsExperimentalCriteria: CriterionEntry[] = [
@@ -2572,6 +2842,7 @@ export const criteriaArchive: CriterionEntry[] = [
   ...spineExperimentalCriteria,
   ...almsExperimentalCriteria,
   ...lamExperimentalCriteria,
+  ...sadExperimentalCriteria,
   ...earlyHaMimCriteria,
   ...extendedHaMimCriteria,
   ...supplementaryFihristCriteria,
