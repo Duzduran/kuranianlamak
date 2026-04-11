@@ -23,7 +23,15 @@ export type CriterionEntry = {
   id: string;
   code: string;
   groupId: string;
+  subsection?: LocalizedText;
+  subsectionIntro?: LocalizedText;
+  subsectionOrder?: number;
+  subsectionEntryOrder?: number;
   bucket?:
+    | "foundational"
+    | "lower-raw"
+    | "control"
+    | "derived-legit"
     | "core-ebced-main"
     | "core-ebced-summary"
     | "core-position"
@@ -114,6 +122,19 @@ const ELMS_ABJAD_DIGITS: Record<string, string> = {
   ص: "90"
 };
 
+const countElmsStreamLetters = (normalizedStream: string) => ({
+  elif: [...normalizedStream].filter((character) => character === "ا").length,
+  lam: [...normalizedStream].filter((character) => character === "ل").length,
+  mim: [...normalizedStream].filter((character) => character === "م").length,
+  sad: [...normalizedStream].filter((character) => character === "ص").length
+});
+
+const digitLengthForElmsStream = (normalizedStream: string) =>
+  [...normalizedStream]
+    .filter((character) => character in ELMS_ABJAD_DIGITS)
+    .map((character) => ELMS_ABJAD_DIGITS[character])
+    .join("").length;
+
 const normalizeArabicLetterStream = (text: string) => {
   const normalized = Array.from(text.normalize("NFD")).flatMap((character) => {
     if (ALEF_LIKE_MAP[character]) return [ALEF_LIKE_MAP[character]];
@@ -123,6 +144,8 @@ const normalizeArabicLetterStream = (text: string) => {
 
   return normalized.join("");
 };
+
+const normalizedBasmala = normalizeArabicLetterStream(BASMALA_TEXT);
 
 const quranFffRows = readFileSync(resolve(process.cwd(), "scripts/fff.txt"), "utf8").trim().split(/\r?\n/u);
 const quranVerseRows = quranFffRows
@@ -144,12 +167,7 @@ const arafVerseRows = quranVerseRows
 const buildArafAlmsNaturalSequence = () => {
   const arafText = arafVerseRows.map((row) => row.text).join("");
   const normalizedStream = normalizeArabicLetterStream(`${BASMALA_TEXT}${arafText}`);
-  const counts = {
-    elif: [...normalizedStream].filter((character) => character === "ا").length,
-    lam: [...normalizedStream].filter((character) => character === "ل").length,
-    mim: [...normalizedStream].filter((character) => character === "م").length,
-    sad: [...normalizedStream].filter((character) => character === "ص").length
-  };
+  const counts = countElmsStreamLetters(normalizedStream);
   const sequence = [...normalizedStream]
     .filter((character) => character in ELMS_ABJAD_DIGITS)
     .map((character) => ELMS_ABJAD_DIGITS[character])
@@ -162,19 +180,26 @@ const arafAlmsNatural = buildArafAlmsNaturalSequence();
 const arafNormalizedStream = normalizeArabicLetterStream(`${BASMALA_TEXT}${arafVerseRows.map((row) => row.text).join("")}`);
 const arafVerseLetterStats = arafVerseRows.map((row) => {
   const normalized = normalizeArabicLetterStream(row.text);
-  const counts = {
-    elif: [...normalized].filter((character) => character === "ا").length,
-    lam: [...normalized].filter((character) => character === "ل").length,
-    mim: [...normalized].filter((character) => character === "م").length,
-    sad: [...normalized].filter((character) => character === "ص").length
-  };
+  const counts = countElmsStreamLetters(normalized);
 
   return {
     ayah: row.ayah,
     counts,
-    total: counts.elif + counts.lam + counts.mim + counts.sad
+    total: counts.elif + counts.lam + counts.mim + counts.sad,
+    digitLength: digitLengthForElmsStream(normalized)
   };
 });
+const arafBasmalaNormalized = normalizeArabicLetterStream(BASMALA_TEXT);
+const arafBasmalaCounts = countElmsStreamLetters(arafBasmalaNormalized);
+const arafVerseLayerWithBasmala = [
+  {
+    ayah: 0,
+    counts: arafBasmalaCounts,
+    total: arafBasmalaCounts.elif + arafBasmalaCounts.lam + arafBasmalaCounts.mim + arafBasmalaCounts.sad,
+    digitLength: digitLengthForElmsStream(arafBasmalaNormalized)
+  },
+  ...arafVerseLetterStats
+];
 const arafAlmsCountValues = [
   arafAlmsNatural.counts.elif,
   arafAlmsNatural.counts.lam,
@@ -221,6 +246,43 @@ const basmalaLamCount = normalizeArabicLetterStream(BASMALA_TEXT).split("").filt
 const arafLamPerVerseCountsWithBasmala = [basmalaLamCount, ...arafVerseLetterStats.map((row) => row.counts.lam)];
 const arafLamCumulativeCountsWithBasmala = cumulativeSums(arafLamPerVerseCountsWithBasmala);
 const arafLamCumulativeCountSequence = sequenceFrom(arafLamCumulativeCountsWithBasmala);
+const arafVerseAyahSadTotalLengthColumnSequence = sequenceFrom([
+  ...arafVerseLayerWithBasmala.map((row) => row.ayah),
+  ...arafVerseLayerWithBasmala.map((row) => row.counts.sad),
+  ...arafVerseLayerWithBasmala.map((row) => row.total),
+  ...arafVerseLayerWithBasmala.map((row) => row.digitLength)
+]);
+
+const buildQuranLamRows = () =>
+  surahNumbers.map((surahNo) => {
+    const prefix = surahNo === 1 || surahNo === 9 ? "" : normalizedBasmala;
+    const fullText = `${prefix}${quranVerseRows
+      .filter((row) => row.surah === surahNo)
+      .map((row) => normalizeArabicLetterStream(row.text))
+      .join("")}`;
+    const lamCount = [...fullText].filter((character) => character === "ل").length;
+
+    return {
+      surahNo,
+      lamCount
+    };
+  });
+
+const quranLamRows = buildQuranLamRows();
+const quranLamCounts = quranLamRows.map((row) => row.lamCount);
+const quranLamTotalCount = sum(quranLamCounts);
+const quranLamCountSequence = sequenceFrom(quranLamCounts);
+const quranLamSurahLamRowSequence = sequenceFrom(quranLamRows.flatMap((row) => [row.surahNo, row.lamCount]));
+const quranLamSurahLamColumnSequence = sequenceFrom([
+  ...quranLamRows.map((row) => row.surahNo),
+  ...quranLamRows.map((row) => row.lamCount)
+]);
+const quranLamSurahLamDigitLengthValues = quranLamRows.flatMap((row) => [String(row.surahNo).length, String(row.lamCount).length]);
+const quranLamSurahLamDigitLengthSequence = sequenceFrom(quranLamSurahLamDigitLengthValues);
+const quranLamSurahLamCumulativeDigitLengthValues = cumulativeSums(quranLamSurahLamDigitLengthValues);
+const quranLamSurahLamCumulativeDigitLengthSequence = sequenceFrom(quranLamSurahLamCumulativeDigitLengthValues);
+const quranLamCumulativeCountValues = cumulativeSums(quranLamCounts);
+const quranLamCumulativeCountSequence = sequenceFrom(quranLamCumulativeCountValues);
 
 const ALMS_FAMILY_SURAHS = [2, 3, 7, 29, 30, 31, 32];
 const buildAlmsFamilyData = () => {
@@ -273,6 +335,25 @@ const buildAlmsFamilyData = () => {
 const almsFamilyData = buildAlmsFamilyData();
 const almsFamilyCountSequence = sequenceFrom(almsFamilyData.familyCounts);
 const almsFamilyCumulativeCountSequence = sequenceFrom(almsFamilyData.familyCumulativeCounts);
+const almsFamilyCoreColumnCountSequence = sequenceFrom([
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.elif),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.lam),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.mim)
+]);
+const almsFamilyCoreColumnsWithSadSequence = sequenceFrom([
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.elif),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.lam),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.mim),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.sad)
+]);
+const almsFamilySurahLamMimColumnSequence = sequenceFrom([
+  ...almsFamilyData.perSurah.map((entry) => entry.surahNo),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.lam),
+  ...almsFamilyData.perSurah.map((entry) => entry.counts.mim)
+]);
+const almsFamilySurahSadTotalRowSequence = sequenceFrom(
+  almsFamilyData.perSurah.flatMap((entry) => [entry.surahNo, entry.counts.sad, entry.countTotal])
+);
 const almsFamilyPerSurahTotalCounts = almsFamilyData.perSurah.map((entry) => entry.countTotal);
 const almsFamilyPerSurahTotalCountSequence = sequenceFrom(almsFamilyPerSurahTotalCounts);
 const almsFamilyCumulativeSurahLengths = cumulativeSums(almsFamilyData.perSurah.map((entry) => entry.digitLength));
@@ -311,7 +392,9 @@ const totalAyahSum = sum(surahVerseCounts);
 const totalSurahDigitSum = sum(surahNumbers.map((surahNo) => digitSum(surahNo)));
 const totalAyahDigitSum = sum(surahVerseCounts.map((ayahCount) => digitSum(ayahCount)));
 const cumulativeVerseCounts = cumulativeSums(surahVerseCounts);
+const cumulativeVerseCountsSlidingWindowSequence = slidingWindowDigitSequence(cumulativeVerseCounts.join(""));
 const lineIndexSums = totalLineCounts.map((lineCount) => (lineCount * (lineCount + 1)) / 2);
+const lineIndexSumsDigitSumSequence = sequenceFrom(lineIndexSums.map((value) => digitSum(value)));
 
 const parityGroups = {
   ee: [] as Array<{ surah: number; ayah: number }>,
@@ -509,6 +592,16 @@ const sourceWithin19Research = {
   url: ""
 };
 
+const spineSubsection = l(
+  "A'râf ve Elif-Lam-Mim(-Sad) Omurgası [Yeni bulgular araştırılıyor]",
+  "Al-A'raf and Alif-Lam-Mim(-Sad) spine [New findings are being researched]"
+);
+const spineSubsectionIntro = l(
+  "Ham temeller, aşağı katmanlar, kontrol kayıtları ve meşru türevler üzerinden A'râf tek-sure hattı ile Elif-Lam-Mim(-Sad) aile hattını birlikte okuyan omurga.",
+  "A spine that reads the single-surah Al-A'raf line together with the Alif-Lam-Mim(-Sad) family line through raw foundations, lower layers, control records, and legitimate derivatives."
+);
+const lamSubsection = l("Lam Hattı", "Lam line");
+
 const criterionFacts = (coding: string, measure: string): CriterionFact[] => [
   { label: l("Kodlama türü"), value: l(coding) },
   { label: l("Ölçüt"), value: l(measure) }
@@ -550,10 +643,13 @@ const referenceCriterion = ({
 export const criteriaGroups: CriterionGroup[] = [
   {
     id: "spine",
-    title: l("A'râf ve Elif-Lam-Mim(-Sad) Omurgası", "Al-A'raf and Alif-Lam-Mim(-Sad) spine"),
+    title: l(
+      "A'râf ve Elif-Lam-Mim(-Sad) Omurgası [Yeni bulgular araştırılıyor]",
+      "Al-A'raf and Alif-Lam-Mim(-Sad) spine [New findings are being researched]"
+    ),
     intro: l(
-      "A'râf tek-sure hattı ile Elif-Lam-Mim(-Sad) aile hattının birbirini kilitlediği seçilmiş çekirdek kayıtlar.",
-      "Selected core records where the single-surah Al-A'raf line interlocks with the Alif-Lam-Mim(-Sad) family line."
+      "Ham temeller, aşağı katmanlar, kontrol kayıtları ve meşru türevler üzerinden A'râf tek-sure hattı ile Elif-Lam-Mim(-Sad) aile hattını birlikte okuyan omurga.",
+      "A spine that reads the single-surah Al-A'raf line together with the Alif-Lam-Mim(-Sad) family line through raw foundations, lower layers, control records, and legitimate derivatives."
     )
   },
   {
@@ -1416,7 +1512,7 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-1",
     code: "ELMS-1",
     groupId: "alms",
-    bucket: "core-ebced-main",
+    bucket: "foundational",
     title: l("A'râf metnindeki doğal Ebced akışının büyük dizilimi"),
     summary: l(
       "A'râf suresinde Elif, Lam, Mim ve Sad harflerinin metindeki doğal sırası Ebced değerleriyle ardışık yazıldığında 7931 basamaklı büyük bir sayı elde edilir; bu sayı 19 modunda doğrulanır.",
@@ -1555,7 +1651,7 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-6",
     code: "ELMS-2",
     groupId: "alms",
-    bucket: "core-ebced-main",
+    bucket: "foundational",
     title: l("A'râf içi harf frekansları dizilimi"),
     summary: l(
       "A'râf suresinde, numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin frekansları 2347-1530-1164-98 olarak doğal sırada yazıldığında 19 modunda doğrulanır.",
@@ -1579,10 +1675,38 @@ const almsCriteria: CriterionEntry[] = [
     tags: ["elif-lam-mim-sad", "a'raf", "harf frekansı", "19"]
   },
   {
+    id: "criterion-elms-17",
+    code: "ELMS-17",
+    groupId: "alms",
+    bucket: "lower-raw",
+    title: l("A'râf ayet no, Sad, toplam frekans ve doğal uzunluk sütun dizilimi"),
+    summary: l(
+      "Numarasız Besmele dahil A'râf 7'de her satır için ayet no, Sad frekansı, Elif-Lam-Mim-Sad toplam frekansı ve doğal akış uzunluğu sütun bazında ardışık yazıldığında oluşan ayet-tablosu hem 19 hem 7 modunda doğrulanır.",
+      "Including the unnumbered basmala in Al-A'raf 7, when the verse number, Sad frequency, total Alif-Lam-Mim-Sad frequency, and natural-stream length of each row are written column-wise, the resulting verse-table verifies modulo both 19 and 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Satır adedi"), value: l(String(arafVerseLayerWithBasmala.length)) },
+      { label: l("Sütunlar"), value: l("Ayet no / Sad / Toplam frekans / Doğal uzunluk") },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 19) · ≡ 0 (mod 7)") }
+    ],
+    tests: [
+      {
+        id: "criterion-elms-17-sequence",
+        label: l("Ayet no / Sad / toplam frekans / doğal uzunluk"),
+        sequence: arafVerseAyahSadTotalLengthColumnSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "a'raf", "ayet tablosu", "ham veri", "sad", "19", "7"]
+  },
+  {
     id: "criterion-elms-7",
     code: "ELMS-6",
     groupId: "alms",
-    bucket: "core-ebced-main",
+    bucket: "derived-legit",
     title: l("Basamak uzunluğu ile toplam frekans birleşimi"),
     summary: l(
       "Büyük doğal Ebced diziliminin basamak uzunluğu 7931 ile, A'râf metninde numarasız Besmele dahil Elif, Lam, Mim ve Sad harflerinin toplam frekansı olan 5139 doğal sırada birleştirildiğinde sonuç 19 modunda doğrulanır.",
@@ -1721,7 +1845,7 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-16",
     code: "ELMS-12",
     groupId: "alms",
-    bucket: "core-ebced-main",
+    bucket: "derived-legit",
     title: l("Kümülatif doğal uzunluklar, harf frekansları ve kümülatif frekanslar"),
     summary: l(
       "A'râf metninde Elif-Lam-Mim-Sad için önce kümülatif doğal Ebced uzunlukları 2347-5407-7735-7931, ardından harf frekansları 2347-1530-1164-98 ve son olarak bu frekansların kümülatif ilerleyişi 2347-3877-5041-5139 doğal sırada yazılır. Oluşan birleşik dizi hem 19 hem 7 modunda doğrulanır.",
@@ -1749,6 +1873,9 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-9",
     code: "LAM-1",
     groupId: "alms",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 20,
     bucket: "experimental",
     title: l("Lam harfinin doğal Ebced akışı"),
     summary: l(
@@ -1776,6 +1903,9 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-10",
     code: "LAM-2",
     groupId: "alms",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 21,
     bucket: "experimental",
     title: l("Lam Ebced değeri ile toplam tekrar sayısı"),
     summary: l(
@@ -1803,6 +1933,9 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-11",
     code: "LAM-3",
     groupId: "alms",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 22,
     bucket: "experimental",
     title: l("Lam harfinin 19 kez geçtiği ayetler"),
     summary: l(
@@ -1837,6 +1970,9 @@ const almsCriteria: CriterionEntry[] = [
     id: "criterion-elms-12",
     code: "LAM-4",
     groupId: "alms",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 23,
     bucket: "experimental",
     title: l("Lam ayet sayımlarının kümülatif dizilimi"),
     summary: l(
@@ -1963,6 +2099,117 @@ const almsFamilyCriteria: CriterionEntry[] = [
       }
     ],
     tags: ["elif-lam-mim-sad", "aile", "doğal uzunluk", "ebced", "kümülatif", "19", "7"]
+  },
+  {
+    id: "criterion-alms-family-5",
+    code: "ALMSF-5",
+    groupId: "alms-family",
+    bucket: "foundational",
+    title: l("2, 3, 7, 29, 30, 31 ve 32. surelerde ortak Elif-Lam-Mim frekanslarının sütun-bazlı aile dizilimi"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerde ortak çekirdek korunup Sad sütunu dışarıda bırakıldığında, Elif-Lam-Mim frekansları önce bütün Elif sütunu, ardından Lam ve Mim sütunları sure sırası korunarak yazılır. Oluşan ham aile dizilimi hem 19 hem 7 modunda doğrulanır.",
+      "Across surahs 2, 3, 7, 29, 30, 31, and 32, when the shared core is preserved and the Sad column is left out, the Alif-Lam-Mim frequencies are written as full Alif, then Lam, then Mim columns while preserving surah order. The resulting raw family sequence verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Çekirdek harfler"), value: l("Elif / Lam / Mim") },
+      { label: l("Sad durumu"), value: l("Sad sütunu dışarıda") },
+      {
+        label: l("Sütun dizilimi"),
+        value: l("4217-2354-2347-715-496-340-245 / 3202-1892-1530-554-394-297-155 / 2195-1249-1164-344-317-173-158")
+      },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 19) · ≡ 0 (mod 7)") }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-5-sequence",
+        label: l("Elif / Lam / Mim sütun dizilimi"),
+        sequence: almsFamilyCoreColumnCountSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "ham veri", "harf frekansı", "sütun", "19", "7"]
+  },
+  {
+    id: "criterion-alms-family-7",
+    code: "ALMSF-7",
+    groupId: "alms-family",
+    bucket: "foundational",
+    title: l("2, 3, 7, 29, 30, 31 ve 32. surelerde sure no, Lam ve Mim sütun dizilimi"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerde önce sure numaraları, ardından Lam ve Mim frekans sütunları sure sırası korunarak yazıldığında oluşan ham aile dizilimi hem 19 hem 7 modunda doğrulanır.",
+      "Across surahs 2, 3, 7, 29, 30, 31, and 32, when the surah numbers are followed by the Lam and Mim frequency columns while preserving surah order, the resulting raw family sequence verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sütunlar"), value: l("Sure no / Lam / Mim") },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 19) · ≡ 0 (mod 7)") }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-7-sequence",
+        label: l("Sure no / Lam / Mim sütun dizilimi"),
+        sequence: almsFamilySurahLamMimColumnSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "ham veri", "sure no", "lam", "mim", "19", "7"]
+  },
+  {
+    id: "criterion-alms-family-8",
+    code: "ALMSF-8",
+    groupId: "alms-family",
+    bucket: "foundational",
+    title: l("2, 3, 7, 29, 30, 31 ve 32. surelerde sure no, Sad ve toplam frekans satır dizilimi"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerde her satır için sure no, Sad frekansı ve toplam Elif-Lam-Mim(-Sad) frekansı doğal satır düzeninde yazıldığında oluşan ham aile dizilimi hem 19 hem 7 modunda doğrulanır.",
+      "Across surahs 2, 3, 7, 29, 30, 31, and 32, when each row writes the surah number, Sad frequency, and total Alif-Lam-Mim(-Sad) frequency in natural row order, the resulting raw family sequence verifies modulo both 19 and 7."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Satır yapısı"), value: l("Sure no / Sad / Toplam frekans") },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 19) · ≡ 0 (mod 7)") }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-8-sequence",
+        label: l("Sure no / Sad / toplam frekans satır dizilimi"),
+        sequence: almsFamilySurahSadTotalRowSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "ham veri", "sure no", "sad", "toplam frekans", "19", "7"]
+  },
+  {
+    id: "criterion-alms-family-6",
+    code: "ALMSF-6",
+    groupId: "alms-family",
+    bucket: "foundational",
+    title: l("2, 3, 7, 29, 30, 31 ve 32. surelerde Elif-Lam-Mim-Sad sütun-bazlı aile dizilimi"),
+    summary: l(
+      "2, 3, 7, 29, 30, 31 ve 32. surelerde Elif-Lam-Mim-Sad frekansları önce bütün Elif sütunu, ardından Lam, Mim ve Sad sütunları sure sırası korunarak yazıldığında oluşan ham aile dizilimi 7 modunda doğrulanır; fakat 19 modunda doğrulanmaz.",
+      "Across surahs 2, 3, 7, 29, 30, 31, and 32, when the Alif-Lam-Mim-Sad frequencies are written as full Alif, then Lam, then Mim, then Sad columns while preserving surah order, the resulting raw family sequence verifies modulo 7 but not modulo 19."
+    ),
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sütunlar"), value: l("Elif / Lam / Mim / Sad") },
+      {
+        label: l("Sütun dizilimi"),
+        value: l(
+          "4217-2354-2347-715-496-340-245 / 3202-1892-1530-554-394-297-155 / 2195-1249-1164-344-317-173-158 / 0-0-98-0-0-0-0"
+        )
+      },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 7) · ≢ 0 (mod 19)") }
+    ],
+    tests: [
+      {
+        id: "criterion-alms-family-6-sequence",
+        label: l("Elif / Lam / Mim / Sad sütun dizilimi"),
+        sequence: almsFamilyCoreColumnsWithSadSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["elif-lam-mim-sad", "aile", "sad", "uzantı", "ham veri", "sütun", "7"]
   }
 ];
 
@@ -1970,8 +2217,25 @@ const buildSpineEntry = (entry: CriterionEntry, id: string): CriterionEntry => (
   ...entry,
   id,
   groupId: "spine",
-  bucket: "core-ebced-main",
+  bucket: entry.bucket ?? "foundational",
   tags: [...new Set([...(entry.tags ?? []), "bütünsel omurga"])]
+});
+
+const buildExperimentalSubsectionEntry = (
+  entry: CriterionEntry,
+  id: string,
+  subsection: LocalizedText,
+  subsectionIntro?: LocalizedText,
+  subsectionOrder = 0
+): CriterionEntry => ({
+  ...entry,
+  id,
+  groupId: "experimental-archive",
+  subsection,
+  subsectionIntro,
+  subsectionOrder,
+  bucket: entry.bucket ?? "foundational",
+  tags: [...new Set([...(entry.tags ?? []), "bütünsel omurga", "deneysel"])]
 });
 
 const buildExperimentalEntry = (entry: CriterionEntry, id: string): CriterionEntry => ({
@@ -1982,18 +2246,57 @@ const buildExperimentalEntry = (entry: CriterionEntry, id: string): CriterionEnt
   tags: [...new Set([...(entry.tags ?? []), "deneysel"])]
 });
 
-const almsSpineCriteria: CriterionEntry[] = [
-  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-1")!, "criterion-spine-elms-1"),
-  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-2")!, "criterion-spine-elms-2"),
-  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-6")!, "criterion-spine-elms-6"),
-  buildSpineEntry(almsCriteria.find((entry) => entry.code === "ELMS-12")!, "criterion-spine-elms-12"),
-  buildSpineEntry(almsFamilyCriteria.find((entry) => entry.code === "ALMSF-1")!, "criterion-spine-almsf-1"),
-  buildSpineEntry(almsFamilyCriteria.find((entry) => entry.code === "ALMSF-3")!, "criterion-spine-almsf-3"),
+const spineExperimentalCriteria: CriterionEntry[] = [
+  buildExperimentalSubsectionEntry(
+    almsFamilyCriteria.find((entry) => entry.code === "ALMSF-6")!,
+    "criterion-spine-almsf-6",
+    spineSubsection,
+    spineSubsectionIntro,
+    -10
+  ),
+  buildExperimentalSubsectionEntry(
+    almsCriteria.find((entry) => entry.code === "ELMS-1")!,
+    "criterion-spine-elms-1",
+    spineSubsection,
+    spineSubsectionIntro,
+    -10
+  ),
+  buildExperimentalSubsectionEntry(
+    almsCriteria.find((entry) => entry.code === "ELMS-2")!,
+    "criterion-spine-elms-2",
+    spineSubsection,
+    spineSubsectionIntro,
+    -10
+  ),
+  buildExperimentalSubsectionEntry(
+    almsFamilyCriteria.find((entry) => entry.code === "ALMSF-7")!,
+    "criterion-spine-almsf-7",
+    spineSubsection,
+    spineSubsectionIntro,
+    -10
+  ),
+  buildExperimentalSubsectionEntry(
+    almsFamilyCriteria.find((entry) => entry.code === "ALMSF-5")!,
+    "criterion-spine-almsf-5",
+    spineSubsection,
+    spineSubsectionIntro,
+    -10
+  ),
+  buildExperimentalSubsectionEntry(
+    almsFamilyCriteria.find((entry) => entry.code === "ALMSF-8")!,
+    "criterion-spine-almsf-8",
+    spineSubsection,
+    spineSubsectionIntro,
+    -10
+  ),
+];
+
+const almsSpineDerivedCriteria: CriterionEntry[] = [
   {
     id: "criterion-spine-1",
     code: "SPINE-1",
-    groupId: "spine",
-    bucket: "core-ebced-main",
+    groupId: "experimental-archive",
+    bucket: "experimental",
     title: l("A'râf kilit zinciri ile aile kümülatif frekansları"),
     summary: l(
       "A'râf içindeki kümülatif doğal uzunluklar, harf frekansları ve kümülatif frekanslardan oluşan tek-sure kilit zinciri; Elif-Lam-Mim(-Sad) ailesinin kümülatif frekans omurgası ile doğal sırada birleştiğinde sonuç hem 19 hem 7 modunda doğrulanır.",
@@ -2012,13 +2315,13 @@ const almsSpineCriteria: CriterionEntry[] = [
         mods: [19, 7]
       }
     ],
-    tags: ["bütünsel omurga", "elif-lam-mim-sad", "aile", "harf frekansı", "19", "7"]
+    tags: ["elif-lam-mim-sad", "aile", "harf frekansı", "19", "7", "deneysel"]
   },
   {
     id: "criterion-spine-2",
     code: "SPINE-2",
-    groupId: "spine",
-    bucket: "core-ebced-main",
+    groupId: "experimental-archive",
+    bucket: "experimental",
     title: l("A'râf frekans-uzunluk omurgası ile aile uzunluk omurgası"),
     summary: l(
       "A'râf içindeki Elif-Lam-Mim-Sad harf frekansları, büyük doğal akışın basamak uzunluğu ile toplam frekansı ve ardından Elif-Lam-Mim(-Sad) ailesinin sure bazlı kümülatif doğal uzunlukları doğal sırada yazıldığında ortaya çıkan dizi hem 19 hem 7 modunda doğrulanır.",
@@ -2038,7 +2341,7 @@ const almsSpineCriteria: CriterionEntry[] = [
         mods: [19, 7]
       }
     ],
-    tags: ["bütünsel omurga", "elif-lam-mim-sad", "aile", "doğal uzunluk", "harf frekansı", "19", "7"]
+    tags: ["elif-lam-mim-sad", "aile", "doğal uzunluk", "harf frekansı", "19", "7", "deneysel"]
   },
   {
     id: "criterion-spine-3",
@@ -2070,9 +2373,193 @@ const almsSpineCriteria: CriterionEntry[] = [
   }
 ];
 
-const holisticSpineCodes = new Set(["ELMS-1", "ELMS-2", "ELMS-6", "ELMS-12", "ALMSF-1", "ALMSF-3"]);
+const lamExperimentalCriteria: CriterionEntry[] = [
+  {
+    id: "criterion-lam-5",
+    code: "LAM-5",
+    groupId: "experimental-archive",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 0,
+    bucket: "experimental",
+    title: l("Kur'an geneli sure sıralı Lam frekansları"),
+    summary: l(
+      "1924 Kahire mushafı tabanı ve projedeki normalizasyon kuralı altında, 1 ve 9 hariç numarasız Besmele dahil tüm 114 surede Lam harfinin frekansları doğal sure sırasıyla yazıldığında oluşan ham dizi 7 modunda doğrulanır.",
+      "Under the 1924 Cairo muṣḥaf base text and the project's normalization rule, when the Lam frequencies across all 114 surahs are written in natural surah order, including the unnumbered basmala except in surahs 1 and 9, the resulting raw sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Toplam Lam sayısı"), value: l(String(quranLamTotalCount)) },
+      { label: l("Sure adedi"), value: l(String(quranLamRows.length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-lam-5-sequence",
+        label: l("Sure sıralı Lam frekansları"),
+        sequence: quranLamCountSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["lam", "lam hattı", "kuran geneli", "ham veri", "frekans", "7"]
+  },
+  {
+    id: "criterion-lam-6",
+    code: "LAM-6",
+    groupId: "experimental-archive",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 1,
+    bucket: "experimental",
+    title: l("Kur'an geneli sure no + Lam frekansı satır dizisi"),
+    summary: l(
+      "Kur'an genelinde her surenin numarası ile aynı surenin Lam frekansı doğal sure sırasıyla satır bazında birlikte yazıldığında oluşan ham dizi 19 modunda doğrulanır.",
+      "Across the whole Quran, when each surah number is written together row-wise with the Lam frequency of the same surah in natural surah order, the resulting raw sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Toplam Lam sayısı"), value: l(String(quranLamTotalCount)) },
+      { label: l("Dizilim yapısı"), value: l("Sure no / Lam frekansı") }
+    ],
+    tests: [
+      {
+        id: "criterion-lam-6-sequence",
+        label: l("Sure no + Lam frekansı"),
+        sequence: quranLamSurahLamRowSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["lam", "lam hattı", "kuran geneli", "ham veri", "sure", "frekans", "19"]
+  },
+  {
+    id: "criterion-lam-7",
+    code: "LAM-7",
+    groupId: "experimental-archive",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 2,
+    bucket: "experimental",
+    title: l("Kur'an geneli sure no sütunu ve Lam frekansı sütunu"),
+    summary: l(
+      "Kur'an genelinde önce 1'den 114'e sure numaraları, ardından aynı sıradaki Lam frekansları sütun bazında yazıldığında oluşan ham dizi 7 modunda doğrulanır.",
+      "Across the whole Quran, when the surah numbers 1 through 114 are written first and then the Lam frequencies in the same order are written as a second column, the resulting raw sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Sütunlar"), value: l("Sure no / Lam frekansı") },
+      { label: l("Sure adedi"), value: l(String(quranLamRows.length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-lam-7-sequence",
+        label: l("Sure no sütunu / Lam frekansı sütunu"),
+        sequence: quranLamSurahLamColumnSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["lam", "lam hattı", "kuran geneli", "ham veri", "sütun", "7"]
+  },
+  {
+    id: "criterion-lam-8",
+    code: "LAM-8",
+    groupId: "experimental-archive",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 3,
+    bucket: "experimental",
+    title: l("LAM-6 dizisinin basamak uzunlukları"),
+    summary: l(
+      "Kur'an geneli sure no + Lam frekansı satır dizisindeki her alanın basamak uzunluğu doğal sırayla yazıldığında oluşan türev dizi 19 modunda doğrulanır.",
+      "When the digit length of each field in the whole-Quran surah-number-plus-Lam-frequency row sequence is written in natural order, the resulting derived sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kayıt"), value: l("LAM-6") },
+      { label: l("Alan adedi"), value: l(String(quranLamSurahLamDigitLengthValues.length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-lam-8-sequence",
+        label: l("LAM-6 basamak uzunlukları"),
+        sequence: quranLamSurahLamDigitLengthSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["lam", "lam hattı", "kuran geneli", "türev", "basamak uzunluğu", "19"]
+  },
+  {
+    id: "criterion-lam-9",
+    code: "LAM-9",
+    groupId: "experimental-archive",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 4,
+    bucket: "experimental",
+    title: l("LAM-8 dizisinin kümülatif basamak uzunlukları"),
+    summary: l(
+      "LAM-6 dizisinin basamak uzunlukları kümülatif toplandığında oluşan türev dizi 7 modunda doğrulanır.",
+      "When the digit lengths of the LAM-6 sequence are cumulatively summed, the resulting derived sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kayıt"), value: l("LAM-8") },
+      { label: l("İlk kümülatif değerler"), value: l(sequenceFrom(quranLamSurahLamCumulativeDigitLengthValues.slice(0, 10))) }
+    ],
+    tests: [
+      {
+        id: "criterion-lam-9-sequence",
+        label: l("LAM-8 kümülatif basamak uzunlukları"),
+        sequence: quranLamSurahLamCumulativeDigitLengthSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["lam", "lam hattı", "kuran geneli", "türev", "kümülatif", "7"]
+  },
+  {
+    id: "criterion-lam-10",
+    code: "LAM-10",
+    groupId: "experimental-archive",
+    subsection: lamSubsection,
+    subsectionOrder: 0,
+    subsectionEntryOrder: 5,
+    bucket: "experimental",
+    title: l("LAM-5 dizisinin kümülatif Lam frekansları"),
+    summary: l(
+      "Kur'an geneli sure sıralı Lam frekansları kümülatif toplandığında oluşan türev dizi 7 modunda doğrulanır.",
+      "When the whole-Quran surah-ordered Lam frequencies are cumulatively summed, the resulting derived sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kayıt"), value: l("LAM-5") },
+      { label: l("Son kümülatif değer"), value: l(String(quranLamTotalCount)) }
+    ],
+    tests: [
+      {
+        id: "criterion-lam-10-sequence",
+        label: l("LAM-5 kümülatif Lam frekansları"),
+        sequence: quranLamCumulativeCountSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["lam", "lam hattı", "kuran geneli", "türev", "kümülatif", "7"]
+  }
+];
+
+const holisticSpineCodes = new Set(["ELMS-1", "ELMS-2", "ALMSF-5", "ALMSF-6", "ALMSF-7", "ALMSF-8"]);
 
 const almsExperimentalCriteria: CriterionEntry[] = [
+  ...almsSpineDerivedCriteria,
   ...almsCriteria
     .filter((entry) => !holisticSpineCodes.has(entry.code))
     .map((entry) => buildExperimentalEntry(entry, `criterion-experimental-${entry.code.toLowerCase()}`)),
@@ -2082,8 +2569,9 @@ const almsExperimentalCriteria: CriterionEntry[] = [
 ];
 
 export const criteriaArchive: CriterionEntry[] = [
-  ...almsSpineCriteria,
+  ...spineExperimentalCriteria,
   ...almsExperimentalCriteria,
+  ...lamExperimentalCriteria,
   ...earlyHaMimCriteria,
   ...extendedHaMimCriteria,
   ...supplementaryFihristCriteria,
@@ -2814,6 +3302,33 @@ export const criteriaArchive: CriterionEntry[] = [
     tags: ["satır indeksleri", "19"]
   },
   {
+    id: "criterion-32-3-a",
+    code: "32.3A",
+    groupId: "fihrist",
+    title: l("32.3 diziliminin basamak toplamları"),
+    summary: l(
+      "32.3'teki sure içi satır indeks toplamlarının her birine basamak toplamı uygulanıp doğal sıra korunduğunda oluşan yeni dizi 19 modunda doğrulanır.",
+      "When a digit sum is applied to each per-surah line-index total in criterion 32.3 while preserving the natural order, the resulting derived sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kriter"), value: l("32.3") },
+      { label: l("İlk değerler"), value: l(sequenceFrom(lineIndexSums.slice(0, 4).map((value) => digitSum(value)))) },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 19)") }
+    ],
+    tests: [
+      {
+        id: "criterion-32-3-a-sequence",
+        label: l("32.3 basamak toplamları"),
+        sequence: lineIndexSumsDigitSumSequence,
+        mods: [19]
+      }
+    ],
+    tags: ["satır indeksleri", "basamak toplamı", "19"]
+  },
+  {
     id: "criterion-32-4",
     code: "32.4",
     groupId: "fihrist",
@@ -2838,6 +3353,33 @@ export const criteriaArchive: CriterionEntry[] = [
       }
     ],
     tags: ["kümülatif", "ahmet düzduran", "19"]
+  },
+  {
+    id: "criterion-32-4-a",
+    code: "32.4A",
+    groupId: "fihrist",
+    title: l("32.4 diziliminin sola kayan pencere dönüşümü"),
+    summary: l(
+      "Fihristeki surelerin ayet sayılarının kümülatif toplamlarından oluşan 32.4 dizilimine sola kayan pencere basamak toplamı uygulandığında oluşan yeni dizi 7 modunda doğrulanır.",
+      "When the sliding-window digit transform is applied to criterion 32.4, the cumulative verse-count sequence of the surahs, the resulting derived sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "11.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kriter"), value: l("32.4") },
+      { label: l("Basamak uzunluğu"), value: l(String(cumulativeVerseCountsSlidingWindowSequence.length)) },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 7)") }
+    ],
+    tests: [
+      {
+        id: "criterion-32-4-a-sequence",
+        label: l("32.4 kayan pencere çıktısı"),
+        sequence: cumulativeVerseCountsSlidingWindowSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["kümülatif", "ayet sayıları", "kayan pencere", "7"]
   },
   {
     id: "criterion-33-1",

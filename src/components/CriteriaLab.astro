@@ -5,14 +5,30 @@ import { criteriaArchive, criteriaGroups } from "../data/criteriaArchive";
 
 const groupMap = new Map(criteriaGroups.map((group) => [group.id, group]));
 const displayBucketMap = {
+  foundational: "foundational",
+  "lower-raw": "lower-raw",
+  control: "control",
+  "derived-legit": "derived-legit",
   "core-ebced-main": "focus",
   "core-ebced-summary": "secondary",
   "core-position": "secondary",
   supporting: "secondary",
   experimental: "experimental"
 };
-const displayBucketOrder = { focus: 0, secondary: 1, experimental: 2 };
+const displayBucketOrder = {
+  foundational: 0,
+  "lower-raw": 1,
+  control: 2,
+  "derived-legit": 3,
+  focus: 4,
+  secondary: 5,
+  experimental: 6
+};
 const rawBucketOrder = {
+  foundational: 0,
+  "lower-raw": 1,
+  control: 2,
+  "derived-legit": 3,
   "core-ebced-main": 0,
   "core-ebced-summary": 1,
   "core-position": 2,
@@ -20,6 +36,10 @@ const rawBucketOrder = {
   experimental: 4
 };
 const displayBucketLabels = {
+  foundational: { tr: "Ham Temeller", en: "Raw foundations" },
+  "lower-raw": { tr: "Aşağı Katman", en: "Lower layer" },
+  control: { tr: "Kontrol", en: "Control" },
+  "derived-legit": { tr: "Meşru Türevler", en: "Legitimate derivatives" },
   focus: { tr: "Ana Omurga", en: "Main spine" },
   secondary: { tr: "İkincil Katmanlar", en: "Secondary layers" },
   experimental: { tr: "Deneysel", en: "Experimental" }
@@ -66,6 +86,22 @@ const compareCodes = (left, right) => {
   return left.code.localeCompare(right.code, "tr");
 };
 
+const compareSpineCodes = (left, right) => {
+  const explicitOrder = {
+    "ALMSF-6": 0,
+    "ALMSF-5": 1,
+    "ALMSF-7": 2,
+    "ALMSF-8": 3,
+    "ELMS-1": 4,
+    "ELMS-2": 5
+  };
+  const leftOrder = explicitOrder[left.code] ?? 99;
+  const rightOrder = explicitOrder[right.code] ?? 99;
+
+  if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+  return compareCodes(left, right);
+};
+
 const uniqueMods = (entry) => [...new Set((entry.tests ?? []).flatMap((test) => test.mods))];
 const discoveryLine = (entry) => {
   const tail = [entry.discovery.date, entry.discovery.place].filter(Boolean).join(" ");
@@ -75,6 +111,10 @@ const shorten = (value, max = 160) => (value.length > max ? `${value.slice(0, ma
 const searchIndex = (entry) =>
   [
     entry.code,
+    entry.subsection?.tr ?? "",
+    entry.subsection?.en ?? "",
+    entry.subsectionIntro?.tr ?? "",
+    entry.subsectionIntro?.en ?? "",
     displayBucketLabels[resolveDisplayBucket(entry.bucket)].tr,
     displayBucketLabels[resolveDisplayBucket(entry.bucket)].en,
     entry.title.tr,
@@ -102,7 +142,28 @@ const groupedCriteria = criteriaGroups.map((group) => ({
       const rightBucket = right.bucket ? rawBucketOrder[right.bucket] : 999;
 
       if (leftBucket !== rightBucket) return leftBucket - rightBucket;
-      return compareCodes(left, right);
+
+      if (group.id === "experimental-archive") {
+        const leftSubsectionOrder = left.subsectionOrder ?? 999;
+        const rightSubsectionOrder = right.subsectionOrder ?? 999;
+
+        if (leftSubsectionOrder !== rightSubsectionOrder) return leftSubsectionOrder - rightSubsectionOrder;
+
+        const leftSubsection = left.subsection?.tr ?? "";
+        const rightSubsection = right.subsection?.tr ?? "";
+        const subsectionOrder = leftSubsection.localeCompare(rightSubsection, "tr");
+
+        if (subsectionOrder !== 0) return subsectionOrder;
+
+        const leftSubsectionEntryOrder = left.subsectionEntryOrder ?? 999;
+        const rightSubsectionEntryOrder = right.subsectionEntryOrder ?? 999;
+
+        if (leftSubsectionEntryOrder !== rightSubsectionEntryOrder) {
+          return leftSubsectionEntryOrder - rightSubsectionEntryOrder;
+        }
+      }
+
+      return group.id === "spine" ? compareSpineCodes(left, right) : compareCodes(left, right);
     })
 })).filter((group) => group.entries.length > 0);
 
@@ -170,8 +231,8 @@ const groupToneClass = {
       <LocalizedText
         as="h1"
         class="lab-header__title"
-        tr="Kur'an Yapısal Kodlamaları ve Mod 19 Bulguları"
-        en="Quran structural codings and mod 19 findings"
+        tr="Kur'an Yapısal Kodlamaları ile Mod 7 ve Mod 19 Bulguları"
+        en="Quran structural codings with mod 7 and mod 19 findings"
       />
     </div>
 
@@ -294,12 +355,15 @@ const groupToneClass = {
                   const previousEntry = group.entries[index - 1];
                   const displayBucket = resolveDisplayBucket(entry.bucket);
                   const previousDisplayBucket = previousEntry ? resolveDisplayBucket(previousEntry.bucket) : null;
+                  const subsectionKey = entry.subsection?.tr ?? "";
+                  const previousSubsectionKey = previousEntry?.subsection?.tr ?? "";
                   const showBucketHeading = displayBucket !== previousDisplayBucket;
+                  const showSubsectionHeading = Boolean(subsectionKey) && (showBucketHeading || subsectionKey !== previousSubsectionKey);
 
                   return (
                     [
                       showBucketHeading ? (
-                        <div class="lab-table__subgroup" data-archive-subgroup={displayBucket}>
+                        <div class="lab-table__subgroup" data-archive-subgroup={`bucket:${displayBucket}`}>
                           <LocalizedText
                             as="h3"
                             class="lab-table__subgroup-title"
@@ -308,11 +372,30 @@ const groupToneClass = {
                           />
                         </div>
                       ) : null,
+                      showSubsectionHeading ? (
+                        <div class="lab-table__subgroup lab-table__subgroup--minor" data-archive-subgroup={`subsection:${subsectionKey}`}>
+                          <LocalizedText
+                            as="h4"
+                            class="lab-table__subgroup-title lab-table__subgroup-title--minor"
+                            tr={entry.subsection?.tr ?? ""}
+                            en={entry.subsection?.en ?? ""}
+                          />
+                          {entry.subsectionIntro ? (
+                            <LocalizedText
+                              as="p"
+                              class="lab-table__subgroup-intro"
+                              tr={entry.subsectionIntro.tr}
+                              en={entry.subsectionIntro.en}
+                            />
+                          ) : null}
+                        </div>
+                      ) : null,
                       <article
                         class="lab-table__row"
                         data-archive-card
                         data-group={entry.groupId}
                         data-bucket={displayBucket}
+                        data-subsection={subsectionKey}
                         data-search={searchIndex(entry)}
                       >
                         <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
@@ -596,11 +679,14 @@ const groupToneClass = {
 
         subgroupHeadings.forEach((heading) => {
           if (!(heading instanceof HTMLElement)) return;
-          const bucket = heading.dataset.archiveSubgroup ?? "";
-          const bucketCards = sectionCards.filter(
-            (card) => card instanceof HTMLElement && card.dataset.bucket === bucket && !card.hidden
-          );
-          heading.hidden = hideSection || bucketCards.length === 0;
+          const groupKey = heading.dataset.archiveSubgroup ?? "";
+          const visibleCards = sectionCards.filter((card) => card instanceof HTMLElement && !card.hidden);
+          const matchingCards = groupKey.startsWith("bucket:")
+            ? visibleCards.filter((card) => card instanceof HTMLElement && card.dataset.bucket === groupKey.slice(7))
+            : groupKey.startsWith("subsection:")
+              ? visibleCards.filter((card) => card instanceof HTMLElement && card.dataset.subsection === groupKey.slice(11))
+              : [];
+          heading.hidden = hideSection || matchingCards.length === 0;
         });
       });
 
@@ -1072,6 +1158,12 @@ const groupToneClass = {
     background: var(--lab-surface);
   }
 
+  .lab-table__subgroup--minor {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+    border-top: 0;
+  }
+
   .lab-table__subgroup-title {
     margin: 0;
     color: var(--lab-heading);
@@ -1079,6 +1171,21 @@ const groupToneClass = {
     font-weight: 800;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+  }
+
+  .lab-table__subgroup-title--minor {
+    color: var(--lab-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+  }
+
+  .lab-table__subgroup-intro {
+    margin: 0.2rem 0 0;
+    color: var(--lab-body);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    letter-spacing: normal;
+    text-transform: none;
   }
 
   .lab-table__head {
