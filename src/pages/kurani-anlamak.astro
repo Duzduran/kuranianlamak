@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import LocalizedText from "../components/LocalizedText.astro";
 import ScrollCue from "../components/ScrollCue.astro";
-import HeroRive from "../components/HeroRive.astro";
 import { uiCopy } from "../data/i18n";
 
 const l = (tr, en) => ({ tr, en });
@@ -69,6 +68,63 @@ const besmeleCriteriaGroups = [
         l("mod 19 = 0", "mod 19 = 0")
       ]
     ]
+  }
+];
+
+const fihristHighlights = [
+  {
+    code: "32.2",
+    result: l("114 = 19 x 6", "114 = 19 x 6"),
+    title: l("Sure sayısı", "Number of surahs"),
+    text: l(
+      "Kur'an 114 sureden oluşur. Fihrist katmanında görülen ilk açık ölçü budur.",
+      "The Qur'an consists of 114 surahs. This is the first clear measure visible at the index layer."
+    )
+  },
+  {
+    code: "23",
+    result: l("57 = 19 x 3", "57 = 19 x 3"),
+    title: l("Çift-tek dengesi", "Even-odd balance"),
+    text: l(
+      "Sure ve ayet sayılarının çift-tek dağılımı 30-27-57 dengesi üretir. Buradaki 57 sayısı 19 x 3'tür.",
+      "The even-odd distribution of surah and verse counts produces a 30-27-57 balance. Here, 57 equals 19 x 3."
+    )
+  },
+  {
+    code: "31.1",
+    result: l("mod 19 = 0", "mod 19 = 0"),
+    title: l("Çift ayet sayıları", "Even verse counts"),
+    text: l(
+      "Yalnız çift ayet sayıları doğal sırayla yazıldığında oluşan dizi 19'a tam bölünür.",
+      "When only the even verse counts are written in natural order, the resulting sequence is exactly divisible by 19."
+    )
+  },
+  {
+    code: "29.1",
+    result: l("38 = 19 x 2", "38 = 19 x 2"),
+    title: l("Sure ve ayet toplamlarının basamakları", "Digit sums of surah and verse totals"),
+    text: l(
+      "Sure ve ayet genel toplamlarının basamak toplamları birlikte 38 verir. Bu sayı 19 x 2'dir.",
+      "The digit sums of the global surah and verse totals add up to 38. This number equals 19 x 2."
+    )
+  },
+  {
+    code: "31.5",
+    result: l("mod 19 = 0", "mod 19 = 0"),
+    title: l("Sure no + ayet sayısı + numarasız Besmele", "Surah no + verse count + unnumbered Basmala"),
+    text: l(
+      "Sure numarası, ayet sayısı ve numarasız Besmele değerleri birlikte doğal sırada yazıldığında oluşan dizi 19'a tam bölünür.",
+      "When surah number, verse count, and unnumbered Basmala values are written together in natural order, the resulting sequence is exactly divisible by 19."
+    )
+  },
+  {
+    code: "32.4",
+    result: l("mod 19 = 0", "mod 19 = 0"),
+    title: l("Kümülatif ayet toplamları", "Cumulative verse totals"),
+    text: l(
+      "Surelerin ayet sayıları birikimli olarak toplandığında oluşan dizi 19'a tam bölünür.",
+      "When the surah verse counts are accumulated, the resulting sequence is exactly divisible by 19."
+    )
   }
 ];
 
@@ -223,6 +279,12 @@ const highlightNumericText = (value) =>
             tr="İlk işaretler görünür olur."
             en="The first signs come into view."
           />
+          <LocalizedText
+            as="p"
+            class="journey-text journey-text--descent-intro"
+            tr="Önce yorum değil, görünen sayılar var. Her örnek tek başına anlaşılır; birlikte okunduğunda aynı sayının girişte, bütünde ve ilk vahiyde belirdiği görülür."
+            en="Start not with interpretation, but with visible numbers. Each example is understandable on its own; read together, they show the same number appearing at the opening, in the whole, and at the first revelation."
+          />
         </header>
 
         <div class="descent-rail">
@@ -235,8 +297,8 @@ const highlightNumericText = (value) =>
                 <LocalizedText
                   as="p"
                   class="descent-panel__text"
-                  tr="Kur'an'ın ilk ayeti Besmele 19 harftir."
-                  en="The Qur'an's opening verse, the Basmala, contains 19 letters."
+                  tr="Kur'an'ın açılış cümlesi olan Besmele 19 harftir. İlk temas en küçük ölçekte başlar."
+                  en="The Qur'an's opening formula, the Basmala, contains 19 letters. The first contact begins at the smallest scale."
                 />
               </div>
             </div>
@@ -251,8 +313,8 @@ const highlightNumericText = (value) =>
                 <LocalizedText
                   as="p"
                   class="descent-panel__text"
-                  tr="Kur'an 114 sureden oluşur. 114 = 19 x 6."
-                  en="The Qur'an consists of 114 surahs. 114 = 19 x 6."
+                  tr="Kur'an 114 sureden oluşur. 114 = 19 x 6. Aynı sayı bu kez bütün kitabın ölçüsünde görünür."
+                  en="The Qur'an consists of 114 surahs. 114 = 19 x 6. The same number now appears at the scale of the whole book."
                 />
               </div>
             </div>
@@ -267,8 +329,8 @@ const highlightNumericText = (value) =>
                 <LocalizedText
                   as="p"
                   class="descent-panel__text"
-                  tr="İlk vahyedilen 96. sure, sondan 19. suredir."
-                  en="The first revealed surah is number 96, and it is the 19th from the end."
+                  tr="İlk vahyedilen sure 96. suredir; sondan sayıldığında 19. sıradadır. Aynı iz bu kez başlangıç noktasında görünür."
+                  en="The first revealed surah is number 96; counted from the end, it stands in the 19th place. The same trace appears again at the point of beginning."
                 />
               </div>
             </div>
@@ -284,12 +346,18 @@ const highlightNumericText = (value) =>
     <article id="kod-19-derin" class="journey-stage journey-stage--code-layer">
       <div class="journey-shell journey-shell--wide descent-shell">
         <header class="descent-intro reveal-step" data-reveal>
-          <LocalizedText as="p" class="journey-label" tr="19 derinleşir" en="19 deepens" />
+          <LocalizedText as="p" class="journey-label" tr="İkinci aşama" en="Second stage" />
           <LocalizedText
             as="h2"
             class="journey-title journey-title--descent"
-            tr="Aşağı indikçe bağlar çoğalır."
-            en="As you descend, the connections multiply."
+            tr="Sayı artık parçaları da bağlar."
+            en="The number now begins to bind parts together."
+          />
+          <LocalizedText
+            as="p"
+            class="journey-text journey-text--descent-intro"
+            tr="Şimdi sayı tek başına görünmekle kalmaz. Bir eksik tamamlanır, bir sure kendi içinde yoğunlaşır ve Besmele de tek başına açık bir örnek haline gelir."
+            en="Now the number does not merely appear on its own. A missing part is completed, a surah condenses it within itself, and the Basmala itself becomes a clear example on its own."
           />
         </header>
 
@@ -313,77 +381,37 @@ const highlightNumericText = (value) =>
             </div>
           </article>
 
-        </div>
-
-        <div class="mt-12 flex justify-center">
-          <ScrollCue href="#yedi-on-dokuz" />
-        </div>
-      </div>
-    </article>
-
-    <article id="yedi-on-dokuz" class="journey-stage journey-stage--method">
-      <div class="journey-shell journey-shell--wide descent-shell">
-        <header class="descent-intro reveal-step" data-reveal>
-          <LocalizedText as="p" class="journey-label" tr="Daha derin bulgular" en="Deeper findings" />
-          <LocalizedText
-            as="h2"
-            class="journey-title journey-title--descent"
-            tr="Şimdi örnekler yoğunlaşır."
-            en="Now the examples grow denser."
-          />
-        </header>
-
-        <div class="descent-rail descent-rail--dense">
-          <article class="descent-step reveal-step" data-reveal style="--step-depth: 0;">
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 1;">
             <div class="descent-step__inner">
               <div class="descent-panel">
-                <LocalizedText as="p" class="descent-panel__eyebrow" tr="İlk inen sure" en="First revealed surah" />
-                <LocalizedText as="p" class="descent-panel__value" tr="285 harf" en="285 letters" />
-                <LocalizedText as="h3" class="descent-panel__title" tr="19 ayet" en="19 verses" />
+                <LocalizedText as="p" class="descent-panel__eyebrow" tr="Sure içi yoğunluk" en="Internal density" />
+                <LocalizedText as="p" class="descent-panel__value" tr="19 ayet / 285 harf" en="19 verses / 285 letters" />
+                <LocalizedText as="h3" class="descent-panel__title" tr="İlk inen sure" en="First revealed surah" />
                 <LocalizedText
                   as="p"
                   class="descent-panel__text"
-                  tr="96. sure 19 ayettir. Bu 19 ayet 285 harf taşır ve 285 = 19 x 15'tir."
-                  en="Surah 96 has 19 verses. Those 19 verses contain 285 letters, and 285 = 19 x 15."
+                  tr="96. sure 19 ayettir. Bu 19 ayetin toplamı 285 harftir ve 285 = 19 x 15'tir. Sayı, surenin kendi içinde de kapanır."
+                  en="Surah 96 has 19 verses. Those 19 verses total 285 letters, and 285 = 19 x 15. The number closes again within the surah itself."
                 />
               </div>
             </div>
           </article>
 
-        </div>
-
-        <div class="descent-outro reveal-step" data-reveal>
-          <p class="journey-note">
-            <span data-copy-lang="tr">
-              Devam için
-              <a href="https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/" target="_blank" rel="noreferrer">
-                kodlama kuralları
-              </a>
-              ,
-              <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
-                insanın yapamayacağı şey
-              </a>
-              .
-            </span>
-            <span data-copy-lang="en">
-              For further reading:
-              <a href="https://www.7ve19.com/0038-kodlama-denemelerini-nerede-yapabilirim/" target="_blank" rel="noreferrer">
-                coding rules
-              </a>
-              ,
-              <a href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/" target="_blank" rel="noreferrer">
-                what a human cannot do
-              </a>
-              .
-            </span>
-          </p>
-
-          <LocalizedText
-            as="p"
-            class="journey-note journey-note--question"
-            tr="Soru artık şudur: Bu kadar çok uyum, gerçekten tesadüf ile açıklanabilir mi?"
-            en="The question now is this: can so much alignment really be explained by coincidence?"
-          />
+          <article class="descent-step reveal-step" data-reveal style="--step-depth: 2;">
+            <div class="descent-step__inner">
+              <div class="descent-panel">
+                <LocalizedText as="p" class="descent-panel__eyebrow" tr="4 kelime, 19 harf, 786 ebced" en="4 words, 19 letters, 786 abjad" />
+                <p class="descent-panel__value">419786</p>
+                <LocalizedText as="h3" class="descent-panel__title" tr="Üç ölçü tek dizilimde birleşir" en="Three measures merge into one sequence" />
+                <LocalizedText
+                  as="p"
+                  class="descent-panel__text"
+                  tr="Besmele'nin kelime sayısı, harf sayısı ve ebced toplamı doğal sırayla birlikte okunduğunda 419786 elde edilir. Bu sayı 19'a tam bölünür."
+                  en="When the Basmala's word count, letter count, and abjad total are read together in natural order, the result is 419786. This number is exactly divisible by 19."
+                />
+              </div>
+            </div>
+          </article>
         </div>
 
         <dialog class="number-dialog" data-detail-dialog="kayip-besmele">
@@ -443,8 +471,14 @@ const highlightNumericText = (value) =>
           <LocalizedText
             as="h2"
             class="journey-title journey-title--descent"
-            tr="Burada Besmele daha yakından okunur."
-            en="Here the Basmala is read more closely."
+            tr="Burada Besmele adım adım okunur."
+            en="Here the Basmala is read step by step."
+          />
+          <LocalizedText
+            as="p"
+            class="journey-text journey-text--descent-intro"
+            tr="Bundan sonra tek bir cümle üzerinde ilerliyoruz. İlk kez geliyorsanız önce B1-B2'yi açın; diğer gruplar bunun üzerine kurulur."
+            en="From this point on, we stay with a single sentence. If this is your first visit, start with B1-B2; the other groups are built on top of that layer."
           />
         </header>
 
@@ -458,6 +492,17 @@ const highlightNumericText = (value) =>
                       <p class="descent-panel__eyebrow">{group.range}</p>
                       <LocalizedText as="h3" class="descent-panel__title" tr={group.title.tr} en={group.title.en} />
                       <LocalizedText as="p" class="descent-panel__text" tr={group.intro.tr} en={group.intro.en} />
+                      <div class="descent-panel__list" aria-hidden="true">
+                        {
+                          group.items.slice(0, 2).map(([code, label]) => (
+                            <p class="descent-panel__list-item">
+                              <span class="descent-panel__list-code">{code}</span>
+                              <span data-copy-lang="tr">{label.tr}</span>
+                              <span data-copy-lang="en">{label.en}</span>
+                            </p>
+                          ))
+                        }
+                      </div>
                       <LocalizedText as="span" class="descent-panel__cta" tr={uiCopy.tr.explore} en={uiCopy.en.explore} />
                     </button>
                   </article>
@@ -485,7 +530,7 @@ const highlightNumericText = (value) =>
         </p>
 
         <div class="mt-12 flex justify-center">
-          <ScrollCue href="#meydan-okuma" />
+          <ScrollCue href="#fihrist-bulgulari" />
         </div>
 
         {
@@ -525,31 +570,6 @@ const highlightNumericText = (value) =>
                     ))
                   }
                 </div>
-
-                {
-                  group.id === "ileri" && (
-                    <div class="criteria-transform">
-                      <LocalizedText
-                        as="h3"
-                        class="criteria-transform__title"
-                        tr="Sola kayan pencere basamak toplamı"
-                        en="Sliding window digit sum"
-                      />
-                      <LocalizedText
-                        as="p"
-                        class="criteria-transform__text"
-                        tr="Bu dönüşümde sayı basamakları soldan değil, basamak komşulukları üzerinden yeniden okunur. Birler basamağından başlayarak her basamak bir sonraki basamakla toplanır."
-                        en="In this transformation, the number is reread through neighboring digits rather than as a flat sequence. Starting from the ones place, each digit is added to the next digit."
-                      />
-                      <LocalizedText
-                        as="p"
-                        class="criteria-transform__formula"
-                        tr="D = { d1, d2, d3, ..., dk }  →  D' = { (0+d1), (d1+d2), (d2+d3), ..., (d{k-1}+dk) }"
-                        en="D = { d1, d2, d3, ..., dk }  →  D' = { (0+d1), (d1+d2), (d2+d3), ..., (d{k-1}+dk) }"
-                      />
-                    </div>
-                  )
-                }
               </div>
             </dialog>
           ))
@@ -557,9 +577,58 @@ const highlightNumericText = (value) =>
       </div>
     </article>
 
+    <article id="fihrist-bulgulari" class="journey-stage journey-stage--fihrist">
+      <div class="journey-shell journey-shell--wide descent-shell">
+        <header class="descent-intro reveal-step" data-reveal>
+          <LocalizedText as="p" class="journey-label" tr="Fihrist bulguları" en="Index findings" />
+          <LocalizedText
+            as="h2"
+            class="journey-title journey-title--descent"
+            tr="Aynı düzen bu kez kitabın fihristinde görünür."
+            en="The same order now appears in the book's index."
+          />
+          <LocalizedText
+            as="p"
+            class="journey-text journey-text--descent-intro"
+            tr="Burada yalnız 19 omurgasını gösteren beş açık örnek var. Besmele küçük bir cümlede ne gösterdiyse, fihristte sure ve ayet sayıları da onu daha büyük ölçekte göstermeye başlar."
+            en="Only five clear examples showing the spine of 19 are given here. What the Basmala showed in a small sentence, the index now begins to show at the larger scale of surah and verse counts."
+          />
+        </header>
+
+        <div class="fihrist-grid">
+          {
+            fihristHighlights.map((item) => (
+              <article class="signal-card signal-card--criteria fihrist-card reveal-step" data-reveal>
+                <p class="fihrist-card__eyebrow">{item.code}</p>
+                <LocalizedText as="p" class="fihrist-card__result" tr={typeof item.result === "string" ? item.result : item.result.tr} en={typeof item.result === "string" ? item.result : item.result.en} />
+                <LocalizedText as="h3" class="fihrist-card__title" tr={item.title.tr} en={item.title.en} />
+                <LocalizedText as="p" class="fihrist-card__text" tr={item.text.tr} en={item.text.en} />
+              </article>
+            ))
+          }
+        </div>
+
+        <p class="journey-note reveal-step" data-reveal>
+          <span data-copy-lang="tr">
+            Fihrist bölümünün tamamı için
+            <a href="/kriter-arsivi">kriter arşivine</a>
+            geçin.
+          </span>
+          <span data-copy-lang="en">
+            For the full index section, go to the
+            <a href="/kriter-arsivi">criteria archive</a>
+            .
+          </span>
+        </p>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#meydan-okuma" />
+        </div>
+      </div>
+    </article>
+
     <article id="meydan-okuma" class="journey-stage journey-stage--next">
       <div class="journey-shell">
-        <LocalizedText as="p" class="journey-label" tr="Bir sonraki eşik" en="The next threshold" />
         <blockquote class="journey-quote journey-quote--arabic journey-quote--next" dir="rtl" lang="ar">
           قُل لَّئِنِ ٱجْتَمَعَتِ ٱلْإِنسُ وَٱلْجِنُّ عَلَىٰٓ أَن يَأْتُوا۟ بِمِثْلِ هَٰذَا
           ٱلْقُرْءَانِ لَا يَأْتُونَ بِمِثْلِهِۦ وَلَوْ كَانَ بَعْضُهُمْ لِبَعْضٍ ظَهِيرًا
@@ -603,20 +672,78 @@ const highlightNumericText = (value) =>
             .
           </span>
         </p>
+
+        <div class="mt-12 flex justify-center">
+          <ScrollCue href="#devam-yollari" />
+        </div>
       </div>
     </article>
 
-    <article class="journey-stage journey-stage--future">
-      <div class="journey-shell">
-        <LocalizedText as="p" class="journey-label" tr="Sıradaki adım" en="Next step" />
+    <article id="devam-yollari" class="journey-stage journey-stage--future">
+      <div class="journey-shell journey-shell--wide">
+        <LocalizedText as="p" class="journey-label" tr="Devam yolları" en="Ways forward" />
         <LocalizedText
           as="h2"
           class="journey-title journey-title--subtle"
-          tr="Geliştirme aşamasında"
-          en="In development"
+          tr="Buradan sonra daha derine birkaç kapı açılır."
+          en="From here, several doors open for going deeper."
         />
-        <div class="future-rive-slot">
-          <HeroRive />
+        <LocalizedText
+          as="p"
+          class="journey-text journey-text--subtle"
+          tr="İsterseniz tam kriter arşivine geçin. İsterseniz Besmele sayfası ve sunum üzerinden ilerleyin."
+          en="You can either move into the full criteria archive, or continue through the Basmala page and the presentation."
+        />
+
+        <div class="journey-paths">
+          <a class="journey-path" href="/kriter-arsivi">
+            <LocalizedText as="p" class="journey-path__eyebrow" tr="Arşiv" en="Archive" />
+            <LocalizedText as="h3" class="journey-path__title" tr="Kriter arşivi" en="Criteria archive" />
+            <LocalizedText
+              as="p"
+              class="journey-path__text"
+              tr="Bütün kayıtları ana bölümler ve alt bölümler halinde görün."
+              en="View all records through main sections and subsections."
+            />
+          </a>
+
+          <a class="journey-path" href="https://kod.7ve19.com/Besmele_Tr.asp" target="_blank" rel="noreferrer">
+            <LocalizedText as="p" class="journey-path__eyebrow" tr="Kaynak" en="Source" />
+            <LocalizedText as="h3" class="journey-path__title" tr="Besmele tam sayfası" en="Full Basmala page" />
+            <LocalizedText
+              as="p"
+              class="journey-path__text"
+              tr="Burada özetlenen yapıyı orijinal dizilimleriyle açın."
+              en="Open the structure summarized here with its original sequences."
+            />
+          </a>
+
+          <a class="journey-path" href="https://www.7ve19.com/000-sunum/" target="_blank" rel="noreferrer">
+            <LocalizedText as="p" class="journey-path__eyebrow" tr="Genel bakış" en="Overview" />
+            <LocalizedText as="h3" class="journey-path__title" tr="7ve19 sunumu" en="7ve19 presentation" />
+            <LocalizedText
+              as="p"
+              class="journey-path__text"
+              tr="Aynı yolu daha geniş ve daha düz bir anlatıyla izleyin."
+              en="Follow the same path through a broader and plainer presentation."
+            />
+          </a>
+
+          <a
+            class="journey-path"
+            href="https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <LocalizedText as="p" class="journey-path__eyebrow" tr="Uzun okuma" en="Long read" />
+            <LocalizedText as="h3" class="journey-path__title" tr="Meydan okumanın devamı" en="The continuation of the challenge" />
+            <LocalizedText
+              as="p"
+              class="journey-path__text"
+              tr="Son aşamadaki soruyu yazı üzerinden daha uzun takip edin."
+              en="Follow the final-stage question at greater length through the essay."
+            />
+          </a>
         </div>
       </div>
     </article>

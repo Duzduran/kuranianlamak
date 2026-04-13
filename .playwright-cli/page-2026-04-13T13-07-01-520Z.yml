@@ -1,0 +1,279 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - button "Theme toggle" [ref=e4]: Dark
+    - group "Choose language" [ref=e5]:
+      - button "English" [ref=e6]:
+        - generic [ref=e7]: English
+        - img [ref=e8]
+  - main [ref=e10]:
+    - link "Back to main entry" [ref=e12] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e13]: Back to main entry
+    - generic [ref=e15]:
+      - heading "Understanding the Qur'an." [level=1] [ref=e16]
+      - figure "Tâhâ 20:114" [ref=e17]:
+        - blockquote [ref=e18]: “My Rabb, increase me in knowledge.”
+        - generic [ref=e19]: Tâhâ 20:114
+      - link "Go deeper" [ref=e21] [cursor=pointer]:
+        - /url: "#ilk-esik"
+        - img [ref=e23]
+    - region "Descending journey" [ref=e25]:
+      - article [ref=e26]:
+        - generic [ref=e27]:
+          - paragraph [ref=e28]: First threshold
+          - blockquote [ref=e29]: “This Book is the very truth itself.”
+          - paragraph [ref=e30]: Bakara 2:2
+          - heading "The text first introduces itself." [level=2] [ref=e31]
+          - link "Scroll down" [ref=e33] [cursor=pointer]:
+            - /url: "#ikinci-esik"
+            - img [ref=e35]
+      - article [ref=e37]:
+        - generic [ref=e38]:
+          - paragraph [ref=e39]: Second threshold
+          - blockquote [ref=e40]: “If you are in doubt about what We have sent down to Our servant, then bring a surah like it.”
+          - paragraph [ref=e41]: Bakara 2:23-24
+          - heading "Here the challenge opens." [level=2] [ref=e42]
+          - link "Scroll down" [ref=e44] [cursor=pointer]:
+            - /url: "#ucuncu-esik"
+            - img [ref=e46]
+      - article [ref=e48]:
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: Doubt speaks
+          - blockquote [ref=e51]: “This is nothing but human speech.”
+          - paragraph [ref=e52]: Müddessir 74:24-25
+          - heading "Here the objection becomes visible." [level=2] [ref=e53]
+          - link "Scroll down" [ref=e55] [cursor=pointer]:
+            - /url: "#dorduncu-esik"
+            - img [ref=e57]
+      - article [ref=e59]:
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: The answer comes
+          - blockquote [ref=e62]: “Over it are nineteen.”
+          - paragraph [ref=e63]: Müddessir 74:30-31
+          - heading "From here, patterns begin." [level=2] [ref=e64]
+          - link "Scroll down" [ref=e66] [cursor=pointer]:
+            - /url: "#kod-19"
+            - img [ref=e68]
+      - article [ref=e70]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - paragraph [ref=e73]: First contact with 19
+            - heading "The first signs come into view." [level=2] [ref=e74]
+            - paragraph [ref=e75]: Start not with interpretation, but with visible numbers. Each example is understandable on its own; read together, they show the same number appearing at the opening, in the whole, and at the first revelation.
+          - generic [ref=e76]:
+            - article [ref=e77]:
+              - generic [ref=e79]:
+                - paragraph [ref=e80]: First verse
+                - paragraph [ref=e81]: 19 letters
+                - heading "Basmala" [level=3] [ref=e82]
+                - paragraph [ref=e83]: The Qur'an's opening formula, the Basmala, contains 19 letters. The first contact begins at the smallest core.
+            - article [ref=e84]:
+              - generic [ref=e86]:
+                - paragraph [ref=e87]: Whole
+                - paragraph [ref=e88]: 114 surahs
+                - heading "The Qur'an" [level=3] [ref=e89]
+                - paragraph [ref=e90]: The Qur'an consists of 114 surahs. 114 = 19 x 6. The same number now appears at the scale of the whole book.
+            - article [ref=e91]:
+              - generic [ref=e93]:
+                - paragraph [ref=e94]: First revelation
+                - paragraph [ref=e95]: 96 / 19
+                - heading "Surah Al-Alaq" [level=3] [ref=e96]
+                - paragraph [ref=e97]: The first revealed surah is number 96; counted from the end, it stands in the 19th place. The same trace appears again at the point of beginning.
+          - paragraph [ref=e98]: "At this first stage, the user is led into wonder: the number appears not in one place only, but across three independent thresholds."
+          - link "Scroll down" [ref=e100] [cursor=pointer]:
+            - /url: "#kod-19-derin"
+            - img [ref=e102]
+      - article [ref=e104]:
+        - generic [ref=e105]:
+          - generic [ref=e106]:
+            - paragraph [ref=e107]: Second stage
+            - heading "The number now begins to bind parts together." [level=2] [ref=e108]
+            - paragraph [ref=e109]: Now the number does not merely appear on its own. A missing part is completed, a surah condenses it within itself, and the small framework of the Basmala becomes readable.
+          - generic [ref=e110]:
+            - article [ref=e111]:
+              - article [ref=e113]:
+                - button "Missing and complete 27 + 30 = 57 Missing Basmala The missing Basmala at the start of Surah 9 is completed by the Basmala in verse 30 of Surah 27. 57 = 19 x 3. Explore" [ref=e114] [cursor=pointer]:
+                  - paragraph [ref=e115]: Missing and complete
+                  - paragraph [ref=e116]: 27 + 30 = 57
+                  - heading "Missing Basmala" [level=3] [ref=e117]
+                  - paragraph [ref=e118]: The missing Basmala at the start of Surah 9 is completed by the Basmala in verse 30 of Surah 27. 57 = 19 x 3.
+                  - generic [ref=e120]: Explore
+            - article [ref=e121]:
+              - generic [ref=e123]:
+                - paragraph [ref=e124]: Internal density
+                - paragraph [ref=e125]: 19 verses / 285 letters
+                - heading "First revealed surah" [level=3] [ref=e126]
+                - paragraph [ref=e127]: Surah 96 has 19 verses. Those 19 verses total 285 letters, and 285 = 19 x 15. The number closes again within the surah itself.
+            - article [ref=e128]:
+              - generic [ref=e130]:
+                - paragraph [ref=e131]: Small core
+                - paragraph [ref=e132]: 4 / 19 / 786
+                - heading "Basmala framework" [level=3] [ref=e133]
+                - paragraph [ref=e134]: The Basmala reads as 4 words, 19 letters, and an abjad total of 786. The small structure now begins to yield its own internal measures.
+          - paragraph [ref=e135]: "At this stage, wonder turns into attentive reading: the examples no longer stand alone, but begin to appear as a mutually completing order."
+          - link "Scroll down" [ref=e137] [cursor=pointer]:
+            - /url: "#yedi-on-dokuz"
+            - img [ref=e139]
+      - article [ref=e141]:
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - paragraph [ref=e144]: Third stage
+            - heading "Now we are ready to descend into the core." [level=2] [ref=e145]
+            - paragraph [ref=e146]: "Up to this point, the examples were chosen to stay simple on purpose. The reason is this: first one sees clear and low-dispute signs, and only then descends into denser measures."
+          - generic [ref=e147]:
+            - article [ref=e148]:
+              - generic [ref=e150]:
+                - paragraph [ref=e151]: Step 1
+                - paragraph [ref=e152]: Clear
+                - heading "Easily visible examples" [level=3] [ref=e153]
+                - paragraph [ref=e154]: Examples such as 19 letters, 114 surahs, and 96/19 are simply seen here; they do not require long calculations, special formulas, or disputed interpretation.
+            - article [ref=e155]:
+              - generic [ref=e157]:
+                - paragraph [ref=e158]: Step 2
+                - paragraph [ref=e159]: Connected
+                - heading "Mutually completing examples" [level=3] [ref=e160]
+                - paragraph [ref=e161]: In examples like the Missing Basmala, the number now binds two different places together. The pattern thus moves beyond a single point and becomes a relational structure.
+            - article [ref=e162]:
+              - generic [ref=e164]:
+                - paragraph [ref=e165]: Step 3
+                - paragraph [ref=e166]: Dense
+                - heading "Many measures in one sentence" [level=3] [ref=e167]
+                - paragraph [ref=e168]: In the next section, we will look only at the Basmala. Seeing the same order inside a small structure makes the larger patterns easier to understand.
+          - paragraph [ref=e170]: "From here, the user looks less at the number itself and more at the method: can the same order be seen again inside the small core?"
+          - link "Scroll down" [ref=e172] [cursor=pointer]:
+            - /url: "#besmele-olcutleri"
+            - img [ref=e174]
+      - article [ref=e176]:
+        - generic [ref=e177]:
+          - generic [ref=e178]:
+            - paragraph [ref=e179]: Basmala criteria
+            - heading "Here the small core opens up." [level=2] [ref=e180]
+            - paragraph [ref=e181]: From this point on, we stay with a single sentence. If this is your first visit, start with B1-B2; the other groups are built on top of that layer.
+          - article [ref=e183]:
+            - heading "Suggested reading order" [level=3] [ref=e184]
+            - paragraph [ref=e185]: First see the clearest skeleton of the Basmala through the core measures. Then move to the letter and abjad sequences. B7-B9 is the densest layer of the whole structure.
+          - generic [ref=e186]:
+            - article [ref=e187]:
+              - article [ref=e189]:
+                - button "B1-B2 Core measures The main measures visible at first glance gather here. Explore" [ref=e190] [cursor=pointer]:
+                  - paragraph [ref=e191]: B1-B2
+                  - heading "Core measures" [level=3] [ref=e192]
+                  - paragraph [ref=e193]: The main measures visible at first glance gather here.
+                  - generic [ref=e194]:
+                    - paragraph [ref=e195]:
+                      - generic [ref=e196]: B1
+                      - generic [ref=e197]: Letter count
+                    - paragraph [ref=e198]:
+                      - generic [ref=e199]: B2
+                      - generic [ref=e200]: Word, letter, and abjad sequence
+                  - generic [ref=e202]: Explore
+            - article [ref=e203]:
+              - article [ref=e205]:
+                - button "B3-B4 Letter sequences Word order and letter structure are read together. Explore" [ref=e206] [cursor=pointer]:
+                  - paragraph [ref=e207]: B3-B4
+                  - heading "Letter sequences" [level=3] [ref=e208]
+                  - paragraph [ref=e209]: Word order and letter structure are read together.
+                  - generic [ref=e210]:
+                    - paragraph [ref=e211]:
+                      - generic [ref=e212]: B3
+                      - generic [ref=e213]: Word order and letter counts
+                    - paragraph [ref=e214]:
+                      - generic [ref=e215]: B4
+                      - generic [ref=e216]: Word number and cumulative letter totals
+                  - generic [ref=e218]: Explore
+            - article [ref=e219]:
+              - article [ref=e221]:
+                - button "B5-B6.1 Abjad sequences Abjad values are traced one by one and cumulatively. Explore" [ref=e222] [cursor=pointer]:
+                  - paragraph [ref=e223]: B5-B6.1
+                  - heading "Abjad sequences" [level=3] [ref=e224]
+                  - paragraph [ref=e225]: Abjad values are traced one by one and cumulatively.
+                  - generic [ref=e226]:
+                    - paragraph [ref=e227]:
+                      - generic [ref=e228]: B5
+                      - generic [ref=e229]: Word order and abjad values
+                    - paragraph [ref=e230]:
+                      - generic [ref=e231]: B6
+                      - generic [ref=e232]: Word number and cumulative abjad totals
+                  - generic [ref=e234]: Explore
+            - article [ref=e235]:
+              - article [ref=e237]:
+                - button "B7-B9 Advanced measures Denser sequences and composite structures appear in this layer. Explore" [ref=e238] [cursor=pointer]:
+                  - paragraph [ref=e239]: B7-B9
+                  - heading "Advanced measures" [level=3] [ref=e240]
+                  - paragraph [ref=e241]: Denser sequences and composite structures appear in this layer.
+                  - generic [ref=e242]:
+                    - paragraph [ref=e243]:
+                      - generic [ref=e244]: B7
+                      - generic [ref=e245]: Word and letter abjad sequence
+                    - paragraph [ref=e246]:
+                      - generic [ref=e247]: B8
+                      - generic [ref=e248]: Cumulative sequence of letter abjads
+                  - generic [ref=e250]: Explore
+          - paragraph [ref=e251]:
+            - generic [ref=e252]:
+              - text: For the full encoding, see
+              - link "kod.7ve19.com/Besmele_Tr.asp" [ref=e253] [cursor=pointer]:
+                - /url: https://kod.7ve19.com/Besmele_Tr.asp
+              - text: .
+          - link "Scroll down" [ref=e255] [cursor=pointer]:
+            - /url: "#meydan-okuma"
+            - img [ref=e257]
+      - article [ref=e259]:
+        - generic [ref=e260]:
+          - paragraph [ref=e261]: Final stage
+          - heading "Here wonder turns into the question of human inability." [level=2] [ref=e262]
+          - paragraph [ref=e263]: "First you saw clear examples. Then you saw them connect to one another and condense inside the small core. At this point, the question is no longer about a single example: is it possible to construct the like of this whole?"
+          - blockquote [ref=e264]: قُل لَّئِنِ ٱجْتَمَعَتِ ٱلْإِنسُ وَٱلْجِنُّ عَلَىٰٓ أَن يَأْتُوا۟ بِمِثْلِ هَٰذَا ٱلْقُرْءَانِ لَا يَأْتُونَ بِمِثْلِهِۦ وَلَوْ كَانَ بَعْضُهُمْ لِبَعْضٍ ظَهِيرًا
+          - paragraph [ref=e265]: İsrâ 17:88
+          - paragraph [ref=e266]: "Say: Even if all known and unknown beings gathered to bring forth the like of this Qur'an, they still could not produce its like."
+          - generic [ref=e267]:
+            - article [ref=e268]:
+              - paragraph [ref=e269]: 1. Wonder
+              - paragraph [ref=e270]: Clear examples are first simply seen.
+            - article [ref=e271]:
+              - paragraph [ref=e272]: 2. Attention
+              - paragraph [ref=e273]: Then these examples begin to connect with one another.
+            - article [ref=e274]:
+              - paragraph [ref=e275]: 3. Inability
+              - paragraph [ref=e276]: In the end, the matter turns into the question of who could construct the like of this whole.
+          - article [ref=e278]:
+            - paragraph [ref=e279]: 19 words
+            - paragraph [ref=e280]: mod 19 = 0
+          - paragraph [ref=e281]:
+            - generic [ref=e282]:
+              - text: For a more detailed study, see the
+              - link "7ve19 presentation" [ref=e283] [cursor=pointer]:
+                - /url: https://www.7ve19.com/000-sunum/
+              - text: and the
+              - link "related article" [ref=e284] [cursor=pointer]:
+                - /url: https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/
+              - text: .
+          - link "Scroll down" [ref=e286] [cursor=pointer]:
+            - /url: "#devam-yollari"
+            - img [ref=e288]
+      - article [ref=e290]:
+        - generic [ref=e291]:
+          - paragraph [ref=e292]: Ways forward
+          - heading "From here, several doors open for going deeper." [level=2] [ref=e293]
+          - paragraph [ref=e294]: You can either move into the full criteria archive, or continue more slowly through the Basmala page and the presentation.
+          - generic [ref=e295]:
+            - link "Archive Criteria archive View all records through main sections and subsections." [ref=e296] [cursor=pointer]:
+              - /url: /kriter-arsivi
+              - paragraph [ref=e297]: Archive
+              - heading "Criteria archive" [level=3] [ref=e298]
+              - paragraph [ref=e299]: View all records through main sections and subsections.
+            - link "Source Full Basmala page Open the core summarized here with its original sequences." [ref=e300] [cursor=pointer]:
+              - /url: https://kod.7ve19.com/Besmele_Tr.asp
+              - paragraph [ref=e301]: Source
+              - heading "Full Basmala page" [level=3] [ref=e302]
+              - paragraph [ref=e303]: Open the core summarized here with its original sequences.
+            - link "Overview 7ve19 presentation Follow the same path through a broader and plainer presentation." [ref=e304] [cursor=pointer]:
+              - /url: https://www.7ve19.com/000-sunum/
+              - paragraph [ref=e305]: Overview
+              - heading "7ve19 presentation" [level=3] [ref=e306]
+              - paragraph [ref=e307]: Follow the same path through a broader and plainer presentation.
+            - link "Long read The continuation of the challenge Follow the final-stage question at greater length through the essay." [ref=e308] [cursor=pointer]:
+              - /url: https://www.7ve19.com/0045-kuran-yazisinda-insanin-yapamayacagi-sey-nedir-nasil-gorebiliriz/
+              - paragraph [ref=e309]: Long read
+              - heading "The continuation of the challenge" [level=3] [ref=e310]
+              - paragraph [ref=e311]: Follow the final-stage question at greater length through the essay.

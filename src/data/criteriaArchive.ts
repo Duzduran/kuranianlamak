@@ -122,6 +122,44 @@ const ELMS_ABJAD_DIGITS: Record<string, string> = {
   ص: "90"
 };
 
+const ARABIC_ABJAD_VALUES: Record<string, number> = {
+  ا: 1,
+  أ: 1,
+  إ: 1,
+  آ: 1,
+  ٱ: 1,
+  ء: 1,
+  ب: 2,
+  ج: 3,
+  د: 4,
+  ه: 5,
+  ة: 5,
+  و: 6,
+  ز: 7,
+  ح: 8,
+  ط: 9,
+  ي: 10,
+  ى: 10,
+  ك: 20,
+  ل: 30,
+  م: 40,
+  ن: 50,
+  س: 60,
+  ع: 70,
+  ف: 80,
+  ص: 90,
+  ق: 100,
+  ر: 200,
+  ش: 300,
+  ت: 400,
+  ث: 500,
+  خ: 600,
+  ذ: 700,
+  ض: 800,
+  ظ: 900,
+  غ: 1000
+};
+
 const countElmsStreamLetters = (normalizedStream: string) => ({
   elif: [...normalizedStream].filter((character) => character === "ا").length,
   lam: [...normalizedStream].filter((character) => character === "ل").length,
@@ -485,6 +523,7 @@ const triSequenceNumbers = surahNumbers.flatMap((surahNo, index) => [
 const triSequence = sequenceFrom(triSequenceNumbers);
 const triSequenceSlidingWindow = slidingWindowDigitSequence(triSequence);
 const triSequenceDigitSum = digitSum(triSequence);
+const triSequenceElementDigitSumSequence = sequenceFrom(triSequenceNumbers.map((value) => digitSum(value)));
 
 const allNumberedAyahSequence = surahVerseCounts.map((ayahCount) => rangeSequence(1, ayahCount)).join(".");
 const allNumberedAyahSequenceLength = digitsOnly(allNumberedAyahSequence).length;
@@ -556,6 +595,47 @@ const primeFactorSum = (value: number) => {
   return total;
 };
 
+const basmalaNormalizedWords = BASMALA_TEXT.trim().split(/\s+/u).map((word) => normalizeArabicLetterStream(word));
+const basmalaWordCount = basmalaNormalizedWords.length;
+const basmalaLetterCounts = basmalaNormalizedWords.map((word) => word.length);
+const basmalaLetterTotal = sum(basmalaLetterCounts);
+const basmalaAbjadValues = basmalaNormalizedWords.map((word) =>
+  [...word].reduce((total, character) => total + (ARABIC_ABJAD_VALUES[character] ?? 0), 0)
+);
+const basmalaAbjadTotal = sum(basmalaAbjadValues);
+const basmalaCumulativeLetterCounts = cumulativeSums(basmalaLetterCounts);
+const basmalaCumulativeAbjadValues = cumulativeSums(basmalaAbjadValues);
+const basmalaB2Values = [basmalaWordCount, basmalaLetterTotal, basmalaAbjadTotal];
+const basmalaB3ForwardValues = basmalaLetterCounts.flatMap((count, index) => [index + 1, count]);
+const basmalaB3ReverseValues = [...basmalaLetterCounts]
+  .reverse()
+  .flatMap((count, index) => [basmalaWordCount - index, count]);
+const basmalaB4Values = basmalaCumulativeLetterCounts.flatMap((count, index) => [index + 1, count]);
+const basmalaB5Values = basmalaAbjadValues.flatMap((value, index) => [index + 1, value]);
+const basmalaB6Values = basmalaCumulativeAbjadValues.flatMap((value, index) => [index + 1, value]);
+const basmalaB61Values = basmalaB6Values.map((value) => primeFactorSum(value));
+const basmalaPerLetterAbjad = basmalaNormalizedWords.map((word) => [...word].map((character) => ARABIC_ABJAD_VALUES[character] ?? 0));
+const basmalaB7Values = basmalaPerLetterAbjad.flatMap((values, index) => [index + 1, ...values]);
+const basmalaB7ReverseValues = [...basmalaPerLetterAbjad]
+  .reverse()
+  .flatMap((values, index) => [basmalaWordCount - index, ...values]);
+const basmalaB7DigitSum = digitSum(sequenceFrom(basmalaB7Values));
+const basmalaB7SlidingWindow = slidingWindowDigitSequence(sequenceFrom(basmalaB7Values));
+const basmalaB8Values = (() => {
+  let runningTotal = 0;
+  return basmalaPerLetterAbjad.flatMap((values, index) => [
+    index + 1,
+    ...values.map((value) => {
+      runningTotal += value;
+      return runningTotal;
+    })
+  ]);
+})();
+const basmalaB9Values = basmalaPerLetterAbjad.flatMap((values, index) => [
+  index + 1,
+  ...values.flatMap((value, letterIndex) => [letterIndex + 1, value])
+]);
+
 const haMimLineCounts = totalLineCounts.slice(39, 46);
 const group36Sequence = [
   sum(evenCombinedSelected.map((entry) => entry.combined)),
@@ -583,6 +663,11 @@ const discovery = (name: string, date?: string, place?: string) => ({ name, date
 const sourceFihrist6 = {
   label: l("Çift ve Tek 6", "Even and odd 6"),
   url: "https://kod.7ve19.com/CiftveTek_6_Tr.asp"
+};
+
+const sourceBesmele = {
+  label: l("Besmele", "Basmala"),
+  url: "https://kod.7ve19.com/Besmele_Tr.asp"
 };
 
 const sourceFihrist7 = {
@@ -644,6 +729,88 @@ const sadSubsectionIntro = l(
   "As a scope-narrowing single-letter analysis, the Sad records collect structural links between whole-Quran Sad frequencies and the connection between Al-A'raf 7 and Sad 38; they do not replace the main spine."
 );
 
+const hamimSubsectionFoundations = l(
+  "1. Bölüm",
+  "Section 1"
+);
+const hamimSubsectionFoundationsIntro = l(
+  "Başlangıç tablosu, ana harf toplamı ve 42. sure anomalisine bağlı oran katmanları burada birlikte görünür.",
+  "The starting table, the main letter total, and the ratio layers tied to the anomaly in surah 42 appear together here."
+);
+const hamimSubsectionRows = l(
+  "2. Bölüm",
+  "Section 2"
+);
+const hamimSubsectionRowsIntro = l(
+  "Satır grupları, sola kayan ardışık basamak toplamları ve aynı çekirdeğin sayı dönüşümleri bu blokta ilerler.",
+  "This block advances through the row groups, the sliding consecutive digit sums, and the number transforms built on the same core."
+);
+const hamimSubsectionTables = l("3. Bölüm", "Section 3");
+const hamimSubsectionTablesIntro = l(
+  "Tablonun satır, sütun, toplam ve mesani okumaları burada birlikte görünür.",
+  "The table's row, column, total, and mesani readings appear together here."
+);
+const hamimSubsectionEbced = l("4. Bölüm", "Section 4");
+const hamimSubsectionEbcedIntro = l(
+  "Ebced değerleri, büyük harf dizileri ve Allah lafzı çevresindeki ana Ebced katmanları bu bölümde toplanır.",
+  "The abjad values, the large letter sequences, and the main abjad layers around the divine name are collected in this section."
+);
+const hamimSubsectionAyah = l("5. Bölüm", "Section 5");
+const hamimSubsectionAyahIntro = l(
+  "Ayet düzeyinde Ebced toplamları, fark dizileri ve ayet-bazlı kodlama sayıları burada ilerler.",
+  "Verse-level abjad totals, difference sequences, and verse-based coding numbers progress here."
+);
+const hamimSubsectionSelection = l(
+  "6. Bölüm",
+  "Section 6"
+);
+const hamimSubsectionSelectionIntro = l(
+  "Seçili mod 7/mod 19 ayet alt kümeleri ile 7 surenin fihrist bağını kuran son katmanlar burada toplanır.",
+  "The final layers that connect selected mod 7/mod 19 verse subsets to the index link of the seven surahs are gathered here."
+);
+
+const resolveHamimSubsection = (code: string) => {
+  if (["1", "2", "3"].includes(code) || code.startsWith("4.")) {
+    return { title: hamimSubsectionFoundations, intro: hamimSubsectionFoundationsIntro, order: 0 };
+  }
+
+  if (code === "5" || code.startsWith("5.")) {
+    return { title: hamimSubsectionRows, intro: hamimSubsectionRowsIntro, order: 1 };
+  }
+
+  if (["6", "7", "8", "8.1", "8.2", "9", "9.1", "9.2", "10"].includes(code)) {
+    return { title: hamimSubsectionTables, intro: hamimSubsectionTablesIntro, order: 2 };
+  }
+
+  if (["11", "12", "13", "14"].includes(code)) {
+    return { title: hamimSubsectionEbced, intro: hamimSubsectionEbcedIntro, order: 3 };
+  }
+
+  if (["15", "16", "17", "18", "19.A", "19.B", "19.1", "19.2", "19.3", "19.4"].includes(code)) {
+    return { title: hamimSubsectionAyah, intro: hamimSubsectionAyahIntro, order: 4 };
+  }
+
+  if (code.startsWith("20.") || code === "21" || code.startsWith("21.") || code === "22") {
+    return { title: hamimSubsectionSelection, intro: hamimSubsectionSelectionIntro, order: 5 };
+  }
+
+  return null;
+};
+
+const decorateHamimEntry = (entry: CriterionEntry): CriterionEntry => {
+  if (entry.groupId !== "hamim") return entry;
+
+  const subsection = resolveHamimSubsection(entry.code);
+  if (!subsection) return entry;
+
+  return {
+    ...entry,
+    subsection: subsection.title,
+    subsectionIntro: subsection.intro,
+    subsectionOrder: subsection.order
+  };
+};
+
 const criterionFacts = (coding: string, measure: string): CriterionFact[] => [
   { label: l("Kodlama türü"), value: l(coding) },
   { label: l("Ölçüt"), value: l(measure) }
@@ -695,6 +862,14 @@ export const criteriaGroups: CriterionGroup[] = [
     )
   },
   {
+    id: "besmele",
+    title: l("Besmele kodlamaları", "Basmala codings"),
+    intro: l(
+      "Besmele ayeti/cümlesi için doğrulanan temel ve meşru türev kodlamalar.",
+      "Validated foundational and legitimate derived codings for the Basmala verse/sentence."
+    )
+  },
+  {
     id: "hamim",
     title: l("Ha-Mim bağlantıları", "Ha-Mim links"),
     intro: l(
@@ -733,6 +908,288 @@ export const criteriaGroups: CriterionGroup[] = [
       "Bu bölüm iki ayrı hatta ayrılır: daha bütünsel ana omurga araştırması ve kapsamı daraltan tek-harf deneysel hatlar. Lam ve Sad kayıtları ana omurga yerine geçmez; seçilmiş alt-küme incelemeleri olarak burada tutulur.",
       "This section is split into two lines: the search for a more holistic main spine and the scope-narrowing single-letter experimental lines. Lam and Sad records do not replace the main spine; they are kept here as selected subset analyses."
     )
+  }
+];
+
+const basmalaCriteria: CriterionEntry[] = [
+  {
+    id: "criterion-b1",
+    code: "B1",
+    groupId: "besmele",
+    title: l("Besmeledeki harf sayısı", "Letter count in the Basmala"),
+    summary: l(
+      "Besmele ayetindeki toplam harf sayısı 19'dur ve doğrudan 19 modunda doğrulanır.",
+      "The total letter count in the Basmala verse is 19 and directly verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Reşat Halife", "1974", "USA"),
+    facts: [
+      { label: l("Kelime sayısı"), value: l(String(basmalaWordCount)) },
+      { label: l("Toplam harf"), value: l(String(basmalaLetterTotal)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b1-total",
+        label: l("Harf sayısı"),
+        sequence: String(basmalaLetterTotal),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "harf sayısı", "19"]
+  },
+  {
+    id: "criterion-b2",
+    code: "B2",
+    groupId: "besmele",
+    title: l("Kelime sayısı, harf sayısı ve Ebced toplamı dizilimi"),
+    summary: l(
+      "Besmeledeki kelime sayısı, toplam harf sayısı ve toplam Ebced değeri doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "When the Basmala's word count, total letter count, and total abjad value are written in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
+    facts: [
+      { label: l("Kelime sayısı"), value: l(String(basmalaWordCount)) },
+      { label: l("Harf sayısı"), value: l(String(basmalaLetterTotal)) },
+      { label: l("Ebced toplamı"), value: l(String(basmalaAbjadTotal)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b2-sequence",
+        label: l("B2 dizilimi"),
+        sequence: sequenceFrom(basmalaB2Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "kelime", "harf", "ebced", "19"]
+  },
+  {
+    id: "criterion-b3",
+    code: "B3",
+    groupId: "besmele",
+    title: l("Kelime sıra numarası ve harf sayıları"),
+    summary: l(
+      "Besmelede kelime sıra numarası ile kelimelerin harf sayıları düz ve ters doğal sırada ayrı ayrı 19 modunda doğrulanır.",
+      "In the Basmala, the word indices and word letter counts verify modulo 19 separately in both forward and reverse natural order."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Abdullah Arık / Mustafa Kurdoğlu", "1992-2012 / 10.11.2023", "USA / Türkiye/Yalova"),
+    facts: [
+      { label: l("Harf sayıları"), value: l(sequenceFrom(basmalaLetterCounts)) },
+      { label: l("Düz dizilim"), value: l(sequenceFrom(basmalaB3ForwardValues)) },
+      { label: l("Ters dizilim"), value: l(sequenceFrom(basmalaB3ReverseValues)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b3-forward",
+        label: l("Düz doğal sıra"),
+        sequence: sequenceFrom(basmalaB3ForwardValues),
+        mods: [19]
+      },
+      {
+        id: "criterion-b3-reverse",
+        label: l("Ters doğal sıra"),
+        sequence: sequenceFrom(basmalaB3ReverseValues),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "kelime sırası", "harf sayısı", "19"]
+  },
+  {
+    id: "criterion-b4",
+    code: "B4",
+    groupId: "besmele",
+    title: l("Kelime numarası ve kümülatif harf toplamları"),
+    summary: l(
+      "Besmelede kelime numarası ile kümülatif harf toplamları doğal sırada birlikte yazıldığında 19 modunda doğrulanır.",
+      "When the word numbers and cumulative letter totals of the Basmala are written together in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
+    facts: [
+      { label: l("Kümülatif harf toplamları"), value: l(sequenceFrom(basmalaCumulativeLetterCounts)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b4-sequence",
+        label: l("B4 dizilimi"),
+        sequence: sequenceFrom(basmalaB4Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "kümülatif", "harf", "19"]
+  },
+  {
+    id: "criterion-b5",
+    code: "B5",
+    groupId: "besmele",
+    title: l("Kelime sırası ve Ebced değerleri"),
+    summary: l(
+      "Besmelede her kelimenin sıra numarası ile o kelimenin Ebced değeri doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "When each Basmala word's index and abjad value are written in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Kod.7ve19 Besmele sayfası"),
+    facts: [
+      { label: l("Kelime Ebcedleri"), value: l(sequenceFrom(basmalaAbjadValues)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b5-sequence",
+        label: l("B5 dizilimi"),
+        sequence: sequenceFrom(basmalaB5Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "ebced", "kelime", "19"]
+  },
+  {
+    id: "criterion-b6",
+    code: "B6",
+    groupId: "besmele",
+    title: l("Kelime numarası ve kümülatif Ebced toplamları"),
+    summary: l(
+      "Besmelede kelime numarası ile kümülatif Ebced toplamları doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "When the Basmala's word numbers and cumulative abjad totals are written in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Kod.7ve19 Besmele sayfası"),
+    facts: [
+      { label: l("Kümülatif Ebced"), value: l(sequenceFrom(basmalaCumulativeAbjadValues)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b6-sequence",
+        label: l("B6 dizilimi"),
+        sequence: sequenceFrom(basmalaB6Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "ebced", "kümülatif", "19"]
+  },
+  {
+    id: "criterion-b6-1",
+    code: "B6.1",
+    groupId: "besmele",
+    title: l("B6 asal çarpan toplamları dizilimi"),
+    summary: l(
+      "B6 dizilimindeki her elemanın asal çarpan toplamı alındığında oluşan türev dizi 19 modunda doğrulanır.",
+      "When the prime-factor sum of each element in criterion B6 is taken, the resulting derived sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Mustafa Kurdoğlu", "14.08.2025", "Türkiye/Yalova"),
+    facts: [
+      { label: l("Temel kriter"), value: l("B6") },
+      { label: l("Asal çarpan toplamları"), value: l(sequenceFrom(basmalaB61Values)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b6-1-sequence",
+        label: l("B6.1 dizilimi"),
+        sequence: sequenceFrom(basmalaB61Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "asal çarpan", "türev", "19"]
+  },
+  {
+    id: "criterion-b7",
+    code: "B7",
+    groupId: "besmele",
+    title: l("Kelime ve harf Ebced dizilimi"),
+    summary: l(
+      "Besmelede kelime sıra numarası ile kelimelerdeki harflerin Ebced değerleri düz doğal sırada 19 modunda doğrulanır. Aynı yapının ters dizilimi, düz dizilimin basamak toplamı ve düz dizilimin sola kayan pencere türevi de yine 19 modunda doğrulanır.",
+      "In the Basmala, the word indices together with the abjad values of the letters inside the words verify modulo 19 in the forward natural order. The reverse arrangement, the digit sum of the forward sequence, and the sliding-window derivative of the forward sequence also verify modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery(
+      "Abdullah Arık / Mustafa Kurdoğlu / Mustafa Kurdoğlu",
+      "1992-2012 / 10.11.2023 / 14.08.2025",
+      "USA / Türkiye/Yalova"
+    ),
+    facts: [
+      { label: l("Basamak toplamı"), value: l(String(basmalaB7DigitSum)) },
+      { label: l("Kayan pencere uzunluğu"), value: l(String(basmalaB7SlidingWindow.length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b7-sequence",
+        label: l("B7 düz dizilimi"),
+        sequence: sequenceFrom(basmalaB7Values),
+        mods: [19]
+      },
+      {
+        id: "criterion-b7-reverse",
+        label: l("B7 ters dizilimi"),
+        sequence: sequenceFrom(basmalaB7ReverseValues),
+        mods: [19]
+      },
+      {
+        id: "criterion-b7-digit-sum",
+        label: l("B7 basamak toplamı"),
+        sequence: String(basmalaB7DigitSum),
+        mods: [19]
+      },
+      {
+        id: "criterion-b7-window",
+        label: l("B7 kayan pencere çıktısı"),
+        sequence: basmalaB7SlidingWindow,
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "harf ebced", "basamak toplamı", "kayan pencere", "19"]
+  },
+  {
+    id: "criterion-b8",
+    code: "B8",
+    groupId: "besmele",
+    title: l("Harf Ebcedlerinin kümülatif dizilimi"),
+    summary: l(
+      "Besmelede harf Ebced değerlerinin kümülatif toplamları, kelime sıra numaralarıyla birlikte doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "When the cumulative totals of the Basmala's letter abjad values are written together with word indices in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Mustafa Kurdoğlu", "05.12.2023", "Türkiye/Yalova"),
+    tests: [
+      {
+        id: "criterion-b8-sequence",
+        label: l("B8 dizilimi"),
+        sequence: sequenceFrom(basmalaB8Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "harf ebced", "kümülatif", "19"]
+  },
+  {
+    id: "criterion-b9",
+    code: "B9",
+    groupId: "besmele",
+    title: l("Kelime sıra no, harf sıra no ve harf Ebced dizilimi"),
+    summary: l(
+      "Besmelede kelime sıra numarası, harf sıra numarası ve harf Ebced değerleri doğal sırada birlikte yazıldığında 19 modunda doğrulanır.",
+      "When the Basmala's word indices, letter indices, and letter abjad values are written together in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
+    tests: [
+      {
+        id: "criterion-b9-sequence",
+        label: l("B9 dizilimi"),
+        sequence: sequenceFrom(basmalaB9Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "harf sırası", "ebced", "19"]
   }
 ];
 
@@ -1317,6 +1774,42 @@ const extendedHaMimCriteria: CriterionEntry[] = [
     tags: ["ha-mim", "mod 19 ayetleri", "19"]
   }),
   referenceCriterion({
+    id: "criterion-20-2-1",
+    code: "20.2.1",
+    groupId: "hamim",
+    title: "Seçili mod 7 Ebced ayetlerinde ayet numarası dizilimi",
+    summary:
+      "Ebced toplamı mod 7 olan ve seçili lafız koşulunu taşıyan ayetlerin ayet numaraları doğal sırada yazıldığında hem 19 hem 7 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "05.07.2023", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 19) ve ≡ 0 (mod 7)",
+    tags: ["ha-mim", "mod 7 ayetleri", "ayet numarası", "7", "19"]
+  }),
+  referenceCriterion({
+    id: "criterion-20-2-2",
+    code: "20.2.2",
+    groupId: "hamim",
+    title: "Seçili mod 7 Ebced ayetlerinde sure ve ayet basamak toplamları",
+    summary:
+      "Aynı alt kümede sure ve ayet numaralarının basamak toplamları topluca 19 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "05.07.2023", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 19)",
+    tags: ["ha-mim", "mod 7 ayetleri", "basamak toplamı", "19"]
+  }),
+  referenceCriterion({
+    id: "criterion-20-2-3",
+    code: "20.2.3",
+    groupId: "hamim",
+    title: "Seçili mod 7 Ebced ayetlerinde Ebced dizilimi",
+    summary:
+      "Ebced toplamı mod 7 olan ve seçili lafız koşulunu taşıyan ayetlerde kodlama harflerinin Ebced değerleri doğal sırada birleştirildiğinde 7 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "05.07.2023", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 7)",
+    tags: ["ha-mim", "mod 7 ayetleri", "ebced", "7"]
+  }),
+  referenceCriterion({
     id: "criterion-20-3",
     code: "20.3",
     groupId: "hamim",
@@ -1351,6 +1844,18 @@ const extendedHaMimCriteria: CriterionEntry[] = [
     discoveryInfo: discovery("Mustafa Kurdoğlu", "16.01.2023", "Türkiye/Yalova"),
     measure: "≡ 0 (mod 19)",
     tags: ["ha-mim", "ebced", "19"]
+  }),
+  referenceCriterion({
+    id: "criterion-20-5-1",
+    code: "20.5.1",
+    groupId: "hamim",
+    title: "Seçili mod 7 birleşik-toplam ayetlerinde Ebced dizilimi",
+    summary:
+      "Birleşik ayet toplamı mod 7 olan ve seçili lafız koşulunu taşıyan ayetlerde kodlama harflerinin Ebced değerleri doğal sırada birleştirildiğinde 19 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "05.07.2023", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 19)",
+    tags: ["ha-mim", "mod 7 ayetleri", "ebced", "19"]
   }),
   referenceCriterion({
     id: "criterion-20-6",
@@ -1401,6 +1906,30 @@ const extendedHaMimCriteria: CriterionEntry[] = [
     tags: ["ha-mim", "ayet bazlı", "kelime", "7", "19"]
   }),
   referenceCriterion({
+    id: "criterion-21-1u",
+    code: "21.1u",
+    groupId: "hamim",
+    title: "ALLAH lafzı bulunan ayetlerde beşli birleşik toplam",
+    summary:
+      "ALLAH lafzı bulunan ayetlerde sure no, ayet no, kodlama harf sayısı, Ebced toplamı ve kelime sayısını birleştiren dizilim 7 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "08.12.2023", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 7)",
+    tags: ["ha-mim", "allah lafzı", "ayet bazlı", "7"]
+  }),
+  referenceCriterion({
+    id: "criterion-21-1v",
+    code: "21.1v",
+    groupId: "hamim",
+    title: "LİLLAHİ lafzı bulunan ayetlerde beşli birleşik toplam",
+    summary:
+      "LİLLAHİ lafzı bulunan ayetlerde sure no, ayet no, kodlama harf sayısı, Ebced toplamı ve kelime sayısını birleştiren dizilim 19 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "08.12.2023", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 19)",
+    tags: ["ha-mim", "lillahi", "ayet bazlı", "19"]
+  }),
+  referenceCriterion({
     id: "criterion-21-2",
     code: "21.2",
     groupId: "hamim",
@@ -1425,6 +1954,18 @@ const extendedHaMimCriteria: CriterionEntry[] = [
     tags: ["ha-mim", "ayet bazlı", "19"]
   }),
   referenceCriterion({
+    id: "criterion-21-3-1",
+    code: "21.3.1",
+    groupId: "hamim",
+    title: "Beşli ayet diziliminin ters sırası",
+    summary:
+      "Sure no, ayet no, kodlama harf sayısı, kelime sayısı ve harf sayısından oluşan beşli ayet diziliminin ters ardışık biçimi hem 19 hem 7 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "13.12.2022", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 19) ve ≡ 0 (mod 7)",
+    tags: ["ha-mim", "ayet bazlı", "ters", "7", "19"]
+  }),
+  referenceCriterion({
     id: "criterion-21-4",
     code: "21.4",
     groupId: "hamim",
@@ -1435,6 +1976,18 @@ const extendedHaMimCriteria: CriterionEntry[] = [
     discoveryInfo: discovery("Mustafa Kurdoğlu", "13.12.2022", "Türkiye/Yalova"),
     measure: "≡ 0 (mod 7)",
     tags: ["ha-mim", "ayet bazlı", "7"]
+  }),
+  referenceCriterion({
+    id: "criterion-21-4-1",
+    code: "21.4.1",
+    groupId: "hamim",
+    title: "Dört öğeli ayet diziliminin ters sırası",
+    summary:
+      "Sure no, ayet no, ayetteki kodlama harf sayısı ve ayetteki kodlama harfleri Ebced toplamından oluşan dört öğeli dizilimin ters ardışık biçimi 19 modunda doğrulanır.",
+    source: sourceHaMim5_3,
+    discoveryInfo: discovery("Mustafa Kurdoğlu", "13.12.2022", "Türkiye/Yalova"),
+    measure: "≡ 0 (mod 19)",
+    tags: ["ha-mim", "ayet bazlı", "ters", "19"]
   }),
   referenceCriterion({
     id: "criterion-21-5",
@@ -1548,6 +2101,69 @@ const supplementaryFihristCriteria: CriterionEntry[] = [
     tags: ["özel", "1 ve 9", "ayet indeksi", "19"]
   })
 ];
+
+const allowedHaMimCodes = new Set([
+  "2",
+  "3",
+  "4.1",
+  "4.2",
+  "5",
+  "5.1",
+  "5.2",
+  "5.3",
+  "5.4",
+  "5.5",
+  "5.6",
+  "6",
+  "7",
+  "8",
+  "8.1",
+  "8.2",
+  "9",
+  "9.1",
+  "9.2",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19.1",
+  "19.2",
+  "19.3",
+  "19.4",
+  "20.1",
+  "20.2",
+  "20.2.1",
+  "20.2.2",
+  "20.2.3",
+  "20.3",
+  "20.4",
+  "20.5",
+  "20.5.1",
+  "20.6",
+  "20.7",
+  "21",
+  "21.1",
+  "21.1u",
+  "21.1v",
+  "21.2",
+  "21.3",
+  "21.3.1",
+  "21.4",
+  "21.4.1",
+  "21.5",
+  "21.6",
+  "21.7",
+  "21.8",
+  "21.9",
+  "21.10",
+  "21.11",
+  "22"
+]);
 
 const almsCriteria: CriterionEntry[] = [
   {
@@ -2843,37 +3459,46 @@ export const criteriaArchive: CriterionEntry[] = [
   ...almsExperimentalCriteria,
   ...lamExperimentalCriteria,
   ...sadExperimentalCriteria,
-  ...earlyHaMimCriteria,
-  ...extendedHaMimCriteria,
+  ...basmalaCriteria,
+  ...earlyHaMimCriteria
+    .filter((entry) => allowedHaMimCodes.has(entry.code))
+    .map(decorateHamimEntry),
+  ...extendedHaMimCriteria
+    .filter((entry) => allowedHaMimCodes.has(entry.code))
+    .map(decorateHamimEntry),
   ...supplementaryFihristCriteria,
-  {
-    id: "criterion-22",
-    code: "22",
-    groupId: "hamim",
-    title: l("Ha-Mim surelerindeki toplam satır sayılarının ardışık dizilimi"),
-    summary: l(
-      "40-46 arası Ha-Mim surelerinin toplam satır sayıları 19 modunda birlikte doğrulanır.",
-      "The total line counts of the Ha-Mim surahs 40-46 are jointly verified modulo 19."
-    ),
-    sourceLabel: sourceHaMim5_3.label,
-    sourceUrl: sourceHaMim5_3.url,
-    discovery: discovery("Mustafa Kurdoğlu", "18.10.2018", "Türkiye/Yalova"),
-    facts: [
-      { label: l("Sureler"), value: l("40-41-42-43-44-45-46") },
-      { label: l("Toplam satır"), value: l(sequenceFrom(haMimLineCounts)) },
-      { label: l("Sonuç"), value: l("≡ 0 (mod 19)") }
-    ],
-    tests: [
-      {
-        id: "criterion-22-lines",
-        label: l("Toplam satır dizilimi"),
-        sequence: sequenceFrom(haMimLineCounts),
-        mods: [19],
-        note: l("Boşluklar kaldırıldığında birleşik sayı 19'a tam bölünür.")
-      }
-    ],
-    tags: ["ha-mim", "satır", "19"]
-  },
+  ...(allowedHaMimCodes.has("22")
+    ? [
+        decorateHamimEntry({
+          id: "criterion-22",
+          code: "22",
+          groupId: "hamim",
+          title: l("Ha-Mim surelerindeki toplam satır sayılarının ardışık dizilimi"),
+          summary: l(
+            "40-46 arası Ha-Mim surelerinin toplam satır sayıları 19 modunda birlikte doğrulanır.",
+            "The total line counts of the Ha-Mim surahs 40-46 are jointly verified modulo 19."
+          ),
+          sourceLabel: sourceHaMim5_3.label,
+          sourceUrl: sourceHaMim5_3.url,
+          discovery: discovery("Mustafa Kurdoğlu", "18.10.2018", "Türkiye/Yalova"),
+          facts: [
+            { label: l("Sureler"), value: l("40-41-42-43-44-45-46") },
+            { label: l("Toplam satır"), value: l(sequenceFrom(haMimLineCounts)) },
+            { label: l("Sonuç"), value: l("≡ 0 (mod 19)") }
+          ],
+          tests: [
+            {
+              id: "criterion-22-lines",
+              label: l("Toplam satır dizilimi"),
+              sequence: sequenceFrom(haMimLineCounts),
+              mods: [19],
+              note: l("Boşluklar kaldırıldığında birleşik sayı 19'a tam bölünür.")
+            }
+          ],
+          tags: ["ha-mim", "satır", "19"]
+        })
+      ]
+    : []),
   {
     id: "criterion-23",
     code: "23",
@@ -3467,6 +4092,34 @@ export const criteriaArchive: CriterionEntry[] = [
       }
     ],
     tags: ["kayan pencere", "725"]
+  },
+  {
+    id: "criterion-31-5-c",
+    code: "31.5C",
+    groupId: "fihrist",
+    title: l("31.5 diziliminin eleman-bazlı basamak toplamları"),
+    summary: l(
+      "31.5'teki her sure numarası, ayet sayısı ve numarasız Besmele değerine ayrı ayrı basamak toplamı uygulanıp doğal sıra korunduğunda oluşan türev dizi 7 modunda doğrulanır.",
+      "When a digit sum is applied separately to every surah number, verse count, and unnumbered Basmala value in criterion 31.5 while preserving the natural order, the resulting derived sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "13.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kriter"), value: l("31.5") },
+      { label: l("İlk değerler"), value: l(sequenceFrom(triSequenceNumbers.slice(0, 12).map((value) => digitSum(value)))) },
+      { label: l("mod 19 kalanı"), value: l("13") },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 7)") }
+    ],
+    tests: [
+      {
+        id: "criterion-31-5-c-sequence",
+        label: l("31.5 eleman-bazlı basamak toplamları"),
+        sequence: triSequenceElementDigitSumSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["basamak toplamı", "7", "türev", "31.5"]
   },
   {
     id: "criterion-32",

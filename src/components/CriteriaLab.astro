@@ -128,6 +128,52 @@ const searchIndex = (entry) =>
     .join(" ")
     .toLowerCase();
 
+const shouldSortBySubsection = (groupId) => groupId === "experimental-archive" || groupId === "hamim";
+
+const buildSubsectionBlocks = (entries) => {
+  const bucketBlocks = [];
+  const bucketMap = new Map();
+
+  entries.forEach((entry) => {
+    const displayBucket = resolveDisplayBucket(entry.bucket);
+    let bucketBlock = bucketMap.get(displayBucket);
+
+    if (!bucketBlock) {
+      bucketBlock = {
+        key: displayBucket,
+        label: displayBucketLabels[displayBucket],
+        plainEntries: [],
+        subsectionBlocks: [],
+        subsectionMap: new Map()
+      };
+      bucketMap.set(displayBucket, bucketBlock);
+      bucketBlocks.push(bucketBlock);
+    }
+
+    const subsectionKey = entry.subsection?.tr ?? "";
+    if (!subsectionKey) {
+      bucketBlock.plainEntries.push(entry);
+      return;
+    }
+
+    let subsectionBlock = bucketBlock.subsectionMap.get(subsectionKey);
+    if (!subsectionBlock) {
+      subsectionBlock = {
+        key: subsectionKey,
+        title: entry.subsection,
+        intro: entry.subsectionIntro,
+        entries: []
+      };
+      bucketBlock.subsectionMap.set(subsectionKey, subsectionBlock);
+      bucketBlock.subsectionBlocks.push(subsectionBlock);
+    }
+
+    subsectionBlock.entries.push(entry);
+  });
+
+  return bucketBlocks.map(({ subsectionMap, ...bucketBlock }) => bucketBlock);
+};
+
 const groupedCriteria = criteriaGroups.map((group) => ({
   ...group,
   entries: criteriaArchive
@@ -143,7 +189,7 @@ const groupedCriteria = criteriaGroups.map((group) => ({
 
       if (leftBucket !== rightBucket) return leftBucket - rightBucket;
 
-      if (group.id === "experimental-archive") {
+      if (shouldSortBySubsection(group.id)) {
         const leftSubsectionOrder = left.subsectionOrder ?? 999;
         const rightSubsectionOrder = right.subsectionOrder ?? 999;
 
@@ -196,7 +242,8 @@ const previewBlocks = (entry) => {
 
 const resultBlocks = (entry) => {
   if (entry.tests?.length) {
-    return entry.tests.slice(0, 2).map((test) => ({
+    const visibleTests = entry.tests.length <= 4 ? entry.tests : entry.tests.slice(0, 2);
+    return visibleTests.map((test) => ({
       label: test.label.tr,
       value: test.mods.map((mod) => `≡ 0 (mod ${mod})`).join(" · ")
     }));
@@ -216,8 +263,9 @@ const resultBlocks = (entry) => {
 };
 
 const groupToneClass = {
+  besmele: "tone-basmala",
   spine: "tone-alms",
-  "experimental-archive": "tone-special",
+  "experimental-archive": "tone-experimental",
   hamim: "tone-hamim",
   fihrist: "tone-fihrist",
   special: "tone-special",
@@ -307,7 +355,7 @@ const groupToneClass = {
   <div class="lab-catalogue">
     {
       groupedCriteria.map((group) => (
-        <details class="lab-section" data-group-section={group.id}>
+        <details class={`lab-section ${groupToneClass[group.id] ?? ""}`} data-group-section={group.id}>
           <summary class={`lab-section__banner ${groupToneClass[group.id] ?? ""}`}>
             <div class="lab-section__banner-copy">
               <LocalizedText as="h2" class="lab-section__title" tr={group.title.tr} en={group.title.en} />
@@ -348,20 +396,198 @@ const groupToneClass = {
             </div>
 
             <div class="lab-table__body">
-              {
-                group.entries.map((entry, index) => {
-                  const preview = previewBlocks(entry);
-                  const results = resultBlocks(entry);
-                  const previousEntry = group.entries[index - 1];
-                  const displayBucket = resolveDisplayBucket(entry.bucket);
-                  const previousDisplayBucket = previousEntry ? resolveDisplayBucket(previousEntry.bucket) : null;
-                  const subsectionKey = entry.subsection?.tr ?? "";
-                  const previousSubsectionKey = previousEntry?.subsection?.tr ?? "";
-                  const showBucketHeading = displayBucket !== previousDisplayBucket;
-                  const showSubsectionHeading = Boolean(subsectionKey) && (showBucketHeading || subsectionKey !== previousSubsectionKey);
+              {group.id === "hamim"
+                ? buildSubsectionBlocks(group.entries).map((bucket) => [
+                    bucket.plainEntries.map((entry) => {
+                      const preview = previewBlocks(entry);
+                      const results = resultBlocks(entry);
+                      const displayBucket = resolveDisplayBucket(entry.bucket);
 
-                  return (
-                    [
+                      return (
+                        <article
+                          class="lab-table__row"
+                          data-archive-card
+                          data-group={entry.groupId}
+                          data-bucket={displayBucket}
+                          data-subsection=""
+                          data-search={searchIndex(entry)}
+                        >
+                          <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
+                            <span class="lab-cell__mobile-label">
+                              <span data-copy-lang="tr">No</span>
+                              <span data-copy-lang="en">No</span>
+                            </span>
+                            <strong>{entry.code}</strong>
+                          </div>
+
+                          <div class="lab-cell lab-cell--summary">
+                            <span class="lab-cell__mobile-label">
+                              <span data-copy-lang="tr">Açıklama</span>
+                              <span data-copy-lang="en">Description</span>
+                            </span>
+                            <LocalizedText as="h3" class="lab-cell__title" tr={entry.title.tr} en={entry.title.en} />
+                            <LocalizedText as="p" class="lab-cell__text" tr={entry.summary.tr} en={entry.summary.en} />
+                          </div>
+
+                          <div class="lab-cell lab-cell--sequence">
+                            <span class="lab-cell__mobile-label">
+                              <span data-copy-lang="tr">Kodlama</span>
+                              <span data-copy-lang="en">Coding</span>
+                            </span>
+                            {preview.map((item) => (
+                              <div class="lab-seq">
+                                <strong class="lab-seq__label">{item.label}</strong>
+                                <span class="lab-seq__value">{item.value}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div class="lab-cell lab-cell--result">
+                            <span class="lab-cell__mobile-label">
+                              <span data-copy-lang="tr">Ölçüt</span>
+                              <span data-copy-lang="en">Measure</span>
+                            </span>
+                            {results.map((item) => (
+                              <div class="lab-resultline">
+                                <strong class="lab-resultline__label">{item.label}</strong>
+                                <span class="lab-resultline__value">{item.value}</span>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div class="lab-cell lab-cell--detail">
+                            <span class="lab-cell__mobile-label">
+                              <span data-copy-lang="tr">Kayıt</span>
+                              <span data-copy-lang="en">Record</span>
+                            </span>
+                            <p class="lab-cell__record">{discoveryLine(entry)}</p>
+                            <button type="button" class="lab-card__button" data-archive-open={entry.id}>
+                              <span data-copy-lang="tr">Detay</span>
+                              <span data-copy-lang="en">Detail</span>
+                            </button>
+                          </div>
+                        </article>
+                      );
+                    }),
+                    bucket.subsectionBlocks.map((subsection) => (
+                      <details class="lab-subsection" data-archive-subsection-block data-subsection-key={subsection.key}>
+                        <summary class="lab-subsection__summary">
+                          <div class="lab-subsection__summary-copy">
+                            <LocalizedText
+                              as="h4"
+                              class="lab-subsection__title"
+                              tr={subsection.title?.tr ?? ""}
+                              en={subsection.title?.en ?? ""}
+                            />
+                            {subsection.intro ? (
+                              <LocalizedText
+                                as="p"
+                                class="lab-subsection__intro"
+                                tr={subsection.intro.tr}
+                                en={subsection.intro.en}
+                              />
+                            ) : null}
+                          </div>
+
+                          <div class="lab-subsection__count">
+                            <span class="lab-subsection__count-copy">
+                              <span data-copy-lang="tr">Kayıt</span>
+                              <span data-copy-lang="en">Entries</span>
+                            </span>
+                            <strong data-subsection-visible-count>{subsection.entries.length}</strong>
+                          </div>
+                        </summary>
+
+                        <div class="lab-subsection__body">
+                          {subsection.entries.map((entry) => {
+                            const preview = previewBlocks(entry);
+                            const results = resultBlocks(entry);
+                            const displayBucket = resolveDisplayBucket(entry.bucket);
+                            const subsectionKey = entry.subsection?.tr ?? "";
+
+                            return (
+                              <article
+                                class="lab-table__row"
+                                data-archive-card
+                                data-group={entry.groupId}
+                                data-bucket={displayBucket}
+                                data-subsection={subsectionKey}
+                                data-search={searchIndex(entry)}
+                              >
+                                <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
+                                  <span class="lab-cell__mobile-label">
+                                    <span data-copy-lang="tr">No</span>
+                                    <span data-copy-lang="en">No</span>
+                                  </span>
+                                  <strong>{entry.code}</strong>
+                                </div>
+
+                                <div class="lab-cell lab-cell--summary">
+                                  <span class="lab-cell__mobile-label">
+                                    <span data-copy-lang="tr">Açıklama</span>
+                                    <span data-copy-lang="en">Description</span>
+                                  </span>
+                                  <LocalizedText as="h3" class="lab-cell__title" tr={entry.title.tr} en={entry.title.en} />
+                                  <LocalizedText as="p" class="lab-cell__text" tr={entry.summary.tr} en={entry.summary.en} />
+                                </div>
+
+                                <div class="lab-cell lab-cell--sequence">
+                                  <span class="lab-cell__mobile-label">
+                                    <span data-copy-lang="tr">Kodlama</span>
+                                    <span data-copy-lang="en">Coding</span>
+                                  </span>
+                                  {preview.map((item) => (
+                                    <div class="lab-seq">
+                                      <strong class="lab-seq__label">{item.label}</strong>
+                                      <span class="lab-seq__value">{item.value}</span>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <div class="lab-cell lab-cell--result">
+                                  <span class="lab-cell__mobile-label">
+                                    <span data-copy-lang="tr">Ölçüt</span>
+                                    <span data-copy-lang="en">Measure</span>
+                                  </span>
+                                  {results.map((item) => (
+                                    <div class="lab-resultline">
+                                      <strong class="lab-resultline__label">{item.label}</strong>
+                                      <span class="lab-resultline__value">{item.value}</span>
+                                    </div>
+                                  ))}
+                                </div>
+
+                                <div class="lab-cell lab-cell--detail">
+                                  <span class="lab-cell__mobile-label">
+                                    <span data-copy-lang="tr">Kayıt</span>
+                                    <span data-copy-lang="en">Record</span>
+                                  </span>
+                                  <p class="lab-cell__record">{discoveryLine(entry)}</p>
+                                  <button type="button" class="lab-card__button" data-archive-open={entry.id}>
+                                    <span data-copy-lang="tr">Detay</span>
+                                    <span data-copy-lang="en">Detail</span>
+                                  </button>
+                                </div>
+                              </article>
+                            );
+                          })}
+                        </div>
+                      </details>
+                    ))
+                  ])
+                : group.entries.map((entry, index) => {
+                    const preview = previewBlocks(entry);
+                    const results = resultBlocks(entry);
+                    const previousEntry = group.entries[index - 1];
+                    const displayBucket = resolveDisplayBucket(entry.bucket);
+                    const previousDisplayBucket = previousEntry ? resolveDisplayBucket(previousEntry.bucket) : null;
+                    const subsectionKey = entry.subsection?.tr ?? "";
+                    const previousSubsectionKey = previousEntry?.subsection?.tr ?? "";
+                    const suppressBucketHeading = group.id === "fihrist" && displayBucket === "secondary";
+                    const showBucketHeading = displayBucket !== previousDisplayBucket && !suppressBucketHeading;
+                    const showSubsectionHeading = Boolean(subsectionKey) && (showBucketHeading || subsectionKey !== previousSubsectionKey);
+
+                    return [
                       showBucketHeading ? (
                         <div class="lab-table__subgroup" data-archive-subgroup={`bucket:${displayBucket}`}>
                           <LocalizedText
@@ -453,10 +679,8 @@ const groupToneClass = {
                           </button>
                         </div>
                       </article>
-                    ]
-                  );
-                })
-              }
+                    ];
+                  })}
             </div>
           </div>
         </details>
@@ -651,6 +875,7 @@ const groupToneClass = {
         const sectionId = section.dataset.groupSection ?? "";
         const sectionCards = Array.from(section.querySelectorAll("[data-archive-card]"));
         const subgroupHeadings = Array.from(section.querySelectorAll("[data-archive-subgroup]"));
+        const subsectionBlocks = Array.from(section.querySelectorAll("[data-archive-subsection-block]"));
         let sectionVisibleCount = 0;
 
         sectionCards.forEach((card) => {
@@ -677,16 +902,36 @@ const groupToneClass = {
           sectionCountTarget.textContent = String(sectionVisibleCount);
         }
 
+        const visibleCards = sectionCards.filter((card) => card instanceof HTMLElement && !card.hidden);
+
         subgroupHeadings.forEach((heading) => {
           if (!(heading instanceof HTMLElement)) return;
           const groupKey = heading.dataset.archiveSubgroup ?? "";
-          const visibleCards = sectionCards.filter((card) => card instanceof HTMLElement && !card.hidden);
           const matchingCards = groupKey.startsWith("bucket:")
             ? visibleCards.filter((card) => card instanceof HTMLElement && card.dataset.bucket === groupKey.slice(7))
             : groupKey.startsWith("subsection:")
               ? visibleCards.filter((card) => card instanceof HTMLElement && card.dataset.subsection === groupKey.slice(11))
               : [];
           heading.hidden = hideSection || matchingCards.length === 0;
+        });
+
+        subsectionBlocks.forEach((block) => {
+          if (!(block instanceof HTMLElement)) return;
+
+          const subsectionKey = block.dataset.subsectionKey ?? "";
+          const matchingCards = visibleCards.filter((card) => card instanceof HTMLElement && card.dataset.subsection === subsectionKey);
+          const blockHidden = hideSection || matchingCards.length === 0;
+
+          block.hidden = blockHidden;
+
+          if (!blockHidden && block instanceof HTMLDetailsElement && (activeFilter !== "all" || query)) {
+            block.open = true;
+          }
+
+          const subsectionCountTarget = block.querySelector("[data-subsection-visible-count]");
+          if (subsectionCountTarget instanceof HTMLElement) {
+            subsectionCountTarget.textContent = String(matchingCards.length);
+          }
         });
       });
 
@@ -1018,14 +1263,15 @@ const groupToneClass = {
   }
 
   .lab-section__banner {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(7.75rem, max-content) 1rem;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    column-gap: 0.9rem;
+    row-gap: 0.65rem;
     width: 100%;
     padding: 0.55rem 0.8rem;
     border-bottom: 1px solid var(--lab-border);
+    border-inline-start: 4px solid var(--tone-strong, var(--lab-border));
     background: var(--tone-soft, #dce8f4);
     list-style: none;
     cursor: pointer;
@@ -1037,10 +1283,11 @@ const groupToneClass = {
 
   .lab-section__banner::after {
     content: "▾";
-    margin-left: 0.6rem;
+    margin-left: 0;
     color: var(--lab-body);
     font-size: 1rem;
     line-height: 1;
+    justify-self: end;
   }
 
   .lab-section:not([open]) .lab-section__banner::after {
@@ -1057,39 +1304,49 @@ const groupToneClass = {
     margin: 0;
     color: var(--lab-heading);
     font-family: var(--font-serif);
-    font-size: 1.1rem;
-    line-height: 1.2;
+    font-size: 1.28rem;
+    line-height: 1.16;
   }
 
   .lab-section__intro {
     margin: 0;
     color: var(--lab-body);
-    font-size: 0.88rem;
+    font-size: 0.97rem;
     line-height: 1.45;
   }
 
   .lab-section__count {
-    display: grid;
-    justify-items: end;
-    gap: 0.12rem;
-    margin-left: auto;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    min-width: 7.75rem;
+    margin-left: 0;
     color: var(--lab-body);
     font-size: 0.7rem;
     font-weight: 800;
     letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
     text-transform: uppercase;
+    text-align: right;
+    white-space: nowrap;
   }
 
   .lab-section__count-copy {
     display: inline-flex;
-    gap: 0.25rem;
+    gap: 0.18rem;
   }
 
   .lab-section__count strong {
     color: var(--lab-heading);
     font-family: var(--font-serif);
-    font-size: 1.25rem;
+    font-size: 1.32rem;
     letter-spacing: normal;
+  }
+
+  .tone-basmala {
+    --tone-strong: #d18a7c;
+    --tone-soft: #f6dfd9;
   }
 
   .tone-hamim {
@@ -1112,9 +1369,19 @@ const groupToneClass = {
     --tone-soft: #f4e6d3;
   }
 
+  .tone-experimental {
+    --tone-strong: #9f9acb;
+    --tone-soft: #e9e6f8;
+  }
+
   .tone-surah-ayah-19 {
     --tone-strong: #98c0a0;
     --tone-soft: #e3efe5;
+  }
+
+  html[data-theme="dark"] .tone-basmala {
+    --tone-strong: #805247;
+    --tone-soft: #2e1e1c;
   }
 
   html[data-theme="dark"] .tone-hamim {
@@ -1135,6 +1402,11 @@ const groupToneClass = {
   html[data-theme="dark"] .tone-special {
     --tone-strong: #7a5a32;
     --tone-soft: #261d15;
+  }
+
+  html[data-theme="dark"] .tone-experimental {
+    --tone-strong: #56507c;
+    --tone-soft: #1f1b2d;
   }
 
   html[data-theme="dark"] .tone-surah-ayah-19 {
@@ -1186,6 +1458,141 @@ const groupToneClass = {
     line-height: 1.45;
     letter-spacing: normal;
     text-transform: none;
+  }
+
+  .lab-subsection {
+    --subtone-soft: var(--tone-soft, #dce8f4);
+    --subtone-rim: var(--tone-strong, var(--lab-border));
+    margin: 0.35rem 0.8rem 0.8rem;
+    border: 1px solid var(--lab-border);
+    background: var(--lab-surface);
+  }
+
+  .lab-subsection__summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(7.75rem, max-content) 0.95rem;
+    align-items: start;
+    column-gap: 0.8rem;
+    row-gap: 0.55rem;
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid var(--lab-border);
+    border-inline-start: 4px solid var(--subtone-rim);
+    background: var(--subtone-soft);
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .lab-subsection__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .lab-subsection__summary::after {
+    content: "▾";
+    margin-left: 0;
+    color: var(--lab-body);
+    font-size: 0.95rem;
+    line-height: 1;
+    justify-self: end;
+  }
+
+  .lab-subsection:not([open]) .lab-subsection__summary::after {
+    content: "▸";
+  }
+
+  .lab-subsection__summary-copy {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .lab-subsection__title {
+    margin: 0;
+    color: var(--lab-heading);
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: none;
+  }
+
+  .lab-subsection__intro {
+    margin: 0;
+    color: var(--lab-body);
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+
+  .lab-subsection__count {
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0.35rem;
+    min-width: 7.75rem;
+    margin-left: 0;
+    color: var(--lab-body);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
+    text-transform: uppercase;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .lab-subsection__count-copy {
+    display: inline-flex;
+    gap: 0.18rem;
+  }
+
+  .lab-subsection__count strong {
+    color: var(--lab-heading);
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    letter-spacing: normal;
+  }
+
+  .tone-hamim .lab-subsection:nth-of-type(4n + 1) {
+    --subtone-soft: #f6eecf;
+    --subtone-rim: #d7b24e;
+  }
+
+  .tone-hamim .lab-subsection:nth-of-type(4n + 2) {
+    --subtone-soft: #f5e4c8;
+    --subtone-rim: #cfa45a;
+  }
+
+  .tone-hamim .lab-subsection:nth-of-type(4n + 3) {
+    --subtone-soft: #efe8d0;
+    --subtone-rim: #b7a062;
+  }
+
+  .tone-hamim .lab-subsection:nth-of-type(4n) {
+    --subtone-soft: #f3e1d3;
+    --subtone-rim: #c19163;
+  }
+
+  html[data-theme="dark"] .tone-hamim .lab-subsection:nth-of-type(4n + 1) {
+    --subtone-soft: #2f2818;
+    --subtone-rim: #7b6630;
+  }
+
+  html[data-theme="dark"] .tone-hamim .lab-subsection:nth-of-type(4n + 2) {
+    --subtone-soft: #302418;
+    --subtone-rim: #7f6030;
+  }
+
+  html[data-theme="dark"] .tone-hamim .lab-subsection:nth-of-type(4n + 3) {
+    --subtone-soft: #2a261c;
+    --subtone-rim: #6f6337;
+  }
+
+  html[data-theme="dark"] .tone-hamim .lab-subsection:nth-of-type(4n) {
+    --subtone-soft: #2f211c;
+    --subtone-rim: #7a5a3d;
+  }
+
+  .lab-subsection__body {
+    border-top: 0;
   }
 
   .lab-table__head {
@@ -1384,16 +1791,18 @@ const groupToneClass = {
   .lab-badge {
     display: inline-flex;
     align-items: center;
-    padding: 0.12rem 0.32rem;
-    border: 1px solid var(--lab-border-soft);
-    color: var(--lab-body);
-    font-size: 0.68rem;
-    font-weight: 700;
+    padding: 0;
+    border: 0;
+    color: var(--lab-muted);
+    font-size: 0.64rem;
+    font-weight: 800;
     line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .lab-badge--interactive {
-    border-color: var(--lab-border);
+    color: var(--lab-heading);
   }
 
   .lab-dialog {
@@ -1448,10 +1857,25 @@ const groupToneClass = {
 
   .lab-overview__facts {
     display: grid;
-    gap: 0.75rem;
+    gap: 0;
   }
 
-  .lab-overview__fact,
+  .lab-overview__fact {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 9.5rem) minmax(0, 1fr);
+    gap: 0.35rem 0.9rem;
+    padding: 0.55rem 0;
+    border-top: 1px solid var(--lab-border-soft);
+    border-radius: 0;
+    background: none;
+    align-items: start;
+  }
+
+  .lab-overview__fact:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+
   .lab-test {
     display: grid;
     gap: 0.72rem;
@@ -1470,6 +1894,13 @@ const groupToneClass = {
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+  }
+
+  .lab-overview__value {
+    margin: 0;
+    color: var(--lab-body);
+    font-size: 0.94rem;
+    line-height: 1.55;
   }
 
   .lab-source {
@@ -1636,7 +2067,6 @@ const groupToneClass = {
     }
 
     .lab-section__count {
-      justify-items: start;
       margin-left: 0;
     }
 
@@ -1654,6 +2084,18 @@ const groupToneClass = {
 
     .lab-table__subgroup {
       padding: 0.8rem 0.75rem 0.35rem;
+    }
+
+    .lab-subsection {
+      margin: 0.35rem 0.75rem 0.75rem;
+    }
+
+    .lab-subsection__summary {
+      padding: 0.65rem 0.7rem;
+    }
+
+    .lab-subsection__count {
+      margin-left: 0;
     }
 
     .lab-table__row {
@@ -1690,6 +2132,12 @@ const groupToneClass = {
 
     .lab-cell--result {
       gap: 0.55rem;
+    }
+
+    .lab-overview__fact {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+      padding: 0.5rem 0;
     }
 
     .lab-resultline__value {
