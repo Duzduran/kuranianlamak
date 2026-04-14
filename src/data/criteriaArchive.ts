@@ -78,6 +78,13 @@ const digitSum = (value: string | number) =>
     .replace(/\D/g, "")
     .split("")
     .reduce((total, digit) => total + Number(digit || 0), 0);
+const digitalRoot = (value: string | number) => {
+  let result = digitSum(value);
+
+  while (result > 9) result = digitSum(result);
+
+  return result;
+};
 
 const sequenceFrom = (values: number[]) => values.join(" ");
 
@@ -606,6 +613,8 @@ const basmalaAbjadTotal = sum(basmalaAbjadValues);
 const basmalaCumulativeLetterCounts = cumulativeSums(basmalaLetterCounts);
 const basmalaCumulativeAbjadValues = cumulativeSums(basmalaAbjadValues);
 const basmalaB2Values = [basmalaWordCount, basmalaLetterTotal, basmalaAbjadTotal];
+const basmalaB21Values = basmalaB2Values.map((value) => digitSum(value));
+const basmalaB22Values = basmalaB2Values.map((value) => digitalRoot(value));
 const basmalaB3ForwardValues = basmalaLetterCounts.flatMap((count, index) => [index + 1, count]);
 const basmalaB3ReverseValues = [...basmalaLetterCounts]
   .reverse()
@@ -967,6 +976,60 @@ const basmalaCriteria: CriterionEntry[] = [
       }
     ],
     tags: ["besmele", "kelime", "harf", "ebced", "19"]
+  },
+  {
+    id: "criterion-b2-1",
+    code: "B2.1",
+    groupId: "besmele",
+    title: l("B2 sayılarının basamak toplamları dizilimi"),
+    summary: l(
+      "B2 dizisindeki kelime sayısı, harf sayısı ve Ebced toplamına ayrı ayrı basamak toplamı uygulandığında oluşan 4 10 21 dizisi 19 modunda doğrulanır.",
+      "When a digit sum is applied separately to the B2 word count, letter count, and abjad total, the resulting 4 10 21 sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Ahmet Düzduran", "14.04.2026"),
+    facts: [
+      { label: l("Temel kriter"), value: l("B2") },
+      { label: l("B2 dizisi"), value: l(sequenceFrom(basmalaB2Values)) },
+      { label: l("Basamak toplamları"), value: l(sequenceFrom(basmalaB21Values)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b2-1-sequence",
+        label: l("B2.1 dizilimi"),
+        sequence: sequenceFrom(basmalaB21Values),
+        mods: [19]
+      }
+    ],
+    tags: ["besmele", "b2 türevi", "basamak toplamı", "19"]
+  },
+  {
+    id: "criterion-b2-2",
+    code: "B2.2",
+    groupId: "besmele",
+    title: l("B2 sayılarının sayısal kök dizilimi"),
+    summary: l(
+      "B2 dizisindeki kelime sayısı, harf sayısı ve Ebced toplamının sayısal kökleri 4 1 3 dizisini verir; bu türev dizi 7 modunda doğrulanır.",
+      "The digital roots of the B2 word count, letter count, and abjad total produce the 4 1 3 sequence; this derived sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceBesmele.label,
+    sourceUrl: sourceBesmele.url,
+    discovery: discovery("Ahmet Düzduran", "14.04.2026"),
+    facts: [
+      { label: l("Temel kriter"), value: l("B2") },
+      { label: l("B2 dizisi"), value: l(sequenceFrom(basmalaB2Values)) },
+      { label: l("Sayısal kökler"), value: l(sequenceFrom(basmalaB22Values)) }
+    ],
+    tests: [
+      {
+        id: "criterion-b2-2-sequence",
+        label: l("B2.2 dizilimi"),
+        sequence: sequenceFrom(basmalaB22Values),
+        mods: [7]
+      }
+    ],
+    tags: ["besmele", "b2 türevi", "sayısal kök", "7"]
   },
   {
     id: "criterion-b3",

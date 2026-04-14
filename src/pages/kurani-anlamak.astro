@@ -9,12 +9,17 @@ const l = (tr, en) => ({ tr, en });
 const besmeleCriteriaGroups = [
   {
     id: "temel",
-    range: "B1-B2",
+    range: "B1-B2.2",
     title: l("Temel ölçüler", "Core measures"),
-    intro: l("İlk bakışta görünen ana ölçüler burada toplanır.", "The main measures visible at first glance gather here."),
+    intro: l(
+      "İlk bakışta görünen ana ölçüler ve B2'nin doğrudan türeyen iki kısa katmanı burada toplanır.",
+      "The main measures visible at first glance, together with two short layers derived directly from B2, gather here."
+    ),
     items: [
       ["B1", l("Harf sayısı", "Letter count"), "19", l("mod 19 = 0", "mod 19 = 0")],
-      ["B2", l("Kelime, harf ve ebced dizilimi", "Word, letter, and abjad sequence"), "4 19 786", l("mod 19 = 0", "mod 19 = 0")]
+      ["B2", l("Kelime, harf ve ebced dizilimi", "Word, letter, and abjad sequence"), "4 19 786", l("mod 19 = 0", "mod 19 = 0")],
+      ["B2.1", l("B2 basamak toplamları", "B2 digit sums"), "4 10 21", l("mod 19 = 0", "mod 19 = 0")],
+      ["B2.2", l("B2 sayısal kökleri", "B2 digital roots"), "4 1 3", l("mod 7 = 0", "mod 7 = 0")]
     ]
   },
   {
