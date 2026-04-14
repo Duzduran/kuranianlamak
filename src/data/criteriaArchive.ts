@@ -611,6 +611,9 @@ const basmalaB3ReverseValues = [...basmalaLetterCounts]
   .reverse()
   .flatMap((count, index) => [basmalaWordCount - index, count]);
 const basmalaB4Values = basmalaCumulativeLetterCounts.flatMap((count, index) => [index + 1, count]);
+const basmalaB4ReverseValues = [...basmalaCumulativeLetterCounts]
+  .reverse()
+  .flatMap((count, index) => [basmalaWordCount - index, count]);
 const basmalaB5Values = basmalaAbjadValues.flatMap((value, index) => [index + 1, value]);
 const basmalaB6Values = basmalaCumulativeAbjadValues.flatMap((value, index) => [index + 1, value]);
 const basmalaB61Values = basmalaB6Values.map((value) => primeFactorSum(value));
@@ -1004,24 +1007,32 @@ const basmalaCriteria: CriterionEntry[] = [
     groupId: "besmele",
     title: l("Kelime numarası ve kümülatif harf toplamları"),
     summary: l(
-      "Besmelede kelime numarası ile kümülatif harf toplamları doğal sırada birlikte yazıldığında 19 modunda doğrulanır.",
-      "When the word numbers and cumulative letter totals of the Basmala are written together in natural order, the sequence verifies modulo 19."
+      "Besmelede kelime numarası ile kümülatif harf toplamları düz doğal sırada 19 modunda, ters doğal sırada ise 7 modunda doğrulanır.",
+      "In the Basmala, the word numbers and cumulative letter totals verify modulo 19 in the forward natural order and modulo 7 in the reverse natural order."
     ),
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
-    discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
+    discovery: discovery("Abdullah Arık / Mustafa Kurdoğlu", "1992-2012 / 10.11.2023", "USA / Türkiye/Yalova"),
     facts: [
-      { label: l("Kümülatif harf toplamları"), value: l(sequenceFrom(basmalaCumulativeLetterCounts)) }
+      { label: l("Kümülatif harf toplamları"), value: l(sequenceFrom(basmalaCumulativeLetterCounts)) },
+      { label: l("Düz dizilim"), value: l(sequenceFrom(basmalaB4Values)) },
+      { label: l("Ters dizilim"), value: l(sequenceFrom(basmalaB4ReverseValues)) }
     ],
     tests: [
       {
-        id: "criterion-b4-sequence",
-        label: l("B4 dizilimi"),
+        id: "criterion-b4-forward",
+        label: l("Düz doğal sıra"),
         sequence: sequenceFrom(basmalaB4Values),
         mods: [19]
+      },
+      {
+        id: "criterion-b4-reverse",
+        label: l("Ters doğal sıra"),
+        sequence: sequenceFrom(basmalaB4ReverseValues),
+        mods: [7]
       }
     ],
-    tags: ["besmele", "kümülatif", "harf", "19"]
+    tags: ["besmele", "kümülatif", "harf", "19", "7"]
   },
   {
     id: "criterion-b5",
@@ -1034,7 +1045,7 @@ const basmalaCriteria: CriterionEntry[] = [
     ),
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
-    discovery: discovery("Kod.7ve19 Besmele sayfası"),
+    discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
     facts: [
       { label: l("Kelime Ebcedleri"), value: l(sequenceFrom(basmalaAbjadValues)) }
     ],
@@ -1059,7 +1070,7 @@ const basmalaCriteria: CriterionEntry[] = [
     ),
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
-    discovery: discovery("Kod.7ve19 Besmele sayfası"),
+    discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
     facts: [
       { label: l("Kümülatif Ebced"), value: l(sequenceFrom(basmalaCumulativeAbjadValues)) }
     ],
@@ -1079,8 +1090,8 @@ const basmalaCriteria: CriterionEntry[] = [
     groupId: "besmele",
     title: l("B6 asal çarpan toplamları dizilimi"),
     summary: l(
-      "B6 dizilimindeki her elemanın asal çarpan toplamı alındığında oluşan türev dizi 19 modunda doğrulanır.",
-      "When the prime-factor sum of each element in criterion B6 is taken, the resulting derived sequence verifies modulo 19."
+      "B6 dizilimindeki her elemanın asal çarpan toplamı alındığında oluşan türev dizi hem 19 hem 7 modunda doğrulanır.",
+      "When the prime-factor sum of each element in criterion B6 is taken, the resulting derived sequence verifies modulo both 19 and 7."
     ),
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
@@ -1094,10 +1105,10 @@ const basmalaCriteria: CriterionEntry[] = [
         id: "criterion-b6-1-sequence",
         label: l("B6.1 dizilimi"),
         sequence: sequenceFrom(basmalaB61Values),
-        mods: [19]
+        mods: [19, 7]
       }
     ],
-    tags: ["besmele", "asal çarpan", "türev", "19"]
+    tags: ["besmele", "asal çarpan", "türev", "19", "7"]
   },
   {
     id: "criterion-b7",
@@ -1153,8 +1164,8 @@ const basmalaCriteria: CriterionEntry[] = [
     groupId: "besmele",
     title: l("Harf Ebcedlerinin kümülatif dizilimi"),
     summary: l(
-      "Besmelede harf Ebced değerlerinin kümülatif toplamları, kelime sıra numaralarıyla birlikte doğal sırada yazıldığında 19 modunda doğrulanır.",
-      "When the cumulative totals of the Basmala's letter abjad values are written together with word indices in natural order, the sequence verifies modulo 19."
+      "Besmelede harf Ebced değerlerinin kümülatif toplamları, kelime sıra numaralarıyla birlikte doğal sırada yazıldığında hem 19 hem 7 modunda doğrulanır.",
+      "When the cumulative totals of the Basmala's letter abjad values are written together with word indices in natural order, the sequence verifies modulo both 19 and 7."
     ),
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
@@ -1164,10 +1175,10 @@ const basmalaCriteria: CriterionEntry[] = [
         id: "criterion-b8-sequence",
         label: l("B8 dizilimi"),
         sequence: sequenceFrom(basmalaB8Values),
-        mods: [19]
+        mods: [19, 7]
       }
     ],
-    tags: ["besmele", "harf ebced", "kümülatif", "19"]
+    tags: ["besmele", "harf ebced", "kümülatif", "19", "7"]
   },
   {
     id: "criterion-b9",

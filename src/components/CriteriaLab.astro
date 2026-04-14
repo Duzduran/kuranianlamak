@@ -103,7 +103,45 @@ const compareSpineCodes = (left, right) => {
 };
 
 const uniqueMods = (entry) => [...new Set((entry.tests ?? []).flatMap((test) => test.mods))];
+const detectModsFromText = (value = "") => {
+  const mods = new Set();
+
+  if (/\bmod\s*19\b|\(mod\s*19\)/i.test(value)) mods.add(19);
+  if (/\bmod\s*7\b|\(mod\s*7\)/i.test(value)) mods.add(7);
+
+  return mods;
+};
+
+const entryMods = (entry) => {
+  const directMods = uniqueMods(entry);
+  if (directMods.length) return directMods;
+
+  const resultLikeFacts = (entry.facts ?? []).filter((fact) => /sonuç|ölçüt|kriter/i.test(fact.label.tr));
+  const mods = new Set();
+
+  resultLikeFacts.forEach((fact) => {
+    [fact.value.tr, fact.value.en].forEach((value) => {
+      detectModsFromText(value).forEach((mod) => mods.add(mod));
+    });
+  });
+
+  return [...mods];
+};
+
+const entryModScope = (entry) => {
+  const mods = entryMods(entry);
+  if (mods.includes(19)) return "contains-19";
+  if (mods.includes(7)) return "7-only";
+  return "neutral";
+};
+
+const isDefaultVisibleEntry = (entry) => entryModScope(entry) === "contains-19";
+
 const discoveryLine = (entry) => {
+  if (entry.discovery.name === "Ahmet Düzduran") {
+    return entry.discovery.date ?? "";
+  }
+
   const tail = [entry.discovery.date, entry.discovery.place].filter(Boolean).join(" ");
   return tail ? `${entry.discovery.name} - ${tail}` : entry.discovery.name;
 };
@@ -121,7 +159,7 @@ const searchIndex = (entry) =>
     entry.title.en,
     entry.summary.tr,
     entry.summary.en,
-    entry.discovery.name,
+    entry.discovery.name === "Ahmet Düzduran" ? "" : entry.discovery.name,
     entry.discovery.place ?? "",
     ...(entry.tags ?? [])
   ]
@@ -215,10 +253,11 @@ const groupedCriteria = criteriaGroups.map((group) => ({
 
 const groupCounts = groupedCriteria.map((group) => ({
   ...group,
-  count: group.entries.length
+  count: group.entries.filter(isDefaultVisibleEntry).length
 }));
 
 const totalCriteria = criteriaArchive.length;
+const defaultVisibleCriteriaCount = criteriaArchive.filter(isDefaultVisibleEntry).length;
 const totalInteractive = criteriaArchive.filter((entry) => entry.tests?.length).length;
 const totalResearchers = new Set(criteriaArchive.map((entry) => entry.discovery.name)).size;
 const totalProtocols = criteriaArchive.reduce((total, entry) => total + (entry.tests?.length ?? 0), 0);
@@ -313,7 +352,7 @@ const groupToneClass = {
           <span data-copy-lang="tr">Tümü</span>
           <span data-copy-lang="en">All</span>
         </span>
-        <strong class="lab-filter__count">{totalCriteria}</strong>
+        <strong class="lab-filter__count" data-archive-filter-count="all">{defaultVisibleCriteriaCount}</strong>
       </button>
 
       {
@@ -323,7 +362,7 @@ const groupToneClass = {
               <span data-copy-lang="tr">{group.title.tr}</span>
               <span data-copy-lang="en">{group.title.en}</span>
             </span>
-            <strong class="lab-filter__count">{group.count}</strong>
+            <strong class="lab-filter__count" data-archive-filter-count={group.id}>{group.count}</strong>
           </button>
         ))
       }
@@ -342,12 +381,22 @@ const groupToneClass = {
         <input type="search" data-archive-search />
       </label>
 
-      <div class="lab-toolbar__status">
-        <span class="lab-toolbar__caption">
-          <span data-copy-lang="tr">Gösterilen kayıt</span>
-          <span data-copy-lang="en">Visible entries</span>
-        </span>
-        <strong class="lab-toolbar__value" data-archive-count>{totalCriteria}</strong>
+      <div class="lab-controls__tools">
+        <label class="lab-toggle">
+          <input type="checkbox" data-archive-mod7-toggle />
+          <span class="lab-toggle__copy">
+            <span data-copy-lang="tr">Mod 7 bulgularını da göster</span>
+            <span data-copy-lang="en">Show mod 7 findings too</span>
+          </span>
+        </label>
+
+        <div class="lab-toolbar__status">
+          <span class="lab-toolbar__caption">
+            <span data-copy-lang="tr">Gösterilen kayıt</span>
+            <span data-copy-lang="en">Visible entries</span>
+          </span>
+          <strong class="lab-toolbar__value" data-archive-count>{defaultVisibleCriteriaCount}</strong>
+        </div>
       </div>
     </div>
   </div>
@@ -355,7 +404,11 @@ const groupToneClass = {
   <div class="lab-catalogue">
     {
       groupedCriteria.map((group) => (
-        <details class={`lab-section ${groupToneClass[group.id] ?? ""}`} data-group-section={group.id}>
+        <details
+          class={`lab-section ${groupToneClass[group.id] ?? ""}`}
+          data-group-section={group.id}
+          hidden={!group.entries.some(isDefaultVisibleEntry)}
+        >
           <summary class={`lab-section__banner ${groupToneClass[group.id] ?? ""}`}>
             <div class="lab-section__banner-copy">
               <LocalizedText as="h2" class="lab-section__title" tr={group.title.tr} en={group.title.en} />
@@ -367,7 +420,7 @@ const groupToneClass = {
                 <span data-copy-lang="tr">Kayıt</span>
                 <span data-copy-lang="en">Entries</span>
               </span>
-              <strong data-group-visible-count>{group.entries.length}</strong>
+              <strong data-group-visible-count>{group.entries.filter(isDefaultVisibleEntry).length}</strong>
             </div>
           </summary>
 
@@ -410,7 +463,9 @@ const groupToneClass = {
                           data-group={entry.groupId}
                           data-bucket={displayBucket}
                           data-subsection=""
+                          data-mod-scope={entryModScope(entry)}
                           data-search={searchIndex(entry)}
+                          hidden={!isDefaultVisibleEntry(entry)}
                         >
                           <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
                             <span class="lab-cell__mobile-label">
@@ -470,7 +525,12 @@ const groupToneClass = {
                       );
                     }),
                     bucket.subsectionBlocks.map((subsection) => (
-                      <details class="lab-subsection" data-archive-subsection-block data-subsection-key={subsection.key}>
+                      <details
+                        class="lab-subsection"
+                        data-archive-subsection-block
+                        data-subsection-key={subsection.key}
+                        hidden={!subsection.entries.some(isDefaultVisibleEntry)}
+                      >
                         <summary class="lab-subsection__summary">
                           <div class="lab-subsection__summary-copy">
                             <LocalizedText
@@ -494,7 +554,7 @@ const groupToneClass = {
                               <span data-copy-lang="tr">Kayıt</span>
                               <span data-copy-lang="en">Entries</span>
                             </span>
-                            <strong data-subsection-visible-count>{subsection.entries.length}</strong>
+                            <strong data-subsection-visible-count>{subsection.entries.filter(isDefaultVisibleEntry).length}</strong>
                           </div>
                         </summary>
 
@@ -512,7 +572,9 @@ const groupToneClass = {
                                 data-group={entry.groupId}
                                 data-bucket={displayBucket}
                                 data-subsection={subsectionKey}
+                                data-mod-scope={entryModScope(entry)}
                                 data-search={searchIndex(entry)}
+                                hidden={!isDefaultVisibleEntry(entry)}
                               >
                                 <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
                                   <span class="lab-cell__mobile-label">
@@ -622,7 +684,9 @@ const groupToneClass = {
                         data-group={entry.groupId}
                         data-bucket={displayBucket}
                         data-subsection={subsectionKey}
+                        data-mod-scope={entryModScope(entry)}
                         data-search={searchIndex(entry)}
+                        hidden={!isDefaultVisibleEntry(entry)}
                       >
                         <div class={`lab-cell lab-cell--code ${groupToneClass[group.id] ?? ""}`}>
                           <span class="lab-cell__mobile-label">
@@ -858,7 +922,9 @@ const groupToneClass = {
 
     const groupSections = Array.from(archiveRoot.querySelectorAll("[data-group-section]"));
     const filterButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-filter]"));
+    const filterCountTargets = Array.from(archiveRoot.querySelectorAll("[data-archive-filter-count]"));
     const searchInput = archiveRoot.querySelector("[data-archive-search]");
+    const mod7Toggle = archiveRoot.querySelector("[data-archive-mod7-toggle]");
     const emptyState = archiveRoot.querySelector("[data-archive-empty]");
     const countTarget = archiveRoot.querySelector("[data-archive-count]");
     let activeFilter = "all";
@@ -866,8 +932,11 @@ const groupToneClass = {
     const updateArchiveCards = () => {
       const query =
         searchInput instanceof HTMLInputElement ? searchInput.value.trim().toLowerCase() : "";
+      const includeMod7Only = mod7Toggle instanceof HTMLInputElement ? mod7Toggle.checked : false;
 
       let visibleCount = 0;
+      let baseVisibleCount = 0;
+      const groupBaseVisibleCounts = new Map();
 
       groupSections.forEach((section) => {
         if (!(section instanceof HTMLElement)) return;
@@ -880,10 +949,20 @@ const groupToneClass = {
 
         sectionCards.forEach((card) => {
           if (!(card instanceof HTMLElement)) return;
+          const modScope = card.dataset.modScope ?? "neutral";
+          const matchesMod = modScope === "contains-19" || (includeMod7Only && modScope === "7-only");
           const matchesFilter = activeFilter === "all" || card.dataset.group === activeFilter;
           const matchesSearch = !query || (card.dataset.search ?? "").includes(query);
-          const visible = matchesFilter && matchesSearch;
+          const baseVisible = matchesMod && matchesSearch;
+          const visible = baseVisible && matchesFilter;
           card.hidden = !visible;
+
+          if (baseVisible) {
+            const groupId = card.dataset.group ?? "";
+            baseVisibleCount += 1;
+            groupBaseVisibleCounts.set(groupId, (groupBaseVisibleCounts.get(groupId) ?? 0) + 1);
+          }
+
           if (visible) {
             visibleCount += 1;
             sectionVisibleCount += 1;
@@ -942,6 +1021,12 @@ const groupToneClass = {
       if (countTarget instanceof HTMLElement) {
         countTarget.textContent = String(visibleCount);
       }
+
+      filterCountTargets.forEach((target) => {
+        if (!(target instanceof HTMLElement)) return;
+        const groupId = target.dataset.archiveFilterCount ?? "";
+        target.textContent = String(groupId === "all" ? baseVisibleCount : groupBaseVisibleCounts.get(groupId) ?? 0);
+      });
     };
 
     filterButtons.forEach((button) => {
@@ -959,6 +1044,7 @@ const groupToneClass = {
     });
 
     searchInput?.addEventListener("input", updateArchiveCards);
+    mod7Toggle?.addEventListener("change", updateArchiveCards);
     updateArchiveCards();
 
     const openButtons = Array.from(archiveRoot.querySelectorAll("[data-archive-open]"));
@@ -1229,6 +1315,41 @@ const groupToneClass = {
 
   .lab-search input:focus {
     border-color: var(--lab-border);
+  }
+
+  .lab-controls__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-left: auto;
+  }
+
+  .lab-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 2.5rem;
+    padding: 0 0.75rem;
+    border: 1px solid var(--lab-border-soft);
+    background: var(--lab-surface);
+    color: var(--lab-heading);
+    cursor: pointer;
+  }
+
+  .lab-toggle input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--lab-heading);
+  }
+
+  .lab-toggle__copy {
+    color: var(--lab-body);
+    font-size: 0.82rem;
+    font-weight: 700;
+    line-height: 1.3;
   }
 
   .lab-toolbar__status {
@@ -2047,6 +2168,21 @@ const groupToneClass = {
       min-height: 2.1rem;
       padding: 0 0.62rem;
       font-size: 0.88rem;
+    }
+
+    .lab-controls__tools {
+      justify-content: flex-start;
+      margin-left: 0;
+    }
+
+    .lab-toggle {
+      width: 100%;
+      min-height: 2.2rem;
+      padding: 0.5rem 0.62rem;
+    }
+
+    .lab-toggle__copy {
+      font-size: 0.78rem;
     }
 
     .lab-toolbar__status {
