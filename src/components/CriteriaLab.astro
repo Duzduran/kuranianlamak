@@ -41,7 +41,7 @@ const displayBucketLabels = {
   control: { tr: "Kontrol", en: "Control" },
   "derived-legit": { tr: "Meşru Türevler", en: "Legitimate derivatives" },
   focus: { tr: "Ana Omurga", en: "Main spine" },
-  secondary: { tr: "İkincil Katmanlar", en: "Secondary layers" },
+  secondary: { tr: "", en: "" },
   experimental: { tr: "Deneysel", en: "Experimental" }
 };
 const resolveDisplayBucket = (bucket) => (bucket ? displayBucketMap[bucket] ?? "secondary" : "secondary");
@@ -115,6 +115,8 @@ const detectModsFromText = (value = "") => {
 const entryMods = (entry) => {
   const directMods = uniqueMods(entry);
   if (directMods.length) return directMods;
+
+  if (entry.contextMods?.length) return entry.contextMods;
 
   const resultLikeFacts = (entry.facts ?? []).filter((fact) => /sonuç|ölçüt|kriter/i.test(fact.label.tr));
   const mods = new Set();
@@ -645,7 +647,7 @@ const groupToneClass = {
                     const previousDisplayBucket = previousEntry ? resolveDisplayBucket(previousEntry.bucket) : null;
                     const subsectionKey = entry.subsection?.tr ?? "";
                     const previousSubsectionKey = previousEntry?.subsection?.tr ?? "";
-                    const suppressBucketHeading = group.id === "fihrist" && displayBucket === "secondary";
+                    const suppressBucketHeading = displayBucket === "secondary";
                     const showBucketHeading = displayBucket !== previousDisplayBucket && !suppressBucketHeading;
                     const showSubsectionHeading = Boolean(subsectionKey) && (showBucketHeading || subsectionKey !== previousSubsectionKey);
 
@@ -794,6 +796,23 @@ const groupToneClass = {
                         <LocalizedText as="p" class="lab-overview__value" tr={fact.value.tr} en={fact.value.en} />
                       </article>
                     ))}
+                  </div>
+                ) : null}
+
+                {entry.walkthrough?.length ? (
+                  <div class="lab-overview__walkthrough">
+                    <h3 class="lab-overview__sectiontitle">
+                      <span data-copy-lang="tr">Nasıl bulunur</span>
+                      <span data-copy-lang="en">How it works</span>
+                    </h3>
+                    <div class="lab-overview__facts">
+                      {entry.walkthrough.map((step) => (
+                        <article class="lab-overview__fact">
+                          <LocalizedText as="h3" class="lab-overview__label" tr={step.label.tr} en={step.label.en} />
+                          <LocalizedText as="p" class="lab-overview__value" tr={step.value.tr} en={step.value.en} />
+                        </article>
+                      ))}
+                    </div>
                   </div>
                 ) : null}
 
@@ -2022,6 +2041,20 @@ const groupToneClass = {
     color: var(--lab-body);
     font-size: 0.94rem;
     line-height: 1.55;
+  }
+
+  .lab-overview__walkthrough {
+    display: grid;
+    gap: 0.7rem;
+  }
+
+  .lab-overview__sectiontitle {
+    margin: 0;
+    color: var(--lab-heading);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
   .lab-source {

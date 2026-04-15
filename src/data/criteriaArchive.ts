@@ -23,6 +23,7 @@ export type CriterionEntry = {
   id: string;
   code: string;
   groupId: string;
+  contextMods?: number[];
   subsection?: LocalizedText;
   subsectionIntro?: LocalizedText;
   subsectionOrder?: number;
@@ -47,6 +48,7 @@ export type CriterionEntry = {
     place?: string;
   };
   facts?: CriterionFact[];
+  walkthrough?: CriterionFact[];
   tests?: CriterionTestCase[];
   tags?: string[];
 };
@@ -72,6 +74,7 @@ const unnumberedBasmalaCounts = surahNumbers.map((surahNo) => (surahNo === 1 || 
 const totalLineCounts = surahVerseCounts.map((ayahCount, index) => ayahCount + unnumberedBasmalaCounts[index]);
 
 const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
+const sumEquation = (values: number[]) => `${values.join(" + ")} = ${sum(values)}`;
 const digitsOnly = (value: string) => value.replace(/\D/g, "");
 const digitSum = (value: string | number) =>
   String(value)
@@ -101,6 +104,8 @@ const slidingWindowDigitSequence = (value: string) => {
 
 const rangeSequence = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index).join(" ");
+const reverseRangeSequence = (start: number, end: number) =>
+  Array.from({ length: end - start + 1 }, (_, index) => end - index).join(" ");
 
 const cumulativeSums = (values: number[]) => {
   let runningTotal = 0;
@@ -110,6 +115,8 @@ const cumulativeSums = (values: number[]) => {
     return runningTotal;
   });
 };
+const digitEquation = (values: number[]) =>
+  `${values.flatMap((value) => String(value).split("")).join(" + ")} = ${sum(values.map((value) => digitSum(value)))}`;
 
 const BASMALA_TEXT = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ";
 const ALEF_LIKE_MAP: Record<string, string> = {
@@ -581,6 +588,11 @@ const evenAyahSelected = surahAyah19List.filter((entry) => entry.ayah % 2 === 0)
 const combinedSum = (entries: Array<{ surah: number; ayah: number }>) => sum(entries.map((entry) => entry.surah + entry.ayah));
 const combinedDigitSum = (entries: Array<{ surah: number; ayah: number }>) =>
   sum(entries.map((entry) => digitSum(entry.surah) + digitSum(entry.ayah)));
+const combinedValues = (entries: Array<{ surah: number; ayah: number }>) => entries.map((entry) => entry.surah + entry.ayah);
+const combinedPairEquation = (entries: Array<{ surah: number; ayah: number }>) =>
+  `${entries.map((entry) => `(${entry.surah}+${entry.ayah})`).join(" + ")} = ${combinedSum(entries)}`;
+const entryDigitEquation = (entries: Array<{ surah: number; ayah: number }>) =>
+  `${entries.flatMap((entry) => [...String(entry.surah), ...String(entry.ayah)]).join(" + ")} = ${combinedDigitSum(entries)}`;
 
 const evenOrOddNumberSums = surahAyah19List.reduce(
   (accumulator, entry) => {
@@ -1207,6 +1219,24 @@ const basmalaCriteria: CriterionEntry[] = [
       { label: l("Basamak toplamı"), value: l(String(basmalaB7DigitSum)) },
       { label: l("Kayan pencere uzunluğu"), value: l(String(basmalaB7SlidingWindow.length)) }
     ],
+    walkthrough: [
+      {
+        label: l("1. Kelime blokları"),
+        value: l("1 | 2 60 40   ·   2 | 1 30 30 5   ·   3 | 1 30 200 8 40 50   ·   4 | 1 30 200 8 10 40")
+      },
+      {
+        label: l("2. Düz dizilim"),
+        value: l("Kelime numarası başta kalır; her kelimenin harf Ebcedleri kendi doğal sırasında arkasına eklenir.")
+      },
+      {
+        label: l("3. Ters dizilim"),
+        value: l("Aynı kelime blokları bu kez 4. kelimeden 1. kelimeye doğru ters sırada okunur.")
+      },
+      {
+        label: l("4. Ek kontroller"),
+        value: l("Düz dizilimin basamak toplamı ve düz dizilimin sola kayan pencere çıktısı da ayrıca 19 kontrolüne girer.")
+      }
+    ],
     tests: [
       {
         id: "criterion-b7-sequence",
@@ -1247,6 +1277,24 @@ const basmalaCriteria: CriterionEntry[] = [
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
     discovery: discovery("Mustafa Kurdoğlu", "05.12.2023", "Türkiye/Yalova"),
+    walkthrough: [
+      {
+        label: l("1. Başlangıç verisi"),
+        value: l("B7'deki aynı harf Ebcedleri kullanılır; fark şu ki burada harfler tek tek değil, birikimli toplam halinde yazılır.")
+      },
+      {
+        label: l("2. İlk iki kelime"),
+        value: l("1 | 2 62 102   ·   2 | 103 133 163 168")
+      },
+      {
+        label: l("3. Sonraki kelimeler"),
+        value: l("3 | 169 199 399 407 447 497   ·   4 | 498 528 728 736 746 786")
+      },
+      {
+        label: l("4. Sonuç"),
+        value: l("Her harf toplamı bir öncekinin üstüne eklenerek ilerler; bütün dizi hem 19 hem 7 kontrolünden geçer.")
+      }
+    ],
     tests: [
       {
         id: "criterion-b8-sequence",
@@ -1269,6 +1317,20 @@ const basmalaCriteria: CriterionEntry[] = [
     sourceLabel: sourceBesmele.label,
     sourceUrl: sourceBesmele.url,
     discovery: discovery("Abdullah Arık", "1992-2012", "USA"),
+    walkthrough: [
+      {
+        label: l("1. Her harfe iki indeks eklenir"),
+        value: l("Önce kelime numarası, sonra o kelimedeki harf sıra numarası yazılır; en sona harfin Ebced değeri eklenir.")
+      },
+      {
+        label: l("2. İlk bloklar"),
+        value: l("1 1 2   1 2 60   1 3 40   ·   2 1 1   2 2 30   2 3 30   2 4 5")
+      },
+      {
+        label: l("3. Doğal sıra korunur"),
+        value: l("1. kelimenin tüm harfleri biter, sonra 2., sonra 3. ve 4. kelimeye geçilir; araya yeni dönüşüm girmez.")
+      }
+    ],
     tests: [
       {
         id: "criterion-b9-sequence",
@@ -3612,8 +3674,8 @@ export const criteriaArchive: CriterionEntry[] = [
     groupId: "fihrist",
     title: l("Çift ve tek grup toplamları simetrisi"),
     summary: l(
-      "Çift-çift ve tek-tek ayet toplamları ile çapraz sure toplamları aynı genel toplamları verir.",
-      "Even-even and odd-odd verse totals, together with the crossed surah totals, land on the same global sums."
+      "Çift-çift ve tek-tek grupların birlikte verdiği toplam, bütün ayetlerin toplamına eşit olur. Çift-tek ve tek-çift grupların birlikte verdiği toplam da bütün sure numaralarının toplamına eşit olur.",
+      "The combined total of the even-even and odd-odd groups equals the total number of verses. The combined total of the even-odd and odd-even groups equals the total of all surah numbers."
     ),
     sourceLabel: sourceFihrist6.label,
     sourceUrl: sourceFihrist6.url,
@@ -3621,6 +3683,14 @@ export const criteriaArchive: CriterionEntry[] = [
     facts: [
       { label: l("Ayet genel toplamı"), value: l(String(totalAyahSum)) },
       { label: l("Sure genel toplamı"), value: l(String(totalSurahSum)) },
+      {
+        label: l("Çift-çift + Tek-tek"),
+        value: l(`${parityGroupSums.ee.surah} + ${parityGroupSums.ee.ayah} + ${parityGroupSums.oo.surah} + ${parityGroupSums.oo.ayah} = ${totalAyahSum}`)
+      },
+      {
+        label: l("Çift-tek + Tek-çift"),
+        value: l(`${parityGroupSums.eo.surah} + ${parityGroupSums.eo.ayah} + ${parityGroupSums.oe.surah} + ${parityGroupSums.oe.ayah} = ${totalSurahSum}`)
+      },
       {
         label: l("Ayet tarafı"),
         value: l(
@@ -3634,21 +3704,51 @@ export const criteriaArchive: CriterionEntry[] = [
         )
       }
     ],
+    walkthrough: [
+      {
+        label: l("1. Dört grup kullanılır"),
+        value: l("Aynı dört kutu vardır: çift sure-çift ayet, tek sure-tek ayet, çift sure-tek ayet, tek sure-çift ayet.")
+      },
+      {
+        label: l("2. İlk kapanış"),
+        value: l("Çift-çift ile tek-tek gruplarının sure ve ayet toplamları birlikte 6236 eder; bu sayı bütün ayetlerin toplamıdır.")
+      },
+      {
+        label: l("3. İkinci kapanış"),
+        value: l("Çift-tek ile tek-çift gruplarının sure ve ayet toplamları birlikte 6555 eder; bu sayı bütün sure numaralarının toplamıdır.")
+      }
+    ],
     tags: ["simetri", "toplam"]
   },
   {
     id: "criterion-25-1",
     code: "25.1",
     groupId: "fihrist",
-    title: l("Çift/Tek grup toplamlarının ardışık dizilimi"),
+    title: l("Dört çift/tek grubun sure ve ayet toplamları"),
     summary: l(
-      "Dört parity grubunun sure ve ayet toplamları ardışık yazıldığında 19 modunda doğrulanır.",
-      "When the surah and verse totals of the four parity groups are concatenated, the result is verified modulo 19."
+      "Sure ve ayet sayıları dört gruba ayrılır: çift sure-çift ayet, tek sure-tek ayet, çift sure-tek ayet ve tek sure-çift ayet. Bu dört grubun sure toplamları ile ayet toplamları doğal sırada yazıldığında dizi 19 modunda doğrulanır.",
+      "The surah and verse counts are split into four groups: even-surah/even-verse, odd-surah/odd-verse, even-surah/odd-verse, and odd-surah/even-verse. When the surah totals and verse totals of these four groups are written in natural order, the sequence verifies modulo 19."
     ),
     sourceLabel: sourceFihrist6.label,
     sourceUrl: sourceFihrist6.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
     facts: [
+      {
+        label: l("Çift sure + çift ayet"),
+        value: l(`Sure toplamı ${parityGroupSums.ee.surah} · Ayet toplamı ${parityGroupSums.ee.ayah}`)
+      },
+      {
+        label: l("Tek sure + tek ayet"),
+        value: l(`Sure toplamı ${parityGroupSums.oo.surah} · Ayet toplamı ${parityGroupSums.oo.ayah}`)
+      },
+      {
+        label: l("Çift sure + tek ayet"),
+        value: l(`Sure toplamı ${parityGroupSums.eo.surah} · Ayet toplamı ${parityGroupSums.eo.ayah}`)
+      },
+      {
+        label: l("Tek sure + çift ayet"),
+        value: l(`Sure toplamı ${parityGroupSums.oe.surah} · Ayet toplamı ${parityGroupSums.oe.ayah}`)
+      },
       {
         label: l("Dizilim"),
         value: l(
@@ -3665,6 +3765,28 @@ export const criteriaArchive: CriterionEntry[] = [
         )
       },
       { label: l("Sonuç"), value: l("≡ 0 (mod 19)") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Dört grup kurulur"),
+        value: l("114 sure, sure numarasının ve ayet sayısının çift/tek oluşuna göre dört kutuya ayrılır.")
+      },
+      {
+        label: l("2. Her kutuda iki toplam alınır"),
+        value: l("Her grup için bir kez sure numaraları toplanır, bir kez de ayet sayıları toplanır.")
+      },
+      {
+        label: l("3. Sekiz sayı oluşur"),
+        value: l("1752 1708 · 1551 1225 · 1554 1497 · 1698 1806")
+      },
+      {
+        label: l("4. Doğal sıra"),
+        value: l("Önce çift-çift, sonra tek-tek, sonra çift-tek, en son tek-çift grubunun sure ve ayet toplamları yazılır.")
+      },
+      {
+        label: l("5. Kontrol"),
+        value: l("Bu sekiz sayının birleşik dizilimi 19'a tam bölünür.")
+      }
     ],
     tests: [
       {
@@ -3689,18 +3811,40 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-25-2",
     code: "25.2",
     groupId: "fihrist",
-    title: l("Çift/Tek grup basamak toplamlarının ardışık dizilimi"),
+    title: l("Dört çift/tek grubun basamak toplamları"),
     summary: l(
-      "Dört parity grubunun basamak toplamları hem 19 hem de 7 modunda doğrulanır.",
-      "The digit totals of the four parity groups are verified both modulo 19 and modulo 7."
+      "Aynı dört grubun içindeki sure ve ayet rakamları tek tek toplanır. Bu dört basamak toplamı doğal sırada yazıldığında hem 19 hem 7 modunda doğrulanır.",
+      "Inside the same four groups, the digits of the surah and verse values are summed individually. When these four digit totals are written in natural order, the sequence verifies modulo both 19 and 7."
     ),
     sourceLabel: sourceFihrist6.label,
     sourceUrl: sourceFihrist6.url,
     discovery: discovery("Mustafa Kurdoğlu", "20.07.2025", "Türkiye/Yalova"),
     facts: [
+      { label: l("Çift sure + çift ayet"), value: l(String(parityGroupDigitSums.ee)) },
+      { label: l("Tek sure + tek ayet"), value: l(String(parityGroupDigitSums.oo)) },
+      { label: l("Çift sure + tek ayet"), value: l(String(parityGroupDigitSums.eo)) },
+      { label: l("Tek sure + çift ayet"), value: l(String(parityGroupDigitSums.oe)) },
       {
         label: l("Basamak toplamları"),
         value: l(sequenceFrom([parityGroupDigitSums.ee, parityGroupDigitSums.oo, parityGroupDigitSums.eo, parityGroupDigitSums.oe]))
+      }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Aynı dört grup"),
+        value: l("25.1'deki aynı dört çift/tek grup korunur.")
+      },
+      {
+        label: l("2. Rakamlar toplanır"),
+        value: l("Bu kez grup içindeki sayılar doğrudan değil, rakamları toplanarak okunur.")
+      },
+      {
+        label: l("3. Dört sonuç"),
+        value: l(`${parityGroupDigitSums.ee} ${parityGroupDigitSums.oo} ${parityGroupDigitSums.eo} ${parityGroupDigitSums.oe}`)
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Bu dört sayının birleşik dizilimi hem 19'a hem 7'ye tam bölünür.")
       }
     ],
     tests: [
@@ -3957,6 +4101,24 @@ export const criteriaArchive: CriterionEntry[] = [
       { label: l("İlk değerler"), value: l(sequenceFrom(evenVerseCountSurahSums.slice(0, 12))) },
       { label: l("Basamak uzunluğu"), value: l(String(sequenceFrom(evenVerseCountSurahSums).replace(/\s+/g, "").length)) }
     ],
+    walkthrough: [
+      {
+        label: l("1. Alt tablo seçimi"),
+        value: l("Sadece ayet sayısı çift olan sureler alınır.")
+      },
+      {
+        label: l("2. Satır toplamı"),
+        value: l("(2,286)→288   ·   (3,200)→203   ·   (4,176)→180   ·   (5,120)→125")
+      },
+      {
+        label: l("3. Doğal sıralama"),
+        value: l("Bu satır toplamları sure sırasını bozmadan yan yana yazılır: 288 203 180 125 213 ...")
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Ortaya çıkan ardışık dizi 19'a tam bölünür.")
+      }
+    ],
     tests: [
       {
         id: "criterion-31-1-a-sequence",
@@ -4006,6 +4168,24 @@ export const criteriaArchive: CriterionEntry[] = [
       { label: l("Temel alt tablo"), value: l("Tek ayet sayılı sureler") },
       { label: l("İlk değerler"), value: l(sequenceFrom(oddVerseCountSurahSums.slice(0, 12))) },
       { label: l("Basamak uzunluğu"), value: l(String(sequenceFrom(oddVerseCountSurahSums).replace(/\s+/g, "").length)) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Alt tablo seçimi"),
+        value: l("Sadece ayet sayısı tek olan sureler alınır.")
+      },
+      {
+        label: l("2. Satır toplamı"),
+        value: l("(1,7)→8   ·   (6,165)→171   ·   (8,75)→83   ·   (9,129)→138")
+      },
+      {
+        label: l("3. Doğal sıralama"),
+        value: l("Bu satır toplamları sure sırasını bozmadan yan yana yazılır: 8 171 83 138 119 ...")
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Ortaya çıkan ardışık dizi 7'ye tam bölünür.")
+      }
     ],
     tests: [
       {
@@ -4159,6 +4339,138 @@ export const criteriaArchive: CriterionEntry[] = [
       }
     ],
     tags: ["harf sayısı", "114"]
+  },
+  {
+    id: "criterion-31-4-d",
+    code: "31.4D",
+    groupId: "special",
+    title: l("9. surenin sonuna kadarki ayet indeksleri"),
+    summary: l(
+      "Kur'an başlangıcından 9. surenin son ayetine kadar giden ayet indeksleri doğal sırada yazıldığında 19 modunda doğrulanır.",
+      "When the verse indices from the start of the Quran to the end of surah 9 are written in natural order, the sequence verifies modulo 19."
+    ),
+    sourceLabel: sourceFihrist6.label,
+    sourceUrl: sourceFihrist6.url,
+    discovery: discovery("Bülend Sungur", "Haziran.2024", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Aralık"), value: l("1 → 1364") },
+      { label: l("Basamak uzunluğu"), value: l("4349") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Kesim noktası"),
+        value: l("9. surenin son ayetine kadar genel ayet kümülatifi 1364 eder.")
+      },
+      {
+        label: l("2. Dizi"),
+        value: l("1, 2, 3, ... 1364 ayet indeksleri doğal sırada yazılır.")
+      },
+      {
+        label: l("3. Kontrol"),
+        value: l("Bu uzun indeks dizisi 19'a tam bölünür.")
+      }
+    ],
+    tests: [
+      {
+        id: "criterion-31-4-d-sequence",
+        label: l("1'den 1364'e ayet indeksleri"),
+        sequence: rangeSequence(1, cumulativeVerseCounts[8]),
+        mods: [19]
+      }
+    ],
+    tags: ["ayet indeksi", "9. sure", "19"]
+  },
+  {
+    id: "criterion-31-4-d1",
+    code: "31.4D1",
+    groupId: "special",
+    title: l("31.4D ters dizilimi"),
+    summary: l(
+      "31.4D'deki ayet indeksleri ters sırada yazıldığında da 19 modunda doğrulanır.",
+      "The verse indices in 31.4D also verify modulo 19 when written in reverse order."
+    ),
+    sourceLabel: sourceFihrist6.label,
+    sourceUrl: sourceFihrist6.url,
+    discovery: discovery("Bülend Sungur", "Haziran.2024", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Aralık"), value: l("1364 → 1") },
+      { label: l("Basamak uzunluğu"), value: l("4349") }
+    ],
+    tests: [
+      {
+        id: "criterion-31-4-d1-sequence",
+        label: l("1364'ten 1'e ayet indeksleri"),
+        sequence: reverseRangeSequence(1, cumulativeVerseCounts[8]),
+        mods: [19]
+      }
+    ],
+    tags: ["ayet indeksi", "9. sure", "ters", "19"]
+  },
+  {
+    id: "criterion-31-4-e",
+    code: "31.4E",
+    groupId: "special",
+    title: l("9. sureden sonraki ayet indeksleri"),
+    summary: l(
+      "9. surenin son ayetinden sonraki 1365-6236 arası ayet indeksleri doğal sırada yazıldığında 7 modunda doğrulanır.",
+      "When the verse indices from 1365 to 6236, after the end of surah 9, are written in natural order, the sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceFihrist6.label,
+    sourceUrl: sourceFihrist6.url,
+    discovery: discovery("Bülend Sungur", "Haziran.2024", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Aralık"), value: l("1365 → 6236") },
+      { label: l("Basamak uzunluğu"), value: l("19488") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Başlangıç noktası"),
+        value: l("9. surenin sonundan sonraki ilk genel ayet indeksi 1365'tir.")
+      },
+      {
+        label: l("2. Dizi"),
+        value: l("1365, 1366, 1367, ... 6236 indeksleri doğal sırada yazılır.")
+      },
+      {
+        label: l("3. Kontrol"),
+        value: l("Bu ikinci indeks dizisi 7'ye tam bölünür.")
+      }
+    ],
+    tests: [
+      {
+        id: "criterion-31-4-e-sequence",
+        label: l("1365'ten 6236'ya ayet indeksleri"),
+        sequence: rangeSequence(cumulativeVerseCounts[8] + 1, sum(surahVerseCounts)),
+        mods: [7]
+      }
+    ],
+    tags: ["ayet indeksi", "9. sure sonrası", "7"]
+  },
+  {
+    id: "criterion-31-4-e1",
+    code: "31.4E1",
+    groupId: "special",
+    title: l("31.4E ters dizilimi"),
+    summary: l(
+      "31.4E'deki ayet indeksleri ters sırada yazıldığında da 7 modunda doğrulanır.",
+      "The verse indices in 31.4E also verify modulo 7 when written in reverse order."
+    ),
+    sourceLabel: sourceFihrist6.label,
+    sourceUrl: sourceFihrist6.url,
+    discovery: discovery("Bülend Sungur", "Haziran.2024", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Aralık"), value: l("6236 → 1365") },
+      { label: l("Basamak uzunluğu"), value: l("19488") }
+    ],
+    tests: [
+      {
+        id: "criterion-31-4-e1-sequence",
+        label: l("6236'dan 1365'e ayet indeksleri"),
+        sequence: reverseRangeSequence(cumulativeVerseCounts[8] + 1, sum(surahVerseCounts)),
+        mods: [7]
+      }
+    ],
+    tags: ["ayet indeksi", "9. sure sonrası", "ters", "7"]
   },
   {
     id: "criterion-31-5",
@@ -4505,6 +4817,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-33-1",
     code: "33.1",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("(Sure + Ayet) 19 katları listesindeki yatay/dikey simetri"),
     summary: l(
       "(Sure + Ayet) 19'un katı olan listede çift toplamlar, tek toplamlar ve yarı toplamları birbirine eşitlenir.",
@@ -4514,8 +4827,25 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Sorgulayan Müslüman", "2020", "Türkiye/İzmir"),
     facts: [
-      { label: l("Çift toplamı / Tek toplamı"), value: l(`${sum(evenCombinedSelected.map((entry) => entry.combined))} = ${sum(oddCombinedSelected.map((entry) => entry.combined))}`) },
-      { label: l("1. yarı / 2. yarı"), value: l(`${sum(surahAyah19FirstHalf.map((entry) => entry.combined))} = ${sum(surahAyah19SecondHalf.map((entry) => entry.combined))}`) }
+      { label: l("19 katları listesi"), value: l(sequenceFrom(surahAyah19Totals)) },
+      { label: l("Çift sayılar"), value: l(sumEquation(combinedValues(evenCombinedSelected))) },
+      { label: l("Tek sayılar"), value: l(sumEquation(combinedValues(oddCombinedSelected))) },
+      { label: l("1. yarı"), value: l(sumEquation(combinedValues(surahAyah19FirstHalf))) },
+      { label: l("2. yarı"), value: l(sumEquation(combinedValues(surahAyah19SecondHalf))) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Başlangıç listesi"),
+        value: l("Önce (sure+ayet) toplamı 19'un katı olan 12 kayıt alınır: 171 114 114 133 95 95 152 114 114 114 95 133")
+      },
+      {
+        label: l("2. İki farklı bölme"),
+        value: l("Aynı liste bir kez çift/tek sayılara, bir kez de ilk 6 ve son 6 eleman olacak şekilde iki yarıya ayrılır.")
+      },
+      {
+        label: l("3. Toplamlar"),
+        value: l("Çiftlerin toplamı 722, teklerin toplamı 722; ilk yarı 722, ikinci yarı 722 verir.")
+      }
     ],
     tags: ["simetri", "722"]
   },
@@ -4523,6 +4853,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-33-2",
     code: "33.2",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("(Sure + Ayet) 19 katları listesindeki adet simetrisi"),
     summary: l(
       "İlk ve ikinci yarının çift/tek adetleri ile genel çift/tek adetleri eşitlik üretir.",
@@ -4532,9 +4863,11 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Sorgulayan Müslüman", "2020", "Türkiye/İzmir"),
     facts: [
+      { label: l("19 katları listesi"), value: l(sequenceFrom(surahAyah19Totals)) },
       { label: l("1. yarı çift / 2. yarı tek"), value: l(`${surahAyah19FirstHalf.filter((entry) => entry.combined % 2 === 0).length} = ${surahAyah19SecondHalf.filter((entry) => entry.combined % 2 === 1).length}`) },
       { label: l("2. yarı çift / 1. yarı tek"), value: l(`${surahAyah19SecondHalf.filter((entry) => entry.combined % 2 === 0).length} = ${surahAyah19FirstHalf.filter((entry) => entry.combined % 2 === 1).length}`) },
-      { label: l("Genel çift / Tek"), value: l(`${evenCombinedSelected.length} = ${oddCombinedSelected.length}`) }
+      { label: l("Genel çift / Tek"), value: l(`${evenCombinedSelected.length} = ${oddCombinedSelected.length}`) },
+      { label: l("Yarı adetleri"), value: l(`${surahAyah19FirstHalf.length} = ${surahAyah19SecondHalf.length}`) }
     ],
     tags: ["adet", "simetri"]
   },
@@ -4542,6 +4875,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-34-1",
     code: "34.1",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("Tek/çift sure ve ayet toplamları simetrisi"),
     summary: l(
       "Tek sureli kayıtların toplamı, tek ayetli kayıtların toplamıyla; çift sureli kayıtların toplamı da çift ayetli kayıtlarla eşleşir.",
@@ -4551,8 +4885,24 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Sorgulayan Müslüman", "2020", "Türkiye/İzmir"),
     facts: [
-      { label: l("Tek sure / Tek ayet"), value: l(`${combinedSum(oddSurahSelected)} = ${combinedSum(oddAyahSelected)}`) },
-      { label: l("Çift sure / Çift ayet"), value: l(`${combinedSum(evenSurahSelected)} = ${combinedSum(evenAyahSelected)}`) }
+      { label: l("Tek sure seçimi"), value: l(combinedPairEquation(oddSurahSelected)) },
+      { label: l("Tek ayet seçimi"), value: l(combinedPairEquation(oddAyahSelected)) },
+      { label: l("Çift sure seçimi"), value: l(combinedPairEquation(evenSurahSelected)) },
+      { label: l("Çift ayet seçimi"), value: l(combinedPairEquation(evenAyahSelected)) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Aynı 12 kayıt kullanılır"),
+        value: l("Her kayıtta satır değeri sure no + ayet sayısıdır; yani listedeki 171, 114, 133 gibi sayılar bu satır toplamlarıdır.")
+      },
+      {
+        label: l("2. İki farklı seçim"),
+        value: l("Kayıtlar bu kez sure numarasının tek/çift oluşuna ve ayet sayısının tek/çift oluşuna göre dört gruba ayrılır.")
+      },
+      {
+        label: l("3. Sonuç"),
+        value: l("Tek sure grubu ile tek ayet grubu aynı toplamı verir: 703. Çift sure grubu ile çift ayet grubu aynı toplamı verir: 741.")
+      }
     ],
     tags: ["simetri", "703", "741"]
   },
@@ -4560,6 +4910,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-34-3",
     code: "34.3",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("34.1 gruplarının basamak toplamı simetrisi"),
     summary: l(
       "34.1'deki tek ve çift grupların basamak toplamları da aynı simetriyi tekrarlar.",
@@ -4569,8 +4920,10 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Sorgulayan Müslüman", "2020", "Türkiye/İzmir"),
     facts: [
-      { label: l("Tek sure / Tek ayet"), value: l(`${combinedDigitSum(oddSurahSelected)} = ${combinedDigitSum(oddAyahSelected)}`) },
-      { label: l("Çift sure / Çift ayet"), value: l(`${combinedDigitSum(evenSurahSelected)} = ${combinedDigitSum(evenAyahSelected)}`) }
+      { label: l("Tek sure basamakları"), value: l(entryDigitEquation(oddSurahSelected)) },
+      { label: l("Tek ayet basamakları"), value: l(entryDigitEquation(oddAyahSelected)) },
+      { label: l("Çift sure basamakları"), value: l(entryDigitEquation(evenSurahSelected)) },
+      { label: l("Çift ayet basamakları"), value: l(entryDigitEquation(evenAyahSelected)) }
     ],
     tags: ["basamak", "109", "111"]
   },
@@ -4578,6 +4931,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-35-1",
     code: "35.1",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("Çift sayılar toplamı = tek sayılar toplamı"),
     summary: l(
       "(Sure + Ayet) 19 listesinde geçen bütün çift sayılar ve tek sayılar aynı toplamı verir.",
@@ -4587,7 +4941,22 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Sorgulayan Müslüman", "2020", "Türkiye/İzmir"),
     facts: [
-      { label: l("Çift / Tek toplam"), value: l(`${sum(evenOrOddNumberSums.even)} = ${sum(evenOrOddNumberSums.odd)}`) }
+      { label: l("Çift sayılar"), value: l(sumEquation(evenOrOddNumberSums.even)) },
+      { label: l("Tek sayılar"), value: l(sumEquation(evenOrOddNumberSums.odd)) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Eleman havuzu"),
+        value: l("Bu kez satır toplamları değil, seçili 12 kaydın içindeki bütün sure numaraları ve ayet sayıları tek tek ele alınır.")
+      },
+      {
+        label: l("2. Parite ayrımı"),
+        value: l("Tüm bu sayılar iki kümeye ayrılır: çift olanlar ve tek olanlar.")
+      },
+      {
+        label: l("3. Sonuç"),
+        value: l("Çift sayıların toplamı 722, tek sayıların toplamı 722 verir.")
+      }
     ],
     tags: ["çift", "tek", "722"]
   },
@@ -4595,6 +4964,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-35-3",
     code: "35.3",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("Çift ve tek sayıların basamak toplamı"),
     summary: l(
       "Bu listedeki çift ve tek sayıların basamak toplamları da eşitlenir.",
@@ -4604,7 +4974,8 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Sorgulayan Müslüman", "2020", "Türkiye/İzmir"),
     facts: [
-      { label: l("Çift / Tek basamak toplamı"), value: l(`${sum(evenOrOddNumberSums.even.map((value) => digitSum(value)))} = ${sum(evenOrOddNumberSums.odd.map((value) => digitSum(value)))}`) }
+      { label: l("Çift sayı basamakları"), value: l(digitEquation(evenOrOddNumberSums.even)) },
+      { label: l("Tek sayı basamakları"), value: l(digitEquation(evenOrOddNumberSums.odd)) }
     ],
     tags: ["basamak", "110"]
   },
@@ -4642,6 +5013,24 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceLabel: sourceFihrist7.label,
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "20.02.2023", "Türkiye/Yalova"),
+    facts: [
+      { label: l("Sekiz kolon"), value: l(sequenceFrom(group36Sequence)) },
+      { label: l("Bloklar"), value: l("722 722 · 703 703 · 722 722 · 741 741") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Önceki grup sonuçları alınır"),
+        value: l("35.1'deki 722-722, 34.1'deki 703-703, tekrar 35.1'in 722-722 tarafı ve 34.1'in 741-741 tarafı yan yana getirilir.")
+      },
+      {
+        label: l("2. Sekiz sayı oluşur"),
+        value: l(sequenceFrom(group36Sequence))
+      },
+      {
+        label: l("3. Kontrol"),
+        value: l("Bu sekiz kolon toplamı birleşik yazıldığında hem 19 hem 7 doğrulaması verir.")
+      }
+    ],
     tests: [
       {
         id: "criterion-36-sequence",
@@ -4665,7 +5054,21 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
     facts: [
-      { label: l("Farklar"), value: l("19 = 19 = 19") }
+      { label: l("Farklar"), value: l("|722-703| = 19 · |722-703| = 19 · |741-722| = 19") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. 36. kriterdeki kolonlar alınır"),
+        value: l("Karşı karşıya duran ana grup toplamları 722, 703 ve 741 çevresinde okunur.")
+      },
+      {
+        label: l("2. Mutlak farklar alınır"),
+        value: l("722 ile 703 arasındaki fark 19, diğer 722 ile 703 arasındaki fark 19, 741 ile 722 arasındaki fark da 19 olur.")
+      },
+      {
+        label: l("3. Sonuç"),
+        value: l("Üç ana fark da aynı sayıya, yani 19'a kapanır.")
+      }
     ],
     tests: [
       {
@@ -4681,6 +5084,7 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-38",
     code: "38",
     groupId: "surah-ayah-19",
+    contextMods: [19],
     title: l("Grup sayı adetleri"),
     summary: l(
       "Seçili listedeki ana grup adetleri 6'şar kayıtla dengelenir.",
@@ -4690,7 +5094,22 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
     facts: [
-      { label: l("Adetler"), value: l("6 = 6 = 6 = 6 = 6 = 6") }
+      { label: l("Grup adetleri"), value: l(sequenceFrom([evenCombinedSelected.length, oddCombinedSelected.length, oddSurahSelected.length, oddAyahSelected.length, evenSurahSelected.length, evenAyahSelected.length])) },
+      { label: l("Adet eşitliği"), value: l("6 = 6 = 6 = 6 = 6 = 6") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Kullanılan gruplar"),
+        value: l("19 katları listesi, çift toplamlar, tek toplamlar, tek sureler, tek ayetler, çift sureler ve çift ayetler diye sayılır.")
+      },
+      {
+        label: l("2. Sayım"),
+        value: l("Bu ana grupların her biri 6 kayıt verir.")
+      },
+      {
+        label: l("3. Sonuç"),
+        value: l("Yapı sayısal eşitlik değil, adet simetrisi üretir: 6 = 6 = 6 = 6 = 6 = 6.")
+      }
     ],
     tags: ["adet", "6"]
   },
@@ -4707,9 +5126,28 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
     facts: [
+      { label: l("12 kolon"), value: l("Sure ve ayet taraflarından gelen 12 basamak-toplam kolonu") },
       { label: l("Kolon toplamları"), value: l(sequenceFrom(criterion39Columns)) },
       { label: l("Kayan pencere"), value: l(sequenceFrom(criterion39Window)) },
       { label: l("Grup toplamları"), value: l(sequenceFrom(criterion39Groups)) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Basamak katmanı"),
+        value: l("19 katları tablosundaki sure ve ayet sayılarına bu kez basamak düzeyinde bakılır.")
+      },
+      {
+        label: l("2. 12 kolon"),
+        value: l("Bu basamaklar 12 kolon halinde toplanır ve şu dizi çıkar: 44 65 43 66 51 59 44 66 51 60 52 59")
+      },
+      {
+        label: l("3. İkinci katman"),
+        value: l("Bu 12 kolon toplamına sola kayan pencere uygulanınca ikinci bir 19 dizisi oluşur.")
+      },
+      {
+        label: l("4. Grup kapanışı"),
+        value: l("Son aşamada altı grup toplamı 109 109 110 110 111 111 olarak okunur ve bu dizi 7 doğrulaması verir.")
+      }
     ],
     tests: [
       {
@@ -4746,8 +5184,24 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
     facts: [
+      { label: l("Sure numaraları"), value: l(sequenceFrom(surahAyah19Surahs)) },
+      { label: l("Toplam satır sayıları"), value: l(sequenceFrom(surahAyah19Lines)) },
       { label: l("Sure basamak toplamı"), value: l(String(digitSum(sequenceFrom(surahAyah19Surahs)))) },
       { label: l("Satır basamak toplamı"), value: l(String(digitSum(sequenceFrom(surahAyah19Lines)))) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Aynı 12 kayıt seçilir"),
+        value: l("19 katları listesinde geçen sure numaraları alınır: 6 15 21 39 41 42 50 55 56 70 88 107")
+      },
+      {
+        label: l("2. Satır tarafı"),
+        value: l("Bu 12 surenin toplam satır sayıları da ayrı bir dizi olarak yazılır: 166 100 113 76 55 54 46 79 97 45 27 8")
+      },
+      {
+        label: l("3. İki ayrı kontrol"),
+        value: l("Sure numaraları dizisi ve onun basamak toplamı 19 verir; satır sayıları dizisi ve onun basamak toplamı 7 verir.")
+      }
     ],
     tests: [
       {
@@ -4777,6 +5231,29 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceLabel: sourceFihrist7.label,
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "26.08.2025", "Türkiye/Yalova"),
+    facts: [
+      { label: l("Temel kriter"), value: l("40") },
+      { label: l("Satır sayıları"), value: l(sequenceFrom(surahAyah19Lines)) },
+      { label: l("Asal çarpan toplamları"), value: l(sequenceFrom(surahAyah19Lines.map((lineCount) => primeFactorSum(lineCount)))) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Başlangıç dizisi"),
+        value: l("40. kriterdeki toplam satır sayıları alınır.")
+      },
+      {
+        label: l("2. Her elemana asal çarpan toplamı uygulanır"),
+        value: l("166→85, 100→14, 113→113, 76→23, ...")
+      },
+      {
+        label: l("3. Yeni dizi"),
+        value: l(sequenceFrom(surahAyah19Lines.map((lineCount) => primeFactorSum(lineCount))))
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Bu türemiş dizi 19'a tam bölünür.")
+      }
+    ],
     tests: [
       {
         id: "criterion-40-1-sequence",
@@ -4799,6 +5276,24 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceLabel: sourceFihrist7.label,
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
+    facts: [
+      { label: l("İlk satırlar"), value: l("171 171 6 165 6 165 6 165 · 114 114 15 99 15 99 15 99") },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 7)") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Satır tablosu kurulur"),
+        value: l("Her 19-katlı kayıt kendi satırına açılır; satırın başına toplam değer iki kez yazılır, arkasına sure/ayet hücreleri yerleşir.")
+      },
+      {
+        label: l("2. Doğal sıra"),
+        value: l("Bu satırlar 171 satırından başlayıp 114 satırına kadar doğal sırada arka arkaya okunur.")
+      },
+      {
+        label: l("3. Kontrol"),
+        value: l("Bütün satırların birleşik dizisi 7'ye tam bölünür.")
+      }
+    ],
     tests: [
       {
         id: "criterion-41-sequence",
@@ -4821,6 +5316,24 @@ export const criteriaArchive: CriterionEntry[] = [
     sourceLabel: sourceFihrist7.label,
     sourceUrl: sourceFihrist7.url,
     discovery: discovery("Mustafa Kurdoğlu", "12.11.2022", "Türkiye/Yalova"),
+    facts: [
+      { label: l("İlk satırlar"), value: l("6 165 6 165 6 165 · 15 99 15 99 15 99") },
+      { label: l("Sonuç"), value: l("≡ 0 (mod 19)") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. 41'in iç tablosu alınır"),
+        value: l("Bu kez satır başındaki tekrar eden toplam değerler çıkarılır; yalnız sure/ayet grup tablosu bırakılır.")
+      },
+      {
+        label: l("2. Doğal sıra"),
+        value: l("Kalan sure/ayet blokları aynı satır düzeni korunarak arka arkaya yazılır.")
+      },
+      {
+        label: l("3. Kontrol"),
+        value: l("Bu iç tablo dizisi 19'a tam bölünür.")
+      }
+    ],
     tests: [
       {
         id: "criterion-42-sequence",
