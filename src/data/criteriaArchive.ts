@@ -471,6 +471,14 @@ const totalSurahDigitSum = sum(surahNumbers.map((surahNo) => digitSum(surahNo)))
 const totalAyahDigitSum = sum(surahVerseCounts.map((ayahCount) => digitSum(ayahCount)));
 const cumulativeVerseCounts = cumulativeSums(surahVerseCounts);
 const cumulativeVerseCountsSlidingWindowSequence = slidingWindowDigitSequence(cumulativeVerseCounts.join(""));
+const evenVerseCountSurahSums = surahNumbers
+  .map((surahNo, index) => ({ surahNo, ayahCount: surahVerseCounts[index] }))
+  .filter(({ ayahCount }) => ayahCount % 2 === 0)
+  .map(({ surahNo, ayahCount }) => surahNo + ayahCount);
+const oddVerseCountSurahSums = surahNumbers
+  .map((surahNo, index) => ({ surahNo, ayahCount: surahVerseCounts[index] }))
+  .filter(({ ayahCount }) => ayahCount % 2 === 1)
+  .map(({ surahNo, ayahCount }) => surahNo + ayahCount);
 const oddSurahCountEndpointRows = surahNumbers.flatMap((surahNo, index) =>
   surahNo % 2 === 1 ? [surahNo, surahVerseCounts[index], cumulativeVerseCounts[index]] : []
 );
@@ -3933,6 +3941,33 @@ export const criteriaArchive: CriterionEntry[] = [
     tags: ["çift", "19"]
   },
   {
+    id: "criterion-31-1-a",
+    code: "31.1A",
+    groupId: "fihrist",
+    title: l("Çift ayet sayılı surelerde sure no + ayet sayısı"),
+    summary: l(
+      "Çift ayet sayılı surelerde her satırda sure numarası ile ayet sayısı toplandığında oluşan doğal dizilim 19 modunda doğrulanır.",
+      "For the surahs with an even verse count, the natural sequence formed by adding the surah number and the verse count in each row verifies modulo 19."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "15.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel alt tablo"), value: l("Çift ayet sayılı sureler") },
+      { label: l("İlk değerler"), value: l(sequenceFrom(evenVerseCountSurahSums.slice(0, 12))) },
+      { label: l("Basamak uzunluğu"), value: l(String(sequenceFrom(evenVerseCountSurahSums).replace(/\s+/g, "").length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-31-1-a-sequence",
+        label: l("Çift ayet sayılı sure toplamları"),
+        sequence: sequenceFrom(evenVerseCountSurahSums),
+        mods: [19]
+      }
+    ],
+    tags: ["çift", "sure no", "ayet sayısı", "19"]
+  },
+  {
     id: "criterion-31-2",
     code: "31.2",
     groupId: "fihrist",
@@ -3954,6 +3989,33 @@ export const criteriaArchive: CriterionEntry[] = [
       }
     ],
     tags: ["tek", "7"]
+  },
+  {
+    id: "criterion-31-2-a",
+    code: "31.2A",
+    groupId: "fihrist",
+    title: l("Tek ayet sayılı surelerde sure no + ayet sayısı"),
+    summary: l(
+      "Tek ayet sayılı surelerde her satırda sure numarası ile ayet sayısı toplandığında oluşan doğal dizilim 7 modunda doğrulanır.",
+      "For the surahs with an odd verse count, the natural sequence formed by adding the surah number and the verse count in each row verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "15.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel alt tablo"), value: l("Tek ayet sayılı sureler") },
+      { label: l("İlk değerler"), value: l(sequenceFrom(oddVerseCountSurahSums.slice(0, 12))) },
+      { label: l("Basamak uzunluğu"), value: l(String(sequenceFrom(oddVerseCountSurahSums).replace(/\s+/g, "").length)) }
+    ],
+    tests: [
+      {
+        id: "criterion-31-2-a-sequence",
+        label: l("Tek ayet sayılı sure toplamları"),
+        sequence: sequenceFrom(oddVerseCountSurahSums),
+        mods: [7]
+      }
+    ],
+    tags: ["tek", "sure no", "ayet sayısı", "7"]
   },
   {
     id: "criterion-31-3-a",
