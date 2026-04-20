@@ -103,43 +103,6 @@ const patternTypes = [
   }
 ];
 
-const secondaryFinding = {
-  trTitle: "Ek çift/tek bulgusu",
-  enTitle: "Additional odd/even finding",
-  trLead: "Besmele dahil fihrist satır sayıları kümülatif toplanır ve oluşan diziler ters çevrilir.",
-  enLead: "Index line counts including Basmala are accumulated, and the resulting sequences are reversed.",
-  rows: [
-    {
-      label: { tr: "Çift ayetli sureler", en: "Even-verse surahs" },
-      sequence: "6348 6335 6320 6301 6276 6243 ...",
-      result: "≡ 0 (mod 19)"
-    },
-    {
-      label: { tr: "Tek ayetli sureler", en: "Odd-verse surahs" },
-      sequence: "6341 6330 6324 6313 6309 6296 ...",
-      result: "≡ 0 (mod 7)"
-    }
-  ],
-  trNote: "Bu kayıt, ana dört bulguya göre daha türevdir; satır sayısı, kümülatif toplam ve ters sıra kullanır.",
-  enNote: "This record is more derivative than the four main findings; it uses line count, cumulative totals, and reverse order.",
-  trSteps: [
-    "Her sure için Besmele dahil fihrist satır sayısı hesaplanır. 1. ve 9. sure hariç, ayet sayısına 1 eklenir.",
-    "1. surede Besmele numaralı ayet olarak zaten sayılır. 9. surenin başında Besmele yoktur. Bu yüzden bu iki sureye ayrıca 1 eklenmez.",
-    "Bu satır sayıları mushaf sırasıyla kümülatif toplanır.",
-    "Kümülatif bitişler, ayet sayısı çift ve tek olan surelere göre iki listeye ayrılır.",
-    "İki liste de ters sıraya çevrilir.",
-    "Çift liste mod 19, tek liste mod 7 ile kontrol edilir."
-  ],
-  enSteps: [
-    "For each surah, the index line count including Basmala is calculated. Except for surahs 1 and 9, 1 is added to the verse count.",
-    "In surah 1, the Basmala is already counted as a numbered verse. Surah 9 has no opening Basmala. Therefore, no extra 1 is added to these two surahs.",
-    "These line counts are accumulated in mushaf order.",
-    "The cumulative endings are split into two lists by even-verse and odd-verse surahs.",
-    "Both lists are reversed.",
-    "The even list is tested with mod 19, and the odd list is tested with mod 7."
-  ]
-};
-
 const limitations = [
   {
     tr: "Veri tabanı, standart 114 sure ayet sayılarıdır.",
@@ -380,41 +343,6 @@ const initialTargetStatuses = [
           <span data-copy-lang="tr">Bir deneme sayısı seçin.</span>
           <span data-copy-lang="en">Choose a trial count.</span>
         </p>
-      </article>
-    </section>
-
-    <section class="pattern-section">
-      <LocalizedText as="h2" class="pattern-section__title" tr={secondaryFinding.trTitle} en={secondaryFinding.enTitle} />
-      <article class="secondary-card">
-        <LocalizedText as="p" class="secondary-card__lead" tr={secondaryFinding.trLead} en={secondaryFinding.enLead} />
-        <div class="secondary-card__grid">
-          {
-            secondaryFinding.rows.map((row) => (
-              <div class="secondary-card__row">
-                <LocalizedText as="h3" class="secondary-card__title" tr={row.label.tr} en={row.label.en} />
-                <code>{row.sequence}</code>
-                <strong>{row.result}</strong>
-              </div>
-            ))
-          }
-        </div>
-        <details class="secondary-card__details">
-          <summary class="secondary-card__summary">
-            <LocalizedText as="span" class="secondary-card__summary-title" tr="Hesap adımlarını göster" en="Show calculation steps" />
-            <span class="secondary-card__toggle" aria-hidden="true">+</span>
-          </summary>
-          <ol class="secondary-card__steps">
-            {
-              secondaryFinding.trSteps.map((step, index) => (
-                <li>
-                  <span data-copy-lang="tr">{step}</span>
-                  <span data-copy-lang="en">{secondaryFinding.enSteps[index]}</span>
-                </li>
-              ))
-            }
-          </ol>
-        </details>
-        <LocalizedText as="p" class="secondary-card__note" tr={secondaryFinding.trNote} en={secondaryFinding.enNote} />
       </article>
     </section>
 
@@ -1024,121 +952,6 @@ const initialTargetStatuses = [
     line-height: 1;
   }
 
-  .secondary-card {
-    display: grid;
-    gap: 1rem;
-    padding: 1.15rem;
-    border: 1px solid var(--theme-border);
-    background:
-      radial-gradient(circle at top left, rgba(13, 149, 13, 0.08), transparent 32%),
-      var(--theme-surface-soft);
-  }
-
-  .secondary-card__details[open] {
-    border-color: var(--theme-border-strong);
-  }
-
-  .secondary-card__details {
-    display: grid;
-    gap: 0.8rem;
-    padding-top: 0.85rem;
-    border-top: 1px solid var(--theme-border);
-  }
-
-  .secondary-card__summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .secondary-card__summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .secondary-card__summary-title {
-    color: var(--theme-ink-strong);
-    font-size: 0.95rem;
-    font-weight: 800;
-  }
-
-  .secondary-card__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.7rem;
-    height: 1.7rem;
-    border: 1px solid var(--theme-border);
-    color: var(--theme-link);
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1;
-    transition:
-      background-color 160ms ease,
-      transform 160ms ease;
-  }
-
-  .secondary-card__details[open] .secondary-card__toggle {
-    background: var(--theme-header);
-    transform: rotate(45deg);
-  }
-
-  .secondary-card__lead,
-  .secondary-card__note {
-    margin: 0;
-    color: var(--theme-ink-soft);
-    font-size: 0.93rem;
-    line-height: 1.72;
-  }
-
-  .secondary-card__steps {
-    margin: 0;
-    padding-left: 1.2rem;
-    color: var(--theme-ink-soft);
-    font-size: 0.92rem;
-    line-height: 1.72;
-  }
-
-  .secondary-card__steps li + li {
-    margin-top: 0.35rem;
-  }
-
-  .secondary-card__grid {
-    display: grid;
-    gap: 0.85rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .secondary-card__row {
-    display: grid;
-    gap: 0.55rem;
-    padding: 0.95rem;
-    border: 1px solid var(--theme-border);
-    background: var(--theme-surface);
-  }
-
-  .secondary-card__title {
-    margin: 0;
-    color: var(--theme-ink-strong);
-    font-size: 0.94rem;
-    font-weight: 700;
-  }
-
-  .secondary-card code {
-    overflow-wrap: anywhere;
-    color: var(--theme-link);
-    font-size: 0.88rem;
-    line-height: 1.65;
-    white-space: normal;
-  }
-
-  .secondary-card strong {
-    color: var(--theme-success);
-    font-size: 0.9rem;
-  }
-
   .interactive-meta {
     display: grid;
     gap: 0.45rem;
@@ -1280,10 +1093,6 @@ const initialTargetStatuses = [
     }
 
     .permutation-card__stats {
-      grid-template-columns: 1fr;
-    }
-
-    .secondary-card__grid {
       grid-template-columns: 1fr;
     }
   }
