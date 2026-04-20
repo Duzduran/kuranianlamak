@@ -564,6 +564,12 @@ const globalVerseRangeRows = surahNumbers.flatMap((surahNo, index) => [
   surahNo,
   cumulativeVerseCounts[index]
 ]);
+const globalVerseBoundaryRows = surahNumbers.flatMap((_, index) => [
+  startingVerseIndices[index],
+  cumulativeVerseCounts[index]
+]);
+const globalVerseBoundarySequence = sequenceFrom(globalVerseBoundaryRows);
+const globalVerseBoundarySequenceLength = digitsOnly(globalVerseBoundarySequence).length;
 const globalVerseRangeSequence = sequenceFrom(globalVerseRangeRows);
 const globalVerseRangeSequenceLength = digitsOnly(globalVerseRangeSequence).length;
 
@@ -4878,15 +4884,62 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-32-5",
     code: "32.5",
     groupId: "fihrist",
-    title: l("Küresel ayet aralığı satır dizilimi"),
+    title: l("Küresel başlangıç / bitiş ayet dizilimi"),
     summary: l(
-      "Her sure için küresel başlangıç ayeti, sure numarası ve küresel bitiş ayeti satır satır doğal sırada yazıldığında oluşan fihrist tablosu hem 19 hem 7 modunda doğrulanır.",
-      "When the global start verse, surah number, and global end verse are written row by row in natural order for each surah, the resulting index table verifies under both mod 19 and mod 7."
+      "Her sure için küresel başlangıç ayeti ve küresel bitiş ayeti satır satır doğal sırada yazıldığında oluşan fihrist sınır dizilimi 19 modunda doğrulanır.",
+      "When the global start verse and global end verse are written row by row in natural order for each surah, the resulting index-boundary sequence verifies modulo 19."
     ),
     sourceLabel: sourceWithin19Research.label,
     sourceUrl: sourceWithin19Research.url,
     discovery: discovery("Ahmet Düzduran", "21.04.2026", "Türkiye/İstanbul"),
     facts: [
+      { label: l("Kolon yapısı"), value: l("Küresel başlangıç ayeti + küresel bitiş ayeti") },
+      { label: l("İlk satırlar"), value: l(sequenceFrom(globalVerseBoundaryRows.slice(0, 8))) },
+      { label: l("Basamak uzunluğu"), value: l(String(globalVerseBoundarySequenceLength)) },
+      { label: l("Son satır"), value: l("6231 6236") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Başlangıç ve bitiş sınırları"),
+        value: l("Her sure için Kur'an içindeki ilk ayet indeksi ile son ayet indeksi alınır: 1–7, 8–293, 294–493, 494–669, ...")
+      },
+      {
+        label: l("2. İkili satır"),
+        value: l("Her sure tek satırda iki sayı ile temsil edilir: başlangıç ayeti ve bitiş ayeti.")
+      },
+      {
+        label: l("3. Doğal sıra"),
+        value: l("Satırlar mushaf sırası korunarak yan yana yazılır: 1 7 8 293 294 493 494 669 ...")
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Ortaya çıkan 893 basamaklı tam dizilim 19'a tam bölünür.")
+      }
+    ],
+    tests: [
+      {
+        id: "criterion-32-5-sequence",
+        label: l("Başlangıç / bitiş satırları"),
+        sequence: globalVerseBoundarySequence,
+        mods: [19]
+      }
+    ],
+    tags: ["küresel aralık", "başlangıç", "bitiş", "kümülatif", "fihrist", "19"]
+  },
+  {
+    id: "criterion-32-5-a",
+    code: "32.5A",
+    groupId: "fihrist",
+    title: l("Küresel başlangıç / sure / bitiş satır dizilimi"),
+    summary: l(
+      "32.5'teki küresel başlangıç ve bitiş sınırlarının arasına sure numarası orta kolon olarak eklendiğinde oluşan satır dizilimi hem 19 hem 7 modunda doğrulanır.",
+      "When the surah number is inserted as the middle column between the global start and end boundaries from 32.5, the resulting row sequence verifies under both mod 19 and mod 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "21.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Temel kriter"), value: l("32.5 başlangıç / bitiş sınır dizilimi") },
       { label: l("Kolon yapısı"), value: l("Küresel başlangıç ayeti + sure no + küresel bitiş ayeti") },
       { label: l("İlk satırlar"), value: l(sequenceFrom(globalVerseRangeRows.slice(0, 12))) },
       { label: l("Basamak uzunluğu"), value: l(String(globalVerseRangeSequenceLength)) },
@@ -4912,13 +4965,13 @@ export const criteriaArchive: CriterionEntry[] = [
     ],
     tests: [
       {
-        id: "criterion-32-5-sequence",
+        id: "criterion-32-5-a-sequence",
         label: l("Başlangıç / sure / bitiş satırları"),
         sequence: globalVerseRangeSequence,
         mods: [19, 7]
       }
     ],
-    tags: ["küresel aralık", "başlangıç", "bitiş", "kümülatif", "fihrist", "19", "7"]
+    tags: ["küresel aralık", "başlangıç", "sure indeksi", "bitiş", "kümülatif", "fihrist", "19", "7"]
   },
   {
     id: "criterion-33-1",

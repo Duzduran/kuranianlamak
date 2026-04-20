@@ -53,15 +53,31 @@ ters yazılır.
 Temel kodlama (criterion-30) ayet sayılarının doğal dizilimidir; bu kriter
 onun satır versiyonuna basamak toplamı + ters dizilim türemiş katmanı koyar.
 
-### F-P · Küresel ayet aralığı satır dizilimi
+### F-P · Küresel başlangıç / bitiş ayet dizilimi
 
-Her sure için üç doğal fihrist sınırı yazılır:
+Her sure için iki doğal fihrist sınırı yazılır:
 
 - küresel başlangıç ayet indeksi `t_s`
-- sure numarası `s`
 - küresel bitiş ayet indeksi `c_s`
 
-Bu üçlü satırlar mushaf sırası korunarak yan yana yazılır:
+Bu ikili satırlar mushaf sırası korunarak yan yana yazılır:
+
+`1 7 · 8 293 · 294 493 · 494 669 · ... · 6231 6236`
+
+Tam 893 basamaklık dizilim:
+
+- ≡ 0 (mod 19) ✓
+
+Buradaki `t_s` ve `c_s`, surelerin Kur'an içindeki gerçek ayet aralıklarını
+verir: örneğin 1. sure `1–7`, 2. sure `8–293`, 3. sure `294–493`, 4. sure
+`494–669` aralığını kaplar. Böylece fihrist bu kez yalnız "sure no + ayet
+sayısı" olarak değil, her surenin mushaf içindeki küresel yerini gösteren
+başlangıç-bitiş satırları olarak okunmuş olur.
+
+#### F-P-A · Küresel başlangıç / sure / bitiş satır dizilimi
+
+F-P'deki başlangıç ve bitiş sınırlarının arasına sure numarası `s` orta kolon
+olarak eklenir:
 
 `1 1 7 · 8 2 293 · 294 3 493 · 494 4 669 · ... · 6231 114 6236`
 
@@ -70,13 +86,9 @@ Tam 1127 basamaklık dizilim:
 - ≡ 0 (mod 19) ✓
 - ≡ 0 (mod 7)  ✓
 
-Buradaki `t_s` ve `c_s`, surelerin Kur'an içindeki gerçek ayet aralıklarını
-verir: örneğin 1. sure `1–7`, 2. sure `8–293`, 3. sure `294–493`, 4. sure
-`494–669` aralığını kaplar. Böylece fihrist bu kez yalnız "sure no + ayet
-sayısı" olarak değil, her surenin mushaf içindeki küresel yerini gösteren
-başlangıç-sure-bitiş satırları olarak okunmuş olur. Aynı `S/A/T/C` sütun
-ailesi içinde hem mod 19 hem mod 7 veren tek doğal satır sırası `T,S,C`
-olduğu için bu aday, dosyadaki en güçlü yeni fihrist adaylarından biridir.
+Aynı `S/A/T/C` sütun ailesi içinde hem mod 19 hem mod 7 veren doğal satır
+sırası `T,S,C` olduğu için bu genişleme, dosyadaki en güçlü yeni fihrist
+adaylarından biridir.
 
 ## Tier 2 — mod 19 = 0 (dominant) yeni bulgular
 
@@ -229,7 +241,7 @@ sunar.
 |---|---|
 | Bütünsellik | Her aday mushafın 114 sure kadrosunun objektif bir alt kümesini veya tamamını kullanır. Parçalama yalnızca çift/tek gibi mushaftan okunan parametrelerle yapılır; ek sayı uydurulmaz. |
 | Dizilim | Tüm diziler mushaftaki sure sırasını korur; ters versiyonlar yalnızca mushafın doğal sıra akışının tersidir ve projede halihazırda kullanılan bir tekniktir (criterion-31.4D1, criterion-31.1/31.2'nin ters kardeşleri vb.). |
-| Ölçüt | Dominant ölçüt mod 19 = 0'dır. Mesani olarak mod 7 = 0 kabul edilmiştir. Çift modlu (19 ve 7 birlikte) bulgular F-A, F-B ve F-P'dir. |
+| Ölçüt | Dominant ölçüt mod 19 = 0'dır. Mesani olarak mod 7 = 0 kabul edilmiştir. Çift modlu (19 ve 7 birlikte) bulgular F-A, F-B ve F-P-A'dır. |
 | Nesnel Dönüşüm | Tek izin verilen aritmetik işlem toplamadır (sure no + satır sayısı vb.). Basamak toplamı ve ters dizilim, criterion-25.2, 29.1–29.3 ve 32.3A'da kullanılan türemiş kodlama biçimleridir; hiçbir değer mushafta nesnel karşılığı olmayan bir sayı üretmez. |
 
 ## Nerede deneyebilirsin
@@ -244,8 +256,9 @@ sunar.
 
 ## Önerilen bir sonraki adım
 
-Bu adaylar arasından öncelikle **F-P** (küresel ayet aralığı satırları, 19 ∧ 7)
-en dengeli yeni bütün-fihrist adayıdır. **F-A** (tek sure + satır, 19 ∧ 7) ve
+Bu adaylar arasından öncelikle **F-P-A** (küresel başlangıç/sure/bitiş satırları, 19 ∧ 7)
+en dengeli yeni bütün-fihrist adayıdır. **F-P** temel 19 sınır dizilimi olarak,
+**F-A** (tek sure + satır, 19 ∧ 7) ve
 **F-B** (satır basamak toplamı ters, 19 ∧ 7) ikinci halkada düşünülebilir.
 F-C, F-D, F-E gibi skaler (tek sayı) bulgular criterion-29.1/29.2/29.4
 kalıbıyla "foundational" olarak eklenebilir. Satır bazlı üçlü F-N ise
