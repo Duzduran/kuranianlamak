@@ -1,0 +1,1290 @@
+---
+import Layout from "../layouts/Layout.astro";
+import LocalizedText from "../components/LocalizedText.astro";
+
+const verseCounts = [
+  7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128, 111, 110, 98, 135, 112, 78, 118, 64,
+  77, 227, 93, 88, 69, 60, 34, 30, 73, 54, 45, 83, 182, 88, 75, 85, 54, 53, 89, 59, 37, 35, 38, 29, 18, 45, 60, 49,
+  62, 55, 78, 96, 29, 22, 24, 13, 14, 11, 11, 18, 12, 12, 30, 52, 52, 44, 28, 28, 20, 56, 40, 31, 50, 40, 46, 42, 29,
+  19, 36, 25, 22, 17, 19, 26, 30, 20, 15, 21, 11, 8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6
+];
+
+const findings = [
+  {
+    label: {
+      tr: "Çift ayet sayıları",
+      en: "Even verse counts"
+    },
+    formula: "286 200 176 120 206 52 ... 8 4 6 ≡ 0 (mod 19)"
+  },
+  {
+    label: {
+      tr: "Tek ayet sayıları",
+      en: "Odd verse counts"
+    },
+    formula: "7 165 75 129 109 123 ... 3 5 5 ≡ 0 (mod 7)"
+  },
+  {
+    label: {
+      tr: "Çiftlerde sure no + ayet sayısı",
+      en: "Even surahs: surah no + verse count"
+    },
+    formula: "288 203 180 125 213 66 ... 114 118 120 ≡ 0 (mod 19)"
+  },
+  {
+    label: {
+      tr: "Teklerde sure no + ayet sayısı",
+      en: "Odd surahs: surah no + verse count"
+    },
+    formula: "8 171 83 138 119 134 ... 112 116 118 ≡ 0 (mod 7)"
+  }
+];
+
+const patternTypes = [
+  {
+    trType: "Tip 1",
+    enType: "Type 1",
+    trTitle: "Doğal sıra 19, ters sıra 7",
+    enTitle: "Forward order 19, reverse order 7",
+    trText: "Aynı veri omurgasının doğal sırası mod 19, ters sırası mod 7 verir.",
+    enText: "The forward order of the same data spine yields mod 19, while the reverse order yields mod 7.",
+    trExamples: "Örnek: B4",
+    enExamples: "Example: B4",
+    trDetail: "Besmelede kelime numarası ve kümülatif harf toplamları düz sırada 19, ters sırada 7 verir.",
+    enDetail: "In the Basmala, word numbers and cumulative letter totals yield 19 forward and 7 in reverse."
+  },
+  {
+    trType: "Tip 2",
+    enType: "Type 2",
+    trTitle: "Doğal sıra 7, ters sıra 19",
+    enTitle: "Forward order 7, reverse order 19",
+    trText: "Doğal ve ters okuma birbirine tamamlayıcı iki mod üretir.",
+    enText: "The forward and reverse readings produce two complementary moduli.",
+    trExamples: "Örnek: 32.2",
+    enExamples: "Example: 32.2",
+    trDetail: "Sure numaralarının düz dizilimi 7, ters dizilimi 19 verir.",
+    enDetail: "The forward sequence of surah numbers yields 7, while the reverse sequence yields 19."
+  },
+  {
+    trType: "Tip 3",
+    enType: "Type 3",
+    trTitle: "Bir parça 19, tamamlayıcı parça 7",
+    enTitle: "One part gives 19, the complementary part gives 7",
+    trText: "Bütün yapı iki alt kümeye ayrılır; bir taraf mod 19, diğer taraf mod 7 verir.",
+    enText: "The full structure is split into two subsets; one side yields mod 19 and the other yields mod 7.",
+    trExamples: "Örnek: 31.1 / 31.2 ve 31.4D / 31.4E",
+    enExamples: "Examples: 31.1 / 31.2 and 31.4D / 31.4E",
+    trDetail: "Çift ayet sayılı sureler 19, tek ayet sayılı sureler 7 verir. 9. sure öncesi ve sonrası ayet indekslerinde de 19/7 ayrımı görülür.",
+    enDetail: "Even-verse surahs yield 19 and odd-verse surahs yield 7. A 19/7 split also appears before and after surah 9 in the verse-index sequences."
+  },
+  {
+    trType: "Tip 4",
+    enType: "Type 4",
+    trTitle: "Aynı omurganın iki türevi",
+    enTitle: "Two derivatives of the same spine",
+    trText: "Ham dizi ile aynı dizinin türevi veya satır versiyonu 19 ve 7 arasında ayrışır.",
+    enText: "A raw sequence and its derivative or row-version split across mod 19 and mod 7.",
+    trExamples: "Örnek: 31.1A / 31.2A",
+    enExamples: "Example: 31.1A / 31.2A",
+    trDetail: "Ayet sayısı yerine sure no + ayet sayısı yazıldığında aynı ayrım korunur: çift taraf 19, tek taraf 7.",
+    enDetail: "When surah no + verse count is used instead of verse count alone, the same split remains: even side 19, odd side 7."
+  },
+  {
+    trType: "Tip 5",
+    enType: "Type 5",
+    trTitle: "Tek dizi hem 19 hem 7",
+    enTitle: "A single sequence gives both 19 and 7",
+    trText: "Bazı diziler aynı anda hem mod 19 hem mod 7 doğrulaması verir.",
+    enText: "Some sequences verify simultaneously under both mod 19 and mod 7.",
+    trExamples: "Örnek: 36",
+    enExamples: "Example: 36",
+    trDetail: "Seçili tablonun kolon toplamları ardışık yazıldığında aynı dizi hem 19 hem 7 kontrolünden geçer.",
+    enDetail: "When the selected table's column totals are concatenated, the same sequence verifies under both 19 and 7."
+  }
+];
+
+const secondaryFinding = {
+  trTitle: "Ek çift/tek bulgusu",
+  enTitle: "Additional odd/even finding",
+  trLead: "Besmele dahil fihrist satır sayıları kümülatif toplanır ve oluşan diziler ters çevrilir.",
+  enLead: "Index line counts including Basmala are accumulated, and the resulting sequences are reversed.",
+  rows: [
+    {
+      label: { tr: "Çift ayetli sureler", en: "Even-verse surahs" },
+      sequence: "6348 6335 6320 6301 6276 6243 ...",
+      result: "≡ 0 (mod 19)"
+    },
+    {
+      label: { tr: "Tek ayetli sureler", en: "Odd-verse surahs" },
+      sequence: "6341 6330 6324 6313 6309 6296 ...",
+      result: "≡ 0 (mod 7)"
+    }
+  ],
+  trNote: "Bu kayıt, ana dört bulguya göre daha türevdir; satır sayısı, kümülatif toplam ve ters sıra kullanır.",
+  enNote: "This record is more derivative than the four main findings; it uses line count, cumulative totals, and reverse order.",
+  trSteps: [
+    "Her sure için Besmele dahil fihrist satır sayısı hesaplanır. 1. ve 9. sure hariç, ayet sayısına 1 eklenir.",
+    "1. surede Besmele numaralı ayet olarak zaten sayılır. 9. surenin başında Besmele yoktur. Bu yüzden bu iki sureye ayrıca 1 eklenmez.",
+    "Bu satır sayıları mushaf sırasıyla kümülatif toplanır.",
+    "Kümülatif bitişler, ayet sayısı çift ve tek olan surelere göre iki listeye ayrılır.",
+    "İki liste de ters sıraya çevrilir.",
+    "Çift liste mod 19, tek liste mod 7 ile kontrol edilir."
+  ],
+  enSteps: [
+    "For each surah, the index line count including Basmala is calculated. Except for surahs 1 and 9, 1 is added to the verse count.",
+    "In surah 1, the Basmala is already counted as a numbered verse. Surah 9 has no opening Basmala. Therefore, no extra 1 is added to these two surahs.",
+    "These line counts are accumulated in mushaf order.",
+    "The cumulative endings are split into two lists by even-verse and odd-verse surahs.",
+    "Both lists are reversed.",
+    "The even list is tested with mod 19, and the odd list is tested with mod 7."
+  ]
+};
+
+const limitations = [
+  {
+    tr: "Veri tabanı, standart 114 sure ayet sayılarıdır.",
+    en: "The data basis is the standard 114-surah verse count list."
+  },
+  {
+    tr: "Tesadüf oranı, bu sayfada tanımlanan dizi ve test ailesi koşuluna bağlıdır.",
+    en: "The chance rate is conditional on the sequence and test family defined on this page."
+  },
+  {
+    tr: "Sonuç, tek başına ontolojik veya teolojik bir sonuç yerine sayısal bir gözlem olarak raporlanır.",
+    en: "The result is reported as a numerical observation rather than as a standalone ontological or theological conclusion."
+  }
+];
+
+const concatMod = (values, mod) => {
+  let remainder = 0;
+
+  values.forEach((value) => {
+    remainder = (remainder * (10 ** String(value).length) + value) % mod;
+  });
+
+  return remainder;
+};
+
+const buildSequences = (order) => {
+  const evenCounts = [];
+  const oddCounts = [];
+  const evenSums = [];
+  const oddSums = [];
+
+  order.forEach((index) => {
+    const value = verseCounts[index];
+    const withSurahNumber = index + 1 + value;
+
+    if (value % 2 === 0) {
+      evenCounts.push(value);
+      evenSums.push(withSurahNumber);
+    } else {
+      oddCounts.push(value);
+      oddSums.push(withSurahNumber);
+    }
+  });
+
+  return { evenCounts, oddCounts, evenSums, oddSums };
+};
+
+const canonicalOrder = verseCounts.map((_, index) => index);
+const canonicalSequences = buildSequences(canonicalOrder);
+const initialTargetStatuses = [
+  {
+    key: "evenCounts",
+    label: { tr: "Çift ayet sayıları / mod 19", en: "Even verse counts / mod 19" },
+    length: canonicalSequences.evenCounts.length,
+    remainder: concatMod(canonicalSequences.evenCounts, 19)
+  },
+  {
+    key: "oddCounts",
+    label: { tr: "Tek ayet sayıları / mod 7", en: "Odd verse counts / mod 7" },
+    length: canonicalSequences.oddCounts.length,
+    remainder: concatMod(canonicalSequences.oddCounts, 7)
+  },
+  {
+    key: "evenSums",
+    label: { tr: "Çift (sure no + ayet) / mod 19", en: "Even (surah no + verse) / mod 19" },
+    length: canonicalSequences.evenSums.length,
+    remainder: concatMod(canonicalSequences.evenSums, 19)
+  },
+  {
+    key: "oddSums",
+    label: { tr: "Tek (sure no + ayet) / mod 7", en: "Odd (surah no + verse) / mod 7" },
+    length: canonicalSequences.oddSums.length,
+    remainder: concatMod(canonicalSequences.oddSums, 7)
+  }
+];
+---
+
+<Layout
+  title="7 ve 19 İlişkisi"
+  description="Tek ve çift ayet dizilerinin 7 ve 19 modlarında verdiği sonuçları, permütasyon testi ve etkileşimli kontrol araçlarıyla sunan araştırma sayfası."
+>
+  <section class="pattern-page">
+    <header class="pattern-page__topbar">
+      <a class="pattern-page__back" href="/kriter-arsivi">
+        <span data-copy-lang="tr">Kriter Arşivi'ne dön</span>
+        <span data-copy-lang="en">Back to Criteria Archive</span>
+      </a>
+    </header>
+
+    <section class="pattern-hero">
+      <p class="pattern-hero__eyebrow">
+        <span data-copy-lang="tr">Veri özeti</span>
+        <span data-copy-lang="en">Data summary</span>
+      </p>
+      <LocalizedText
+        as="h1"
+        class="pattern-hero__title"
+        tr="7 ve 19: tek/çift ayet dizileri"
+        en="7 and 19: odd/even verse sequences"
+      />
+    </section>
+
+    <section class="pattern-section">
+      <div class="finding-grid">
+        {
+          findings.map((finding) => (
+            <article class="finding-card">
+              <LocalizedText as="h3" class="finding-card__title" tr={finding.label.tr} en={finding.label.en} />
+              <code class="finding-card__formula">{finding.formula}</code>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="pattern-section">
+      <LocalizedText as="h2" class="pattern-section__title" tr="İnteraktif kontrol" en="Interactive check" />
+
+      <article class="interactive-card interactive-card--full">
+        <LocalizedText as="h3" class="interactive-card__title" tr="Mushaf sırası ve karıştırma" en="Mushaf order and shuffle" />
+
+        <div class="interactive-controls">
+          <button type="button" class="interactive-button interactive-button--solid" data-order-reset>
+            <span data-copy-lang="tr">Mushaf sırası</span>
+            <span data-copy-lang="en">Mushaf order</span>
+          </button>
+          <button type="button" class="interactive-button" data-order-shuffle>
+            <span data-copy-lang="tr">Karıştır</span>
+            <span data-copy-lang="en">Shuffle</span>
+          </button>
+        </div>
+
+        <div class="interactive-meta">
+          <p class="interactive-meta__row">
+            <span data-copy-lang="tr">Sıra</span>
+            <span data-copy-lang="en">Order</span>
+            <strong data-order-label>
+              <span data-copy-lang="tr">Mushaf sırası</span>
+              <span data-copy-lang="en">Mushaf order</span>
+            </strong>
+          </p>
+          <p class="interactive-meta__row">
+            <span data-copy-lang="tr">İlk kayıtlar</span>
+            <span data-copy-lang="en">First records</span>
+            <code data-order-preview>1:7, 2:286, 3:200, 4:176</code>
+          </p>
+          <p class="interactive-meta__row">
+            <span data-copy-lang="tr">İlk ayet aralığı</span>
+            <span data-copy-lang="en">First verse ranges</span>
+            <code data-range-preview>1-7, 8-293, 294-493, 494-669</code>
+          </p>
+          <p class="interactive-meta__row">
+            <span data-copy-lang="tr">İlk türev toplam</span>
+            <span data-copy-lang="en">First derived sums</span>
+            <code data-sum-preview>1+7=8, 2+286=288, 3+200=203, 4+176=180</code>
+          </p>
+        </div>
+
+        <div class="mod-table-wrap">
+          <table class="mod-table">
+            <thead>
+              <tr>
+                <th>
+                  <span data-copy-lang="tr">Koşul</span>
+                  <span data-copy-lang="en">Condition</span>
+                </th>
+                <th>
+                  <span data-copy-lang="tr">Uzunluk</span>
+                  <span data-copy-lang="en">Length</span>
+                </th>
+                <th>
+                  <span data-copy-lang="tr">Kalan</span>
+                  <span data-copy-lang="en">Remainder</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                initialTargetStatuses.map((row) => (
+                  <tr data-target-row={row.key}>
+                    <th scope="row">
+                      <LocalizedText as="span" tr={row.label.tr} en={row.label.en} />
+                    </th>
+                    <td data-length-cell={row.key}>{row.length}</td>
+                    <td>
+                      <strong data-target-status={row.key}>{row.remainder}</strong>
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <p class="interactive-summary" data-quartet-status>
+          <span data-copy-lang="tr">Dört koşul birlikte sağlanıyor.</span>
+          <span data-copy-lang="en">All four conditions are satisfied together.</span>
+        </p>
+      </article>
+    </section>
+
+    <section class="pattern-section">
+      <LocalizedText as="h2" class="pattern-section__title" tr="Permütasyon testi" en="Permutation test" />
+      <article class="permutation-card">
+        <div class="permutation-card__top">
+          <LocalizedText
+            as="p"
+            class="permutation-card__text"
+            tr="Aynı 114 sure korunur; yalnızca sıra karıştırılır. Her denemede dört koşul yeniden hesaplanır."
+            en="The same 114 surahs are kept; only the order is shuffled. The four conditions are recomputed in each trial."
+          />
+          <div class="permutation-card__buttons">
+            <button type="button" class="interactive-button" data-permutation-run="1000">1.000</button>
+            <button type="button" class="interactive-button interactive-button--solid" data-permutation-run="10000">10.000</button>
+            <button type="button" class="interactive-button" data-permutation-run="50000">50.000</button>
+          </div>
+        </div>
+
+        <div class="permutation-card__stats" aria-live="polite">
+          <div>
+            <span data-copy-lang="tr">Deneme</span>
+            <span data-copy-lang="en">Trials</span>
+            <strong data-permutation-trials>0</strong>
+          </div>
+          <div>
+            <span data-copy-lang="tr">İsabet</span>
+            <span data-copy-lang="en">Hits</span>
+            <strong data-permutation-hits>0</strong>
+          </div>
+          <div>
+            <span data-copy-lang="tr">Oran</span>
+            <span data-copy-lang="en">Rate</span>
+            <strong data-permutation-rate>0%</strong>
+          </div>
+        </div>
+
+        <p class="permutation-card__status" data-permutation-status>
+          <span data-copy-lang="tr">Bir deneme sayısı seçin.</span>
+          <span data-copy-lang="en">Choose a trial count.</span>
+        </p>
+      </article>
+    </section>
+
+    <section class="pattern-section">
+      <LocalizedText as="h2" class="pattern-section__title" tr={secondaryFinding.trTitle} en={secondaryFinding.enTitle} />
+      <article class="secondary-card">
+        <LocalizedText as="p" class="secondary-card__lead" tr={secondaryFinding.trLead} en={secondaryFinding.enLead} />
+        <div class="secondary-card__grid">
+          {
+            secondaryFinding.rows.map((row) => (
+              <div class="secondary-card__row">
+                <LocalizedText as="h3" class="secondary-card__title" tr={row.label.tr} en={row.label.en} />
+                <code>{row.sequence}</code>
+                <strong>{row.result}</strong>
+              </div>
+            ))
+          }
+        </div>
+        <details class="secondary-card__details">
+          <summary class="secondary-card__summary">
+            <LocalizedText as="span" class="secondary-card__summary-title" tr="Hesap adımlarını göster" en="Show calculation steps" />
+            <span class="secondary-card__toggle" aria-hidden="true">+</span>
+          </summary>
+          <ol class="secondary-card__steps">
+            {
+              secondaryFinding.trSteps.map((step, index) => (
+                <li>
+                  <span data-copy-lang="tr">{step}</span>
+                  <span data-copy-lang="en">{secondaryFinding.enSteps[index]}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </details>
+        <LocalizedText as="p" class="secondary-card__note" tr={secondaryFinding.trNote} en={secondaryFinding.enNote} />
+      </article>
+    </section>
+
+    <section class="pattern-section">
+      <LocalizedText as="h2" class="pattern-section__title" tr="7/19 ilişki tipleri" en="7/19 relation types" />
+      <div class="type-grid">
+        {
+          patternTypes.map((item) => (
+            <details class="type-card">
+              <summary class="type-card__summary">
+                <span class="type-card__kicker">
+                  <span data-copy-lang="tr">{item.trType}</span>
+                  <span data-copy-lang="en">{item.enType}</span>
+                </span>
+                <LocalizedText as="span" class="type-card__title" tr={item.trTitle} en={item.enTitle} />
+                <span class="type-card__toggle" aria-hidden="true">+</span>
+              </summary>
+              <LocalizedText as="p" class="type-card__text" tr={item.trText} en={item.enText} />
+              <LocalizedText as="p" class="type-card__example" tr={item.trExamples} en={item.enExamples} />
+              <LocalizedText as="p" class="type-card__detail" tr={item.trDetail} en={item.enDetail} />
+            </details>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="pattern-section pattern-section--compact">
+      <LocalizedText as="h2" class="pattern-section__title" tr="Kapsam ve sınırlar" en="Scope and limits" />
+      <ul class="notes-list">
+        {
+          limitations.map((item) => (
+            <li>
+              <LocalizedText as="span" tr={item.tr} en={item.en} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </section>
+</Layout>
+
+<script is:inline define:vars={{ verseCounts }}>
+  (() => {
+    const root = document.documentElement;
+    const canonicalOrder = verseCounts.map((_, index) => index);
+    let currentOrder = canonicalOrder.slice();
+    const verseRanges = (() => {
+      let start = 1;
+      return verseCounts.map((count) => {
+        const range = { start, end: start + count - 1 };
+        start += count;
+        return range;
+      });
+    })();
+
+    const copy = {
+      tr: {
+        canonical: "Mushaf sırası",
+        shuffled: "Rastgele sıra",
+        quartetPass: "Dört koşul birlikte sağlanıyor.",
+        quartetFail: "Dört koşul birlikte sağlanmıyor.",
+        running: "Test çalışıyor...",
+        complete: "Test tamamlandı.",
+        chooseTrial: "Bir deneme sayısı seçin."
+      },
+      en: {
+        canonical: "Mushaf order",
+        shuffled: "Random order",
+        quartetPass: "All four conditions are satisfied together.",
+        quartetFail: "All four conditions are not satisfied together.",
+        running: "Test running...",
+        complete: "Test complete.",
+        chooseTrial: "Choose a trial count."
+      }
+    };
+
+    const concatMod = (values, mod) => {
+      let remainder = 0;
+      for (const value of values) {
+        remainder = (remainder * Math.pow(10, String(value).length) + value) % mod;
+      }
+      return remainder;
+    };
+
+    const buildSequences = (order) => {
+      const evenCounts = [];
+      const oddCounts = [];
+      const evenSums = [];
+      const oddSums = [];
+
+      order.forEach((index) => {
+        const value = verseCounts[index];
+        const withSurahNumber = index + 1 + value;
+
+        if (value % 2 === 0) {
+          evenCounts.push(value);
+          evenSums.push(withSurahNumber);
+        } else {
+          oddCounts.push(value);
+          oddSums.push(withSurahNumber);
+        }
+      });
+
+      return { evenCounts, oddCounts, evenSums, oddSums };
+    };
+
+    const t = (key) => copy[root.dataset.locale === "en" ? "en" : "tr"][key];
+
+    const orderLabel = document.querySelector("[data-order-label]");
+    const orderPreview = document.querySelector("[data-order-preview]");
+    const rangePreview = document.querySelector("[data-range-preview]");
+    const sumPreview = document.querySelector("[data-sum-preview]");
+    const quartetStatus = document.querySelector("[data-quartet-status]");
+    const lengthCells = {
+      evenCounts: document.querySelector("[data-length-cell='evenCounts']"),
+      oddCounts: document.querySelector("[data-length-cell='oddCounts']"),
+      evenSums: document.querySelector("[data-length-cell='evenSums']"),
+      oddSums: document.querySelector("[data-length-cell='oddSums']")
+    };
+    const targetStatusCells = {
+      evenCounts: document.querySelector("[data-target-status='evenCounts']"),
+      oddCounts: document.querySelector("[data-target-status='oddCounts']"),
+      evenSums: document.querySelector("[data-target-status='evenSums']"),
+      oddSums: document.querySelector("[data-target-status='oddSums']")
+    };
+    const targetRows = {
+      evenCounts: document.querySelector("[data-target-row='evenCounts']"),
+      oddCounts: document.querySelector("[data-target-row='oddCounts']"),
+      evenSums: document.querySelector("[data-target-row='evenSums']"),
+      oddSums: document.querySelector("[data-target-row='oddSums']")
+    };
+    const permutationButtons = [...document.querySelectorAll("[data-permutation-run]")];
+    const permutationTrials = document.querySelector("[data-permutation-trials]");
+    const permutationHits = document.querySelector("[data-permutation-hits]");
+    const permutationRate = document.querySelector("[data-permutation-rate]");
+    const permutationStatus = document.querySelector("[data-permutation-status]");
+
+    const shuffle = (values) => {
+      const next = values.slice();
+      for (let index = next.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [next[index], next[swapIndex]] = [next[swapIndex], next[index]];
+      }
+      return next;
+    };
+
+    const hasQuartetPass = (order) => {
+      const sequences = buildSequences(order);
+      return (
+        concatMod(sequences.evenCounts, 19) === 0 &&
+        concatMod(sequences.oddCounts, 7) === 0 &&
+        concatMod(sequences.evenSums, 19) === 0 &&
+        concatMod(sequences.oddSums, 7) === 0
+      );
+    };
+
+    const setPermutationStatus = (key) => {
+      if (!permutationStatus) return;
+      permutationStatus.textContent = t(key);
+    };
+
+    const renderPermutation = (trials, hits) => {
+      const rate = trials > 0 ? (hits / trials) * 100 : 0;
+      if (permutationTrials) permutationTrials.textContent = trials.toLocaleString(root.lang === "tr" ? "tr-TR" : "en-US");
+      if (permutationHits) permutationHits.textContent = hits.toLocaleString(root.lang === "tr" ? "tr-TR" : "en-US");
+      if (permutationRate) permutationRate.textContent = `${rate.toFixed(trials > 0 && rate < 0.01 ? 4 : 3)}%`;
+    };
+
+    const runPermutationTest = async (trialCount) => {
+      permutationButtons.forEach((button) => {
+        button.disabled = true;
+      });
+      setPermutationStatus("running");
+
+      let hits = 0;
+      const chunkSize = 500;
+
+      for (let trial = 1; trial <= trialCount; trial += 1) {
+        if (hasQuartetPass(shuffle(canonicalOrder))) {
+          hits += 1;
+        }
+
+        if (trial % chunkSize === 0 || trial === trialCount) {
+          renderPermutation(trial, hits);
+          await new Promise((resolve) => window.requestAnimationFrame(resolve));
+        }
+      }
+
+      setPermutationStatus("complete");
+      permutationButtons.forEach((button) => {
+        button.disabled = false;
+      });
+    };
+
+    const render = () => {
+      const sequences = buildSequences(currentOrder);
+      const isCanonical = currentOrder.every((value, index) => value === canonicalOrder[index]);
+      const quartetPass =
+        concatMod(sequences.evenCounts, 19) === 0 &&
+        concatMod(sequences.oddCounts, 7) === 0 &&
+        concatMod(sequences.evenSums, 19) === 0 &&
+        concatMod(sequences.oddSums, 7) === 0;
+
+      if (orderLabel) {
+        orderLabel.textContent = isCanonical ? t("canonical") : t("shuffled");
+      }
+
+      if (orderPreview) {
+        orderPreview.textContent = currentOrder
+          .slice(0, 4)
+          .map((index) => `${index + 1}:${verseCounts[index]}`)
+          .join(", ");
+      }
+
+      if (rangePreview) {
+        rangePreview.textContent = currentOrder
+          .slice(0, 4)
+          .map((index) => `${verseRanges[index].start}-${verseRanges[index].end}`)
+          .join(", ");
+      }
+
+      if (sumPreview) {
+        sumPreview.textContent = currentOrder
+          .slice(0, 4)
+          .map((index) => `${index + 1}+${verseCounts[index]}=${index + 1 + verseCounts[index]}`)
+          .join(", ");
+      }
+
+      if (quartetStatus) {
+        quartetStatus.textContent = quartetPass ? t("quartetPass") : t("quartetFail");
+        quartetStatus.dataset.pass = String(quartetPass);
+      }
+
+      const rowData = {
+        evenCounts: { values: sequences.evenCounts, mod: 19 },
+        oddCounts: { values: sequences.oddCounts, mod: 7 },
+        evenSums: { values: sequences.evenSums, mod: 19 },
+        oddSums: { values: sequences.oddSums, mod: 7 }
+      };
+
+      Object.entries(rowData).forEach(([key, row]) => {
+        if (targetStatusCells[key]) {
+          const remainder = concatMod(row.values, row.mod);
+          targetStatusCells[key].textContent = String(remainder);
+          targetStatusCells[key].dataset.pass = String(remainder === 0);
+          if (targetRows[key]) {
+            targetRows[key].dataset.pass = String(remainder === 0);
+          }
+        }
+
+        if (lengthCells[key]) {
+          lengthCells[key].textContent = String(row.values.length);
+        }
+      });
+    };
+
+    document.querySelector("[data-order-reset]")?.addEventListener("click", () => {
+      currentOrder = canonicalOrder.slice();
+      render();
+    });
+
+    document.querySelector("[data-order-shuffle]")?.addEventListener("click", () => {
+      currentOrder = shuffle(canonicalOrder);
+      render();
+    });
+
+    permutationButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const trialCount = Number(button.getAttribute("data-permutation-run"));
+        if (!Number.isFinite(trialCount)) return;
+        void runPermutationTest(trialCount);
+      });
+    });
+
+    window.addEventListener("site:locale-change", render);
+    render();
+  })();
+</script>
+
+<style>
+  .pattern-page {
+    width: min(1120px, calc(100vw - 1.5rem));
+    margin: 0 auto;
+    padding: 5.4rem 0 4rem;
+    color: var(--theme-ink);
+  }
+
+  .pattern-page__topbar {
+    margin-bottom: 2rem;
+  }
+
+  .pattern-page__back {
+    display: inline-flex;
+    align-items: center;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid var(--theme-border);
+    color: var(--theme-ink-soft);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .pattern-page__back:hover {
+    border-color: var(--theme-border-strong);
+    color: var(--theme-ink-strong);
+  }
+
+  .pattern-hero {
+    display: grid;
+    gap: 0.85rem;
+    max-width: 54rem;
+    margin-bottom: 2.8rem;
+  }
+
+  .pattern-hero__eyebrow {
+    margin: 0;
+    color: var(--theme-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .pattern-hero__title {
+    margin: 0;
+    color: var(--theme-ink-strong);
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 5vw, 4.1rem);
+    line-height: 1.06;
+    text-wrap: balance;
+  }
+
+  .pattern-hero__lead {
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .pattern-section {
+    padding-top: 1.5rem;
+    margin-top: 1.75rem;
+    border-top: 1px solid var(--theme-border);
+  }
+
+  .pattern-section--compact {
+    padding-bottom: 0.4rem;
+  }
+
+  .pattern-section__title {
+    margin: 0 0 1rem;
+    color: var(--theme-ink-strong);
+    font-family: var(--font-serif);
+    font-size: clamp(1.3rem, 2vw, 1.85rem);
+    line-height: 1.2;
+  }
+
+  .finding-grid,
+  .metric-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .type-grid {
+    column-count: 2;
+    column-gap: 1rem;
+  }
+
+  .finding-card,
+  .metric-card,
+  .interactive-card,
+  .type-card {
+    display: grid;
+    gap: 0.75rem;
+    min-height: 100%;
+    padding: 1.15rem;
+    border: 1px solid var(--theme-border);
+    background:
+      linear-gradient(180deg, rgba(184, 212, 238, 0.12), transparent 42%),
+      var(--theme-surface-soft);
+  }
+
+  .interactive-card--full {
+    width: 100%;
+  }
+
+  .finding-card__title,
+  .interactive-card__title,
+  .type-card__title {
+    margin: 0;
+    color: var(--theme-ink-strong);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.45;
+  }
+
+  .finding-card__formula {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--theme-link);
+    font-size: 0.92rem;
+    line-height: 1.75;
+    white-space: normal;
+  }
+
+  .metric-card__text,
+  .type-card__text,
+  .pattern-section__footnote {
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 0.93rem;
+    line-height: 1.72;
+  }
+
+  .type-card__kicker {
+    margin: 0;
+    color: var(--theme-link);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .type-card__example {
+    margin: 0;
+    color: var(--theme-muted);
+    font-size: 0.84rem;
+    line-height: 1.6;
+  }
+
+  .type-card {
+    position: relative;
+    display: inline-grid;
+    width: 100%;
+    margin: 0 0 1rem;
+    break-inside: avoid;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at top right, rgba(15, 86, 168, 0.14), transparent 34%),
+      linear-gradient(180deg, rgba(184, 212, 238, 0.18), transparent 48%),
+      var(--theme-surface-soft);
+  }
+
+  .type-card[open] {
+    border-color: var(--theme-border-strong);
+  }
+
+  .type-card::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--theme-link), rgba(15, 86, 168, 0.2));
+    content: "";
+  }
+
+  .type-card__summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.45rem 0.9rem;
+    align-items: start;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .type-card__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .type-card__summary .type-card__kicker,
+  .type-card__summary .type-card__title {
+    grid-column: 1;
+  }
+
+  .type-card__title {
+    max-width: 18rem;
+    font-family: var(--font-serif);
+    font-size: 1.08rem;
+    line-height: 1.3;
+  }
+
+  .type-card__toggle {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 1px solid var(--theme-border);
+    color: var(--theme-link);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    transition:
+      background-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .type-card[open] .type-card__toggle {
+    background: var(--theme-header);
+    transform: rotate(45deg);
+  }
+
+  .type-card__detail {
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--theme-border);
+    color: var(--theme-ink-soft);
+    font-size: 0.9rem;
+    line-height: 1.72;
+  }
+
+  .interactive-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    align-items: center;
+  }
+
+  .interactive-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.58rem 0.82rem;
+    border: 1px solid var(--theme-border);
+    background: var(--theme-surface);
+    color: var(--theme-ink-strong);
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .interactive-button:hover {
+    border-color: var(--theme-border-strong);
+  }
+
+  .interactive-button:disabled {
+    cursor: progress;
+    opacity: 0.55;
+  }
+
+  .interactive-button--solid {
+    background: var(--theme-header);
+  }
+
+  .permutation-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.15rem;
+    border: 1px solid var(--theme-border);
+    background:
+      linear-gradient(180deg, rgba(184, 212, 238, 0.14), transparent 42%),
+      var(--theme-surface-soft);
+  }
+
+  .permutation-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .permutation-card__text,
+  .permutation-card__status {
+    max-width: 42rem;
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 0.93rem;
+    line-height: 1.72;
+  }
+
+  .permutation-card__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .permutation-card__stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .permutation-card__stats div {
+    display: grid;
+    gap: 0.35rem;
+    padding: 0.9rem;
+    border: 1px solid var(--theme-border);
+    background: var(--theme-surface);
+  }
+
+  .permutation-card__stats span {
+    color: var(--theme-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .permutation-card__stats strong {
+    color: var(--theme-ink-strong);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2.5vw, 2rem);
+    line-height: 1;
+  }
+
+  .secondary-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1.15rem;
+    border: 1px solid var(--theme-border);
+    background:
+      radial-gradient(circle at top left, rgba(13, 149, 13, 0.08), transparent 32%),
+      var(--theme-surface-soft);
+  }
+
+  .secondary-card__details[open] {
+    border-color: var(--theme-border-strong);
+  }
+
+  .secondary-card__details {
+    display: grid;
+    gap: 0.8rem;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--theme-border);
+  }
+
+  .secondary-card__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .secondary-card__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .secondary-card__summary-title {
+    color: var(--theme-ink-strong);
+    font-size: 0.95rem;
+    font-weight: 800;
+  }
+
+  .secondary-card__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 1px solid var(--theme-border);
+    color: var(--theme-link);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    transition:
+      background-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .secondary-card__details[open] .secondary-card__toggle {
+    background: var(--theme-header);
+    transform: rotate(45deg);
+  }
+
+  .secondary-card__lead,
+  .secondary-card__note {
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 0.93rem;
+    line-height: 1.72;
+  }
+
+  .secondary-card__steps {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--theme-ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.72;
+  }
+
+  .secondary-card__steps li + li {
+    margin-top: 0.35rem;
+  }
+
+  .secondary-card__grid {
+    display: grid;
+    gap: 0.85rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .secondary-card__row {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.95rem;
+    border: 1px solid var(--theme-border);
+    background: var(--theme-surface);
+  }
+
+  .secondary-card__title {
+    margin: 0;
+    color: var(--theme-ink-strong);
+    font-size: 0.94rem;
+    font-weight: 700;
+  }
+
+  .secondary-card code {
+    overflow-wrap: anywhere;
+    color: var(--theme-link);
+    font-size: 0.88rem;
+    line-height: 1.65;
+    white-space: normal;
+  }
+
+  .secondary-card strong {
+    color: var(--theme-success);
+    font-size: 0.9rem;
+  }
+
+  .interactive-meta {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--theme-border);
+    border-bottom: 1px solid var(--theme-border);
+  }
+
+  .interactive-meta__row {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    color: var(--theme-muted);
+    font-size: 0.83rem;
+  }
+
+  .interactive-meta__row strong,
+  .interactive-meta__row code {
+    color: var(--theme-ink-strong);
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  .interactive-summary {
+    margin: 0;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--theme-border);
+    color: var(--theme-ink-strong);
+    font-size: 0.93rem;
+    font-weight: 700;
+  }
+
+  .interactive-summary[data-pass="false"] {
+    color: var(--theme-ink-soft);
+  }
+
+  .mod-table-wrap {
+    overflow-x: auto;
+  }
+
+  .mod-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .mod-table th,
+  .mod-table td {
+    padding: 0.72rem 0.85rem;
+    border-bottom: 1px solid var(--theme-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .mod-table thead th {
+    color: var(--theme-muted);
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mod-table tbody th {
+    color: var(--theme-ink-strong);
+    font-weight: 600;
+  }
+
+  .mod-table tbody tr {
+    transition:
+      background-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .mod-table tbody tr[data-pass="true"] {
+    background: var(--theme-success-soft);
+    box-shadow: inset 4px 0 0 var(--theme-success);
+  }
+
+  .mod-table tbody tr[data-pass="true"] th,
+  .mod-table tbody tr[data-pass="true"] td {
+    border-bottom-color: rgba(13, 149, 13, 0.18);
+  }
+
+  .mod-table strong {
+    color: var(--theme-ink-strong);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mod-table strong[data-pass="true"] {
+    color: var(--theme-success);
+  }
+
+  .metric-card__value {
+    margin: 0;
+    color: var(--theme-ink-strong);
+    font-family: var(--font-serif);
+    font-size: clamp(1.55rem, 3vw, 2.4rem);
+    line-height: 1;
+  }
+
+  .pattern-section__footnote {
+    margin-top: 1rem;
+    color: var(--theme-muted);
+    font-size: 0.88rem;
+  }
+
+  .notes-list {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--theme-ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.72;
+  }
+
+  .notes-list li + li {
+    margin-top: 0.35rem;
+  }
+
+  @media (max-width: 820px) {
+    .pattern-page {
+      width: min(100vw - 1rem, 100%);
+      padding-top: 5rem;
+    }
+
+    .finding-grid,
+    .metric-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .type-grid {
+      column-count: 1;
+    }
+
+    .finding-card,
+    .metric-card,
+    .interactive-card,
+    .permutation-card {
+      padding: 1rem;
+    }
+
+    .permutation-card__stats {
+      grid-template-columns: 1fr;
+    }
+
+    .secondary-card__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

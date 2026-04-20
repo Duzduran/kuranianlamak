@@ -477,6 +477,7 @@ const totalAyahSum = sum(surahVerseCounts);
 const totalSurahDigitSum = sum(surahNumbers.map((surahNo) => digitSum(surahNo)));
 const totalAyahDigitSum = sum(surahVerseCounts.map((ayahCount) => digitSum(ayahCount)));
 const cumulativeVerseCounts = cumulativeSums(surahVerseCounts);
+const startingVerseIndices = [1, ...cumulativeVerseCounts.slice(0, -1).map((count) => count + 1)];
 const cumulativeVerseCountsSlidingWindowSequence = slidingWindowDigitSequence(cumulativeVerseCounts.join(""));
 const evenVerseCountSurahSums = surahNumbers
   .map((surahNo, index) => ({ surahNo, ayahCount: surahVerseCounts[index] }))
@@ -552,6 +553,19 @@ const triSequence = sequenceFrom(triSequenceNumbers);
 const triSequenceSlidingWindow = slidingWindowDigitSequence(triSequence);
 const triSequenceDigitSum = digitSum(triSequence);
 const triSequenceElementDigitSumSequence = sequenceFrom(triSequenceNumbers.map((value) => digitSum(value)));
+const ayahBasmalaPairSequenceNumbers = surahVerseCounts.flatMap((ayahCount, index) => [
+  ayahCount,
+  unnumberedBasmalaCounts[index]
+]);
+const ayahBasmalaPairSequence = sequenceFrom(ayahBasmalaPairSequenceNumbers);
+const ayahBasmalaPairSequenceLength = digitsOnly(ayahBasmalaPairSequence).length;
+const globalVerseRangeRows = surahNumbers.flatMap((surahNo, index) => [
+  startingVerseIndices[index],
+  surahNo,
+  cumulativeVerseCounts[index]
+]);
+const globalVerseRangeSequence = sequenceFrom(globalVerseRangeRows);
+const globalVerseRangeSequenceLength = digitsOnly(globalVerseRangeSequence).length;
 
 const allNumberedAyahSequence = surahVerseCounts.map((ayahCount) => rangeSequence(1, ayahCount)).join(".");
 const allNumberedAyahSequenceLength = digitsOnly(allNumberedAyahSequence).length;
@@ -4576,6 +4590,51 @@ export const criteriaArchive: CriterionEntry[] = [
     tags: ["basamak toplamı", "7", "türev", "31.5"]
   },
   {
+    id: "criterion-31-5-d",
+    code: "31.5D",
+    groupId: "fihrist",
+    title: l("Ayet sayısı / numarasız Besmele dizilimi"),
+    summary: l(
+      "Her surede ayet sayısı ile numarasız Besmele göstergesi ikili bloklar halinde doğal sırada yazıldığında oluşan dizilim 7 modunda doğrulanır.",
+      "When the verse count and the unnumbered Basmala marker are written as natural two-value blocks for each surah, the resulting sequence verifies modulo 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "21.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Kolon yapısı"), value: l("Ayet sayısı + numarasız Besmele göstergesi") },
+      { label: l("İlk değerler"), value: l(sequenceFrom(ayahBasmalaPairSequenceNumbers.slice(0, 12))) },
+      { label: l("Basamak uzunluğu"), value: l(String(ayahBasmalaPairSequenceLength)) }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Ham kolonlar"),
+        value: l("Her sure için yalnız iki ham değer yazılır: ayet sayısı ve numarasız Besmele göstergesi.")
+      },
+      {
+        label: l("2. İlk satırlar"),
+        value: l("(1) 7, 0   ·   (2) 286, 1   ·   (3) 200, 1   ·   (4) 176, 1   ·   (9) 129, 0")
+      },
+      {
+        label: l("3. Doğal sıralama"),
+        value: l("Bu ikili bloklar mushaf sırası bozulmadan yan yana yazılır: 7 0 286 1 200 1 176 1 ...")
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Ortaya çıkan 341 basamaklı dizi 7'ye tam bölünür.")
+      }
+    ],
+    tests: [
+      {
+        id: "criterion-31-5-d-sequence",
+        label: l("Ayet / Besmele ikili dizilimi"),
+        sequence: ayahBasmalaPairSequence,
+        mods: [7]
+      }
+    ],
+    tags: ["ayet sayısı", "besmele", "doğal sıra", "ham", "7"]
+  },
+  {
     id: "criterion-32",
     code: "32",
     groupId: "fihrist",
@@ -4762,7 +4821,8 @@ export const criteriaArchive: CriterionEntry[] = [
   {
     id: "criterion-32-4-b",
     code: "32.4B",
-    groupId: "fihrist",
+    groupId: "experimental-archive",
+    bucket: "experimental",
     title: l("Tek sure satırlarının üçlü fihrist dizilimi"),
     summary: l(
       "Tek numaralı surelerde sure numarası, ayet sayısı ve kümülatif ayet bitişi satır satır doğal sırada yazıldığında oluşan dizilim 19 modunda doğrulanır.",
@@ -4784,12 +4844,13 @@ export const criteriaArchive: CriterionEntry[] = [
         mods: [19]
       }
     ],
-    tags: ["tek sure", "kümülatif", "19"]
+    tags: ["tek sure", "kümülatif", "19", "deneysel"]
   },
   {
     id: "criterion-32-4-c",
     code: "32.4C",
-    groupId: "fihrist",
+    groupId: "experimental-archive",
+    bucket: "experimental",
     title: l("Çift sure satırlarının üçlü fihrist dizilimi"),
     summary: l(
       "Çift numaralı surelerde sure numarası, ayet sayısı ve kümülatif ayet bitişi satır satır doğal sırada yazıldığında oluşan dizilim 19 modunda doğrulanır.",
@@ -4811,7 +4872,53 @@ export const criteriaArchive: CriterionEntry[] = [
         mods: [19]
       }
     ],
-    tags: ["çift sure", "kümülatif", "19"]
+    tags: ["çift sure", "kümülatif", "19", "deneysel"]
+  },
+  {
+    id: "criterion-32-5",
+    code: "32.5",
+    groupId: "fihrist",
+    title: l("Küresel ayet aralığı satır dizilimi"),
+    summary: l(
+      "Her sure için küresel başlangıç ayeti, sure numarası ve küresel bitiş ayeti satır satır doğal sırada yazıldığında oluşan fihrist tablosu hem 19 hem 7 modunda doğrulanır.",
+      "When the global start verse, surah number, and global end verse are written row by row in natural order for each surah, the resulting index table verifies under both mod 19 and mod 7."
+    ),
+    sourceLabel: sourceWithin19Research.label,
+    sourceUrl: sourceWithin19Research.url,
+    discovery: discovery("Ahmet Düzduran", "21.04.2026", "Türkiye/İstanbul"),
+    facts: [
+      { label: l("Kolon yapısı"), value: l("Küresel başlangıç ayeti + sure no + küresel bitiş ayeti") },
+      { label: l("İlk satırlar"), value: l(sequenceFrom(globalVerseRangeRows.slice(0, 12))) },
+      { label: l("Basamak uzunluğu"), value: l(String(globalVerseRangeSequenceLength)) },
+      { label: l("Son satır"), value: l("6231 114 6236") }
+    ],
+    walkthrough: [
+      {
+        label: l("1. Başlangıç ve bitiş sınırları"),
+        value: l("Her sure için Kur'an içindeki ilk ayet indeksi ile son ayet indeksi alınır: 1–7, 8–293, 294–493, 494–669, ...")
+      },
+      {
+        label: l("2. Üçlü satır"),
+        value: l("Her sure tek satırda üç sayı ile temsil edilir: başlangıç ayeti, sure numarası, bitiş ayeti.")
+      },
+      {
+        label: l("3. Doğal sıra"),
+        value: l("Satırlar mushaf sırası korunarak yan yana yazılır: 1 1 7 8 2 293 294 3 493 494 4 669 ...")
+      },
+      {
+        label: l("4. Kontrol"),
+        value: l("Ortaya çıkan 1127 basamaklı tam dizilim hem 19'a hem 7'ye tam bölünür.")
+      }
+    ],
+    tests: [
+      {
+        id: "criterion-32-5-sequence",
+        label: l("Başlangıç / sure / bitiş satırları"),
+        sequence: globalVerseRangeSequence,
+        mods: [19, 7]
+      }
+    ],
+    tags: ["küresel aralık", "başlangıç", "bitiş", "kümülatif", "fihrist", "19", "7"]
   },
   {
     id: "criterion-33-1",

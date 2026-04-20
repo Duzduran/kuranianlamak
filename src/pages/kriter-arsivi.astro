@@ -42,6 +42,29 @@ import CriteriaLab from "../components/CriteriaLab.astro";
       </p>
     </section>
 
+    <a class="criteria-page__feature" href="/7-ve-19-iliskisi">
+      <div class="criteria-page__feature-copy">
+        <p class="criteria-page__feature-kicker">
+          <span data-copy-lang="tr">Yeni not</span>
+          <span data-copy-lang="en">New note</span>
+        </p>
+        <h2 class="criteria-page__feature-title">
+          <span data-copy-lang="tr">7 ve 19: tekler, çiftler ve tesadüf testi</span>
+          <span data-copy-lang="en">7 and 19: odds, evens, and the chance test</span>
+        </h2>
+        <p class="criteria-page__feature-text">
+          <span data-copy-lang="tr">
+            Tek ayet sayıları mod 7, çift ayet sayıları mod 19; aynı aile için permütasyon testi ve etkileşimli kontrol araçları.
+          </span>
+          <span data-copy-lang="en">
+            Odd verse counts under mod 7, even verse counts under mod 19; permutation testing and interactive controls for the same family.
+          </span>
+        </p>
+      </div>
+
+      <span class="criteria-page__feature-arrow" aria-hidden="true">↗</span>
+    </a>
+
     <CriteriaLab />
   </section>
 </Layout>
@@ -109,6 +132,64 @@ import CriteriaLab from "../components/CriteriaLab.astro";
     font-size: 0.86rem;
   }
 
+  .criteria-page__feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding: 1.1rem 1.15rem;
+    border: 1px solid var(--theme-border);
+    background:
+      linear-gradient(180deg, rgba(184, 212, 238, 0.16), transparent 48%),
+      var(--theme-surface-soft);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .criteria-page__feature:hover {
+    border-color: var(--theme-border-strong);
+    transform: translateY(-1px);
+  }
+
+  .criteria-page__feature-copy {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .criteria-page__feature-kicker {
+    margin: 0;
+    color: var(--theme-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .criteria-page__feature-title {
+    margin: 0;
+    color: var(--theme-ink-strong);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+    line-height: 1.2;
+  }
+
+  .criteria-page__feature-text {
+    max-width: 72rem;
+    margin: 0;
+    color: var(--theme-ink-soft);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  .criteria-page__feature-arrow {
+    color: var(--theme-muted-soft);
+    font-size: 1rem;
+    line-height: 1;
+  }
+
   @media (max-width: 780px) {
     .criteria-page {
       width: min(100vw - 1rem, 100%);
@@ -126,6 +207,15 @@ import CriteriaLab from "../components/CriteriaLab.astro";
     .criteria-page__method-text {
       font-size: 0.9rem;
       line-height: 1.65;
+    }
+
+    .criteria-page__feature {
+      grid-template-columns: 1fr;
+      padding: 1rem;
+    }
+
+    .criteria-page__feature-arrow {
+      display: none;
     }
   }
 </style>
