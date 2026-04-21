@@ -541,9 +541,6 @@ const absoluteDifferenceSum = surahVerseCounts.slice(1).reduce((total, ayahCount
   return total + Math.abs(ayahCount - surahVerseCounts[index]);
 }, 0);
 
-const multiplesOf19Surahs = [19, 38, 57, 76, 95, 114];
-const multiplesOf19LineCounts = multiplesOf19Surahs.map((surahNo) => totalLineCounts[surahNo - 1]);
-
 const triSequenceNumbers = surahNumbers.flatMap((surahNo, index) => [
   surahNo,
   surahVerseCounts[index],
@@ -577,6 +574,11 @@ const allNumberedAyahSequence = surahVerseCounts.map((ayahCount) => rangeSequenc
 const allNumberedAyahSequenceLength = digitsOnly(allNumberedAyahSequence).length;
 const allNumberedAyahSlidingWindowLength = slidingWindowDigitSequence(allNumberedAyahSequence).length;
 
+const naturalVerseCountSequence = sequenceFrom(surahVerseCounts);
+const naturalVerseCountSequenceLength = digitsOnly(naturalVerseCountSequence).length;
+const naturalOddVerseCounts = surahVerseCounts.filter((ayahCount) => ayahCount % 2 === 1);
+const naturalOddVerseCountSequence = sequenceFrom(naturalOddVerseCounts);
+const naturalOddVerseCountSequenceLength = digitsOnly(naturalOddVerseCountSequence).length;
 const naturalSurahSequence = sequenceFrom(surahNumbers);
 const reverseSurahSequence = sequenceFrom([...surahNumbers].reverse());
 const reverseDigitsOfNaturalSurahSequence = digitsOnly(naturalSurahSequence).split("").reverse().join("");
@@ -3976,107 +3978,35 @@ export const criteriaArchive: CriterionEntry[] = [
     tags: ["basamak toplamı", "38"]
   },
   {
-    id: "criterion-29-2",
-    code: "29.2",
-    groupId: "fihrist",
-    title: l("Sure ve ayet basamak toplamlarının alt toplamları"),
-    summary: l(
-      "Sure basamak toplamları ile ayet basamak toplamlarının kendi basamak toplamları yine 38 verir.",
-      "The digit sums of the surah-digit total and the verse-digit total again yield 38."
-    ),
-    sourceLabel: sourceFihrist6.label,
-    sourceUrl: sourceFihrist6.url,
-    discovery: discovery("Kourosh Jamneshan", undefined, "İran"),
-    facts: [
-      { label: l("Sure basamak toplamı"), value: l(`${totalSurahDigitSum} → ${digitSum(totalSurahDigitSum)}`) },
-      { label: l("Ayet basamak toplamı"), value: l(`${totalAyahDigitSum} → ${digitSum(totalAyahDigitSum)}`) },
-      { label: l("Toplam"), value: l(String(digitSum(totalSurahDigitSum) + digitSum(totalAyahDigitSum))) }
-    ],
-    tests: [
-      {
-        id: "criterion-29-2-total",
-        label: l("38"),
-        sequence: String(digitSum(totalSurahDigitSum) + digitSum(totalAyahDigitSum)),
-        mods: [19]
-      }
-    ],
-    tags: ["basamak", "38"]
-  },
-  {
-    id: "criterion-29-3",
-    code: "29.3",
-    groupId: "fihrist",
-    title: l("İki ayrı 38 toplamının simetrisi"),
-    summary: l(
-      "29.1 ve 29.2'nin çıktıları aynı toplamda, yani 38'de buluşur.",
-      "The outputs of 29.1 and 29.2 meet at the same total: 38."
-    ),
-    sourceLabel: sourceFihrist6.label,
-    sourceUrl: sourceFihrist6.url,
-    discovery: discovery("Kourosh Jamneshan", undefined, "İran"),
-    facts: [
-      { label: l("29.1"), value: l(String(digitSum(totalSurahSum) + digitSum(totalAyahSum))) },
-      { label: l("29.2"), value: l(String(digitSum(totalSurahDigitSum) + digitSum(totalAyahDigitSum))) },
-      { label: l("Simetri"), value: l("38 = 38") }
-    ],
-    tags: ["simetri", "38"]
-  },
-  {
-    id: "criterion-29-4",
-    code: "29.4",
-    groupId: "fihrist",
-    title: l("19 ve katı surelerin numara ve satır toplamları"),
-    summary: l(
-      "19'un katı olan sure numaralarının toplamı ile bu surelerin toplam satır sayıları hem 7 hem 19 modunda doğrulanır.",
-      "The sum of the surah numbers that are multiples of 19 and the sum of their line counts both verify under mod 7 and mod 19."
-    ),
-    sourceLabel: sourceFihrist6.label,
-    sourceUrl: sourceFihrist6.url,
-    discovery: discovery("Mustafa Kurdoğlu", "10.09.2019", "Türkiye/Yalova"),
-    facts: [
-      { label: l("Sureler"), value: l(sequenceFrom(multiplesOf19Surahs)) },
-      { label: l("Sure numaraları toplamı"), value: l(String(sum(multiplesOf19Surahs))) },
-      { label: l("Toplam satır sayıları"), value: l(sequenceFrom(multiplesOf19LineCounts)) },
-      { label: l("Satır toplamı"), value: l(String(sum(multiplesOf19LineCounts))) }
-    ],
-    tests: [
-      {
-        id: "criterion-29-4-surahs",
-        label: l("Sure numaraları toplamı"),
-        sequence: String(sum(multiplesOf19Surahs)),
-        mods: [19, 7]
-      },
-      {
-        id: "criterion-29-4-lines",
-        label: l("Toplam satır sayıları toplamı"),
-        sequence: String(sum(multiplesOf19LineCounts)),
-        mods: [19, 7]
-      }
-    ],
-    tags: ["19'un katları", "satır", "7", "19"]
-  },
-  {
     id: "criterion-30",
     code: "30",
     groupId: "fihrist",
-    title: l("Ayet sayılarının doğal sırasındaki ardışık dizilimi"),
+    title: l(
+      "Fihristeki ayet sayılarının doğal sıradaki ardışık dizilimi",
+      "Natural-order concatenation of the index verse counts"
+    ),
     summary: l(
-      "114 suredeki ayet sayıları doğal sırada birleştirildiğinde 7 modunda doğrulanır.",
+      "Fihristeki 114 ayet sayısı doğal sırada ardışık yazıldığında oluşan 227 basamaklı sayı 7'ye tam bölünür.",
       "When the verse counts of all 114 surahs are concatenated in natural order, the result verifies modulo 7."
     ),
     sourceLabel: sourceFihrist6.label,
     sourceUrl: sourceFihrist6.url,
     discovery: discovery("İmran Akdemir", undefined, "Türkiye"),
     facts: [
-      { label: l("Basamak uzunluğu"), value: l("227") },
-      { label: l("Dizilim"), value: l(sequenceFrom(surahVerseCounts)) }
+      { label: l("Basamak uzunluğu"), value: l(String(naturalVerseCountSequenceLength)) },
+      { label: l("Kalan"), value: l("0") },
+      { label: l("Dizilim"), value: l(naturalVerseCountSequence) }
     ],
     tests: [
       {
         id: "criterion-30-sequence",
-        label: l("Ayet sayıları dizilimi"),
-        sequence: sequenceFrom(surahVerseCounts),
-        mods: [7]
+        label: l("Ayet sayılarının doğal dizilimi", "Natural verse-count sequence"),
+        sequence: naturalVerseCountSequence,
+        mods: [7],
+        note: l(
+          "Kriter-30: Getirilecek yeni ayet sayılarının doğal sıradaki ardışık dizilimi 7'ye tam olarak bölünmelidir.",
+          "Criterion 30: The natural-order concatenation of any new verse counts must be exactly divisible by 7."
+        )
       }
     ],
     tags: ["ayet sayıları", "7"]
@@ -4153,21 +4083,32 @@ export const criteriaArchive: CriterionEntry[] = [
     id: "criterion-31-2",
     code: "31.2",
     groupId: "fihrist",
-    title: l("Tek ayet sayılarının ardışık dizilimi"),
+    title: l(
+      "Fihristeki tek ayet sayılarının doğal sıradaki ardışık dizilimi",
+      "Natural-order concatenation of the odd verse counts in the index"
+    ),
     summary: l(
-      "Fihrist içindeki tek ayet sayıları doğal sırada birleştirildiğinde 7 modunda doğrulanır.",
+      "Fihrist içindeki tek ayet sayıları doğal sırada ardışık yazıldığında oluşan 106 basamaklı sayı 7'ye tam bölünür.",
       "When the odd verse counts are concatenated in natural order, the result verifies modulo 7."
     ),
     sourceLabel: sourceFihrist6.label,
     sourceUrl: sourceFihrist6.url,
     discovery: discovery("İmran Akdemir", undefined, "Türkiye"),
-    facts: [{ label: l("Basamak uzunluğu"), value: l("106") }],
+    facts: [
+      { label: l("Basamak uzunluğu"), value: l(String(naturalOddVerseCountSequenceLength)) },
+      { label: l("Kalan"), value: l("0") },
+      { label: l("Dizilim"), value: l(naturalOddVerseCountSequence) }
+    ],
     tests: [
       {
         id: "criterion-31-2-sequence",
-        label: l("Tek ayet sayıları"),
-        sequence: sequenceFrom(surahVerseCounts.filter((ayahCount) => ayahCount % 2 === 1)),
-        mods: [7]
+        label: l("Tek ayet sayılarının doğal dizilimi", "Natural odd verse-count sequence"),
+        sequence: naturalOddVerseCountSequence,
+        mods: [7],
+        note: l(
+          "Kriter-31.2: Getirilecek yeni ayet sayılarının içindeki tek ayet sayılarının doğal sıradaki ardışık dizilimi 7'ye tam olarak bölünmelidir.",
+          "Criterion 31.2: The natural-order concatenation of the odd verse counts inside any new verse counts must be exactly divisible by 7."
+        )
       }
     ],
     tags: ["tek", "7"]

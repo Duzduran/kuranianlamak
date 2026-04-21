@@ -137,7 +137,10 @@ const entryModScope = (entry) => {
   return "neutral";
 };
 
-const isDefaultVisibleEntry = (entry) => entryModScope(entry) === "contains-19";
+const isDefaultVisibleEntry = (entry) => {
+  const scope = entryModScope(entry);
+  return scope === "contains-19" || scope === "7-only";
+};
 
 const discoveryLine = (entry) => {
   if (entry.discovery.name === "Ahmet Düzduran") {
@@ -385,7 +388,7 @@ const groupToneClass = {
 
       <div class="lab-controls__tools">
         <label class="lab-toggle">
-          <input type="checkbox" data-archive-mod7-toggle />
+          <input type="checkbox" data-archive-mod7-toggle checked />
           <span class="lab-toggle__copy">
             <span data-copy-lang="tr">Mod 7 bulgularını da göster</span>
             <span data-copy-lang="en">Show mod 7 findings too</span>

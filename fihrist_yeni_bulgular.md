@@ -12,7 +12,7 @@ Kullanılan ham veri sadece mushaftan doğrudan gözlenebilen üç kolondur:
 1. Sure numarası s ∈ {1, 2, …, 114}
 2. Numaralı ayet sayısı a_s (114 değer)
 3. Toplam satır sayısı ℓ_s = a_s + (0 eğer s ∈ {1, 9} değilse 1) — yani numarasız
-   Besmele satırı dahil (criterion-29.4 ve 31.3B'deki satır tanımıyla aynı)
+   Besmele satırı dahil (criterion-31.3B'deki satır tanımıyla aynı)
 
 Her adayda; kullanılan her sayı mushaftan veya daha önce doğrulanmış bir temel
 kodlamadan doğrudan gözlenebilir (nesnel karşılık), tek izin verilen aritmetik
@@ -242,7 +242,7 @@ sunar.
 | Bütünsellik | Her aday mushafın 114 sure kadrosunun objektif bir alt kümesini veya tamamını kullanır. Parçalama yalnızca çift/tek gibi mushaftan okunan parametrelerle yapılır; ek sayı uydurulmaz. |
 | Dizilim | Tüm diziler mushaftaki sure sırasını korur; ters versiyonlar yalnızca mushafın doğal sıra akışının tersidir ve projede halihazırda kullanılan bir tekniktir (criterion-31.4D1, criterion-31.1/31.2'nin ters kardeşleri vb.). |
 | Ölçüt | Dominant ölçüt mod 19 = 0'dır. Mesani olarak mod 7 = 0 kabul edilmiştir. Çift modlu (19 ve 7 birlikte) bulgular F-A, F-B ve F-P-A'dır. |
-| Nesnel Dönüşüm | Tek izin verilen aritmetik işlem toplamadır (sure no + satır sayısı vb.). Basamak toplamı ve ters dizilim, criterion-25.2, 29.1–29.3 ve 32.3A'da kullanılan türemiş kodlama biçimleridir; hiçbir değer mushafta nesnel karşılığı olmayan bir sayı üretmez. |
+| Nesnel Dönüşüm | Tek izin verilen aritmetik işlem toplamadır (sure no + satır sayısı vb.). Basamak toplamı ve ters dizilim, criterion-25.2, 29.1 ve 32.3A'da kullanılan türemiş kodlama biçimleridir; hiçbir değer mushafta nesnel karşılığı olmayan bir sayı üretmez. |
 
 ## Nerede deneyebilirsin
 
@@ -260,7 +260,7 @@ Bu adaylar arasından öncelikle **F-P-A** (küresel başlangıç/sure/bitiş sa
 en dengeli yeni bütün-fihrist adayıdır. **F-P** temel 19 sınır dizilimi olarak,
 **F-A** (tek sure + satır, 19 ∧ 7) ve
 **F-B** (satır basamak toplamı ters, 19 ∧ 7) ikinci halkada düşünülebilir.
-F-C, F-D, F-E gibi skaler (tek sayı) bulgular criterion-29.1/29.2/29.4
+F-C, F-D, F-E gibi skaler (tek sayı) bulgular criterion-29.1
 kalıbıyla "foundational" olarak eklenebilir. Satır bazlı üçlü F-N ise
 criterion-32.4B/32.4C ile birlikte deneysel kümeye (experimental-archive)
 konabilir.
