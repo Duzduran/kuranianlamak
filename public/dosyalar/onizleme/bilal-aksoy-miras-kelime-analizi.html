@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="tr">
+<!--This file was converted to xhtml by LibreOffice - see https://cgit.freedesktop.org/libreoffice/core/tree/filter/source/xslt for the code.-->
+
+<head profile="http://dublincore.org/documents/dcmi-terms/">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8"/>
+<title>Bilal Aksoy · Miras Kelime Analizi</title>
+<meta name="DCTERMS.title" content="" xml:lang="en-US"/>
+
+<meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646"/>
+<meta name="DCTERMS.source" content="http://xml.openoffice.org/odf2xhtml"/>
+<meta name="DCTERMS.creator" content="Un-named"/>
+<meta name="DCTERMS.issued" content="2026-11-23T21:21:00" scheme="DCTERMS.W3CDTF"/>
+<meta name="DCTERMS.contributor" content="Serhat CINAR"/>
+<meta name="DCTERMS.modified" content="2026-11-23T21:23:00" scheme="DCTERMS.W3CDTF"/>
+
+
+<meta name="xsl:vendor" content="libxslt"/>
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" hreflang="en"/>
+<link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" hreflang="en"/>
+<link rel="schema.DCTYPE" href="http://purl.org/dc/dcmitype/" hreflang="en"/>
+<link rel="schema.DCAM" href="http://purl.org/dc/dcam/" hreflang="en"/>
+
+<style>
+    table { border-collapse:collapse; border-spacing:0; empty-cells:show }
+    td, th { vertical-align:top; font-size:12pt;}
+    h1, h2, h3, h4, h5, h6 { clear:both;}
+    ol, ul { margin:0; padding:0;}
+    li { list-style: none; margin:0; padding:0;}
+    span.footnodeNumber { padding-right:1em; }
+    span.annotation_style_by_filter { font-size:95%; font-family:Arial, Arimo, 'Liberation Sans', Helvetica, sans-serif; background-color:#fff000;  margin:0; border:0; padding:0;  }
+    span.heading_numbering { margin-right: 0.8rem; }* { margin:0;}
+    .graphic-gr2{ background-color:transparent; color:#1a1a1a; font-size:10.5pt; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; min-height:0in;min-width:0in;padding-top:0in; padding-bottom:0.2083in; padding-left:0.278in; padding-right:0in; margin-left:0in; margin-right:0.0146in; margin-top:0in; margin-bottom:0in; vertical-align:bottom; text-align:left; }
+    .paragraph-Footer{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-Frame_20_contents{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P1{ color:#1a1a1a; font-size:18pt; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr;background-color:transparent; text-align:left ! important; }
+    .paragraph-P10{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0972in; margin-top:0.0417in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; line-height:1.1; }
+    .paragraph-P11{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0972in; margin-top:0.0555in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; line-height:1.1; }
+    .paragraph-P12{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; margin-top:0.0835in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; line-height:1.1; }
+    .paragraph-P13_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.111in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-width:0.018cm; border-top-style:solid; border-top-color:#ebd9ae; padding-bottom:0.111in;  border-bottom-style:none; }
+    .paragraph-P13_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; padding-bottom:0.111in; padding-top:0.111in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P13_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.111in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-bottom-width:0.018cm; border-bottom-style:solid; border-bottom-color:#ebd9ae; padding-top:0.111in;  border-top-style:none;}
+    .paragraph-P13{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.111in; margin-top:0.111in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-width:0.018cm; border-top-style:solid; border-top-color:#ebd9ae; border-bottom-width:0.018cm; border-bottom-style:solid; border-bottom-color:#ebd9ae; }
+    .paragraph-P14_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.111in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-width:0.018cm; border-top-style:solid; border-top-color:#ebd9ae; padding-bottom:0.0417in;  border-bottom-style:none; }
+    .paragraph-P14_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; padding-bottom:0.0417in; padding-top:0.111in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P14_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0417in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-bottom-style:none; padding-top:0.111in;  border-top-style:none;}
+    .paragraph-P14{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0417in; margin-top:0.111in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-width:0.018cm; border-top-style:solid; border-top-color:#ebd9ae; border-bottom-style:none; }
+    .paragraph-P15_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-style:none; padding-bottom:0.111in;  border-bottom-style:none; }
+    .paragraph-P15_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; padding-bottom:0.111in; padding-top:0in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P15_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.111in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-bottom-width:0.018cm; border-bottom-style:solid; border-bottom-color:#ebd9ae; padding-top:0in;  border-top-style:none;}
+    .paragraph-P15{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.111in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-style:none; border-bottom-width:0.018cm; border-bottom-style:solid; border-bottom-color:#ebd9ae; }
+    .paragraph-P16_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-style:none; padding-bottom:0.0417in;  border-bottom-style:none; }
+    .paragraph-P16_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; padding-bottom:0.0417in; padding-top:0in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P16_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0417in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-bottom-style:none; padding-top:0in;  border-top-style:none;}
+    .paragraph-P16{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0417in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#fdf4e0; margin-left:0.1528in; margin-right:0.111in; padding:0in; border-left-width:0.079cm; border-left-style:solid; border-left-color:#e8b04b; border-right-width:0.018cm; border-right-style:solid; border-right-color:#ebd9ae; border-top-style:none; border-bottom-style:none; }
+    .paragraph-P17{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; margin-top:0in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P18_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.0972in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; border-top-width:0.018cm; border-top-style:solid; border-top-color:#e3d9c4; padding-bottom:0in;  border-bottom-style:none; }
+    .paragraph-P18_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; padding-bottom:0in; padding-top:0.0972in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P18_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; border-bottom-style:none; padding-top:0.0972in;  border-top-style:none;}
+    .paragraph-P18{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; margin-top:0.0972in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; border-top-width:0.018cm; border-top-style:solid; border-top-color:#e3d9c4; border-bottom-style:none; }
+    .paragraph-P19_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.028in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; border-top-style:none; padding-bottom:0.0972in;  border-bottom-style:none; }
+    .paragraph-P19_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; padding-bottom:0.0972in; padding-top:0.028in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P19_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0972in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; border-bottom-width:0.018cm; border-bottom-style:solid; border-bottom-color:#e3d9c4; padding-top:0.028in;  border-top-style:none;}
+    .paragraph-P19{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0972in; margin-top:0.028in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#f7f3ea; padding:0in; border-left-width:0.018cm; border-left-style:solid; border-left-color:#e3d9c4; border-right-width:0.018cm; border-right-style:solid; border-right-color:#e3d9c4; border-top-style:none; border-bottom-width:0.018cm; border-bottom-style:solid; border-bottom-color:#e3d9c4; }
+    .paragraph-P2{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0209in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P20_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.111in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; border-top-width:0.0441cm; border-top-style:solid; border-top-color:#1f3b43; padding-bottom:0in;  border-bottom-style:none; }
+    .paragraph-P20_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; padding-bottom:0in; padding-top:0.111in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P20_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; border-bottom-style:none; padding-top:0.111in;  border-top-style:none;}
+    .paragraph-P20{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0in; margin-top:0.111in; text-align:center ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; border-top-width:0.0441cm; border-top-style:solid; border-top-color:#1f3b43; border-bottom-style:none; }
+    .paragraph-P21{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0835in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P22{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0484in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; margin-left:0.1807in; }
+    .paragraph-P23_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.0835in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; margin-left:0.1807in; margin-right:0.1807in; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; border-top-style:none; padding-bottom:0.111in;  border-bottom-style:none; }
+    .paragraph-P23_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; margin-left:0.1807in; margin-right:0.1807in; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; padding-bottom:0.111in; padding-top:0.0835in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P23_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.111in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; margin-left:0.1807in; margin-right:0.1807in; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; border-bottom-width:0.0441cm; border-bottom-style:solid; border-bottom-color:#1f3b43; padding-top:0.0835in;  border-top-style:none;}
+    .paragraph-P23{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.111in; margin-top:0.0835in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; background-color:#1f3b43; margin-left:0.1807in; margin-right:0.1807in; padding:0in; border-left-width:0.0441cm; border-left-style:solid; border-left-color:#1f3b43; border-right-width:0.0441cm; border-right-style:solid; border-right-color:#1f3b43; border-top-style:none; border-bottom-width:0.0441cm; border-bottom-style:solid; border-bottom-color:#1f3b43; }
+    .paragraph-P3{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0555in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P4{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0417in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P5_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; padding-top:0in; border-left-style:none; border-right-style:none; border-top-style:none; padding-bottom:0.2083in;  border-bottom-style:none; }
+    .paragraph-P5_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; border-left-style:none; border-right-style:none; padding-bottom:0.2083in; padding-top:0in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P5_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.2083in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; padding-bottom:0.111in; border-left-style:none; border-right-style:none; border-bottom-width:0.0441cm; border-bottom-style:solid; border-bottom-color:#e8b04b; padding-top:0in;  border-top-style:none;}
+    .paragraph-P5{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.2083in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; padding-top:0in; padding-bottom:0.111in; border-left-style:none; border-right-style:none; border-top-style:none; border-bottom-width:0.0441cm; border-bottom-style:solid; border-bottom-color:#e8b04b; }
+    .paragraph-P6{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0693in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; }
+    .paragraph-P7{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.028in; margin-top:0in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; margin-left:0.111in; }
+    .paragraph-P8_borderStart{ color:#1a1a1a; font-size:10.5pt; margin-top:0.25in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; padding-top:0in; border-left-style:none; border-right-style:none; border-top-style:none; padding-bottom:0.028in;  border-bottom-style:none; }
+    .paragraph-P8_borderSides{ color:#1a1a1a; font-size:10.5pt; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; border-left-style:none; border-right-style:none; padding-bottom:0.028in; padding-top:0.25in;  border-top-style:none; border-bottom-style:none; }
+    .paragraph-P8_borderEnd{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.028in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; padding-bottom:0.0555in; border-left-style:none; border-right-style:none; border-bottom-width:0.0261cm; border-bottom-style:solid; border-bottom-color:#e8b04b; padding-top:0.25in;  border-top-style:none;}
+    .paragraph-P8{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.028in; margin-top:0.25in; text-align:left ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; padding-left:0in; padding-right:0in; padding-top:0in; padding-bottom:0.0555in; border-left-style:none; border-right-style:none; border-top-style:none; border-bottom-width:0.0261cm; border-bottom-style:solid; border-bottom-color:#e8b04b; }
+    .paragraph-P9{ color:#1a1a1a; font-size:10.5pt; margin-bottom:0.0972in; margin-top:0in; text-align:justify ! important; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; line-height:1.1; }
+    .paragraph-Standard{ color:#1a1a1a; font-size:10.5pt; font-family:Calibri, Carlito, 'Segoe UI', Arial, sans-serif; writing-mode:horizontal-tb; direction:ltr; margin-top:0in; margin-bottom:0in; text-align:left ! important; }
+    .table-Table1{ width:6.2681in; margin-left:0.0035in; margin-top:0in; margin-bottom:0in; margin-right:auto;writing-mode:horizontal-tb; direction:ltr;}
+    .table-Table2{ width:6.2681in; margin-left:0.0035in; margin-top:0in; margin-bottom:0in; margin-right:auto;writing-mode:horizontal-tb; direction:ltr;}
+    .table-Table3{ width:6.2681in; margin-left:0.0035in; margin-top:0in; margin-bottom:0in; margin-right:auto;writing-mode:horizontal-tb; direction:ltr;}
+    .cell-Table1_A1{ background-color:#e8b04b; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table1_A2{ background-color:#ffffff; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table1_A3{ background-color:#f4f6f6; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table2_A1{ background-color:#e8b04b; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table2_A2{ background-color:#ffffff; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table2_A3{ background-color:#f4f6f6; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table3_A1{ background-color:#e8b04b; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table3_A2{ background-color:#ffffff; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .cell-Table3_A3{ background-color:#f4f6f6; border-top-width:0.0176cm; border-top-style:solid; border-top-color:#c9d2d4; border-left-width:0.0176cm; border-left-style:solid; border-left-color:#c9d2d4; border-bottom-width:0.0176cm; border-bottom-style:solid; border-bottom-color:#c9d2d4; border-right-width:0.0176cm; border-right-style:solid; border-right-color:#c9d2d4; padding-left:0.0833in; padding-right:0.0833in; padding-top:0.0556in; padding-bottom:0.0556in; }
+    .col-Table1_A{ width:0.8681in; }
+    .col-Table1_B{ width:1.4229in; }
+    .col-Table1_C{ width:1.3194in; }
+    .col-Table1_D{ width:2.6569in; }
+    .col-Table2_A{ width:0.8681in; }
+    .col-Table2_B{ width:1.4229in; }
+    .col-Table2_C{ width:1.3194in; }
+    .col-Table2_D{ width:2.6569in; }
+    .col-Table3_A{ width:2.3611in; }
+    .col-Table3_B{ width:3.9063in; }
+    .text-T1{ color:#000000; font-family:Aptos, Calibri, Carlito, 'Segoe UI', Arial, sans-serif; font-size:10pt; }
+    .text-T10{ color:#1f3b43; font-family:Arial, Arimo, 'Liberation Sans', Helvetica, sans-serif; font-size:15pt; font-weight:bold; }
+    .text-T11{ color:#1f3b43; font-family:Arial, Arimo, 'Liberation Sans', Helvetica, sans-serif; font-size:12pt; font-weight:bold; }
+    .text-T12{ color:#555555; font-size:11.5pt; }
+    .text-T13{ color:#555555; font-size:10pt; font-style:italic; }
+    .text-T14{ color:#555555; font-size:10pt; }
+    .text-T15{ font-size:10pt; }
+    .text-T16{ color:#e8b04b; font-size:9.5pt; font-weight:bold; }
+    .text-T17{ color:#ffffff; font-size:11pt; font-weight:bold; }
+    .text-T2{ color:#b07a14; font-size:9.5pt; font-weight:bold; }
+    .text-T3{ color:#b07a14; font-size:12pt; font-weight:bold; }
+    .text-T4{ color:#b07a14; font-size:10pt; }
+    .text-T5{ color:#1f3b43; font-size:17pt; font-weight:bold; }
+    .text-T6{ color:#1f3b43; font-size:12pt; font-weight:bold; }
+    .text-T7{ color:#1f3b43; font-weight:bold; }
+    .text-T8{ color:#1f3b43; font-size:10pt; font-weight:bold; }
+    .text-T9{ color:#1f3b43; font-family:Arial, Arimo, 'Liberation Sans', Helvetica, sans-serif; font-size:13pt; font-weight:bold; }
+    /* ODF styles with no properties representable as CSS:
+    .dp1 .Table1.1 .Table2.1 .Table3.1 .ListLabel_20_1 .ListLabel_20_2 .ListLabel_20_3 .ListLabel_20_4 .ListLabel_20_5 .ListLabel_20_6 .ListLabel_20_7 .ListLabel_20_8 .ListLabel_20_9  { } */
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<style id="within19-viewer">
+  html {
+    background: #ffffff;
+    overflow-x: auto;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    max-width: 1040px;
+    margin: 0 auto !important;
+    padding: 36px 28px 56px !important;
+    background: #ffffff;
+    color: #000000;
+  }
+  img { max-width: 100%; height: auto; }
+  @media (max-width: 700px) {
+    body { padding: 18px 12px 32px !important; }
+  }
+</style>
+</head>
+
+<body dir="ltr" style="max-width:8.2681in;margin-top:0.7091in; margin-bottom:0.4925in; margin-left:1in; margin-right:1in; ">
+
+<p class="paragraph-P2"><span class="text-T2">KUR’AN’DA MİRAS ARAŞTIRMASI</span></p>
+
+<p class="paragraph-P3"><span class="text-T5">Kur’an’ın Miras Ayetlerinde Tekil, İkil, Çoğul ve Hiçlik Bildirimlerinin Dilsel ve Matematiksel Bütünlüğü</span></p>
+
+<p class="paragraph-P4"><span class="text-T12">Nisâ 7, 11, 12 ve 176. ayetlerdeki sayısal kategorilerin, şartların ve miras paylarının birlikte değerlendirilmesi</span></p>
+
+<p class="paragraph-P5"><span class="text-T13">Bilal Aksoy  ·  Emekli Hesap Uzmanı</span></p>
+
+<p class="paragraph-P6"><span class="text-T2">İÇİNDEKİLER</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">1. Giriş</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">2. Nisâ 7, 11, 12 ve 176. ayetlerde genel çoğul kategoriler</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">3. Nisâ 11, 12 ve 176. ayetlerde tekil kategoriler</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">4. Olumsuzluk edatıyla kullanılan tekil kelimenin hiçlik bildirmesi</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">5. Olumlu şartta veledun kelimesinin bir çocuk bildirmesi</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">6. Nisâ 12’de bir kardeş ve birden fazla kardeş ayrımı</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">7. Nisâ 11’de ikiden fazla kız şartı</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">8. Nisâ 176’da ikil fiil ve iki sayısı</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">9. Nisâ 176’da tekil kategoriler, hiçlik ve zamirler</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">10. Genel çoğul kategoriler, tekil kategoriler ve özel sayısal şartlar</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">11. Dilsel ve matematiksel verilerin birbirini denetlemesi</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">12. Araştırmacının yorumu değil, ayet metninde bulunan veriler</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">13. Geleneksel miras yorumlarının metinle karşılaştırılması</span></p>
+
+<p class="paragraph-P7"><span class="text-T14">14. Genel sonuç</span></p>
+
+<p class="paragraph-P8"><span class="text-T3">1.  </span><span class="text-T6">GİRİŞ</span></p>
+
+<p class="paragraph-P9">Kur’an-ı Kerim’in Nisâ suresinin 7, 11, 12 ve 176. ayetlerinde mirasçıların kimlikleri, cinsiyetleri, sayıları, mirasçılık şartları ve miras payları çok sayıda dilsel ve matematiksel unsurla düzenlenmiştir. Bu ayetlerde hiçlik, bir, iki, birden fazla ve ikiden fazla olma durumları farklı dilsel yapılarla ifade edilmiştir.</p>
+
+<p class="paragraph-P9">Ayrıca tekil (müfred), ikil (tesniye) ve çoğul (cem’) kelimeler; eril ve dişil isimler, fiil çekimleri, zamirler, olumsuzluk edatları, şart ifadeleri ve kesirli miras payları birlikte kullanılmıştır. Bu kadar çok unsurun bir arada bulunması, ayetlerin yalnızca tek tek kelimeler üzerinden değil, bütün dilsel ve matematiksel ilişkileri karşılaştırılarak değerlendirilmesini gerektirmektedir. Bilal Aksoy’un yıllara yayılan çalışmasının temel yaklaşımı budur.</p>
+
+<p class="paragraph-P13"><span class="text-T7">Bu araştırmada ayetlerde bulunmayan yeni kelimeler, yeni sayı şartları veya yeni miras payları oluşturulmamıştır.</span></p>
+
+<p class="paragraph-P9">Araştırmanın amacı, ayet metninde zaten bulunan tekil, ikil, çoğul, hiçlik ve sayısal şart bildirimlerini ortaya çıkarmak; bunların birbirleriyle ilişkilerini belirlemek ve miras hükümlerinin matematiksel sonuçlarını incelemektir. Dolayısıyla çalışmanın merkezinde araştırmacının kişisel görüşü değil, ayetlerin kendi metni bulunmaktadır.</p>
+
+<p class="paragraph-P8"><span class="text-T3">2.  </span><span class="text-T6">NİSÂ 7, 11, 12 VE 176. AYETLERDE GENEL ÇOĞUL KATEGORİLER</span></p>
+
+<p class="paragraph-P9">Dört ayette farklı mirasçı grupları çoğul kelimelerle belirtilmiştir.</p>
+
+
+<table border="0" cellspacing="0" cellpadding="0" class="table-Table1"><colgroup><col width="96"/><col width="158"/><col width="146"/><col width="295"/></colgroup><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A1">
+<p class="paragraph-Standard"><span class="text-T8">Ayet</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A1">
+<p class="paragraph-Standard"><span class="text-T8">Arapça kelime</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A1">
+<p class="paragraph-Standard"><span class="text-T8">Okunuşu</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A1">
+<p class="paragraph-Standard"><span class="text-T8">Genel çoğul kategori</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 7</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A2">
+<p class="paragraph-P17"><span class="text-T9">لِلرِّجَالِ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">lirricâli</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Erkekler genel kategorisi</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 7</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A3">
+<p class="paragraph-P17"><span class="text-T9">وَلِلنِّسَاءِ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">velinnisâi</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">Kadınlar genel kategorisi</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 11</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A2">
+<p class="paragraph-P17"><span class="text-T9">أَوْلَادِكُمْ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">evlâdikum</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Çocuklar genel kategorisi</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 11</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A3">
+<p class="paragraph-P17"><span class="text-T9">إِخْوَةٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">ihvetun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">Kardeşler genel kategorisi</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 12</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A2">
+<p class="paragraph-P17"><span class="text-T9">أَزْوَاجُكُمْ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">ezvâcukum</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Eşler genel kategorisi</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 176</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A3">
+<p class="paragraph-P17"><span class="text-T9">رِجَالًا</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">ricâlen</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A3">
+<p class="paragraph-Standard"><span class="text-T15">Erkekler genel kategorisi</span></p>
+</td></tr><tr class="row-Table1_1"><td style="text-align:left;width:0.8681in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 176</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table1_A2">
+<p class="paragraph-P17"><span class="text-T9">نِسَاءً</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">nisâen</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table1_A2">
+<p class="paragraph-Standard"><span class="text-T15">Kadınlar genel kategorisi</span></p>
+</td></tr></table>
+
+<p class="paragraph-P21"> </p>
+<p class="paragraph-P9">Bu yedi kullanımın ortak özelliği, çoğul biçimde kurulmuş olmalarıdır. Bilal Aksoy’un çalışmasında bu kelimelerin tamamı aynı dilsel ilkeye göre değerlendirilmektedir.</p>
+
+<p class="paragraph-P13"><span class="text-T7">Genel çoğul kategori; bir, iki ve ikiden fazla üyeli durumları kapsayan üst kategoridir.</span></p>
+
+<p class="paragraph-P9">Bu yaklaşımda çoğul kelimelerle özel sayısal şartlar birbirinden ayrılmaktadır. Örneğin Nisâ 11’de أَوْلَادِكُمْ kelimesi çocuklar genel kategorisini bildirirken, aynı ayette bir kızın durumu ayrıca belirtilmektedir. Böylece genel çoğul kategori altında tek üyeli bir durum da düzenlenmektedir. Bu durum, genel kategori ile özel sayısal şartın farklı görevler üstlendiğini göstermektedir.</p>
+
+<p class="paragraph-P9">Aynı ölçütün Nisâ 11’deki kardeşler, Nisâ 12’deki eşler ve Nisâ 7 ile 176’daki erkekler ve kadınlar kategorilerine de uygulanması gerekir. Bir çoğul kelimeyi genel kategori kabul edip başka bir çoğul kelimeyi metinsel gerekçe göstermeden yalnızca üç veya daha fazla kişiyle sınırlandırmak tutarlı bir yöntem değildir.</p>
+
+<p class="paragraph-P8"><span class="text-T3">3.  </span><span class="text-T6">NİSÂ 11, 12 VE 176. AYETLERDE TEKİL KATEGORİLER</span></p>
+
+<p class="paragraph-P9">Ayetlerde genel çoğul kategorilerin yanında tekil kelimeler de bulunmaktadır. Bu kelimelerin tekil niteliğinin açıkça gösterilmesi önemlidir.</p>
+
+
+<table border="0" cellspacing="0" cellpadding="0" class="table-Table2"><colgroup><col width="96"/><col width="158"/><col width="146"/><col width="295"/></colgroup><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A1">
+<p class="paragraph-Standard"><span class="text-T8">Ayet</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A1">
+<p class="paragraph-Standard"><span class="text-T8">Arapça kelime</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A1">
+<p class="paragraph-Standard"><span class="text-T8">Okunuşu</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A1">
+<p class="paragraph-Standard"><span class="text-T8">Tekil kategori</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 11</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A2">
+<p class="paragraph-P17"><span class="text-T9">ذَكَرِ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">zeker</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Bir erkek</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 11</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A3">
+<p class="paragraph-P17"><span class="text-T9">وَلَدٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">veledun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Bir çocuk</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 12</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A2">
+<p class="paragraph-P17"><span class="text-T9">رَجُلٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">raculun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Bir erkek</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 12</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A3">
+<p class="paragraph-P17"><span class="text-T9">امْرَأَةٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">imraetun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Bir kadın</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 12</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A2">
+<p class="paragraph-P17"><span class="text-T9">أَخٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">ahun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Bir erkek kardeş</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 12</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A3">
+<p class="paragraph-P17"><span class="text-T9">أُخْتٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">uhtun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Bir kız kardeş</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 12</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A2">
+<p class="paragraph-P17"><span class="text-T9">وَلَدٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">veledun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Bir çocuk</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 176</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A3">
+<p class="paragraph-P17"><span class="text-T9">امْرُؤٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">imruun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Bir erkek / bir kişi</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 176</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A2">
+<p class="paragraph-P17"><span class="text-T9">أُخْتٌ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">uhtun</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A2">
+<p class="paragraph-Standard"><span class="text-T15">Bir kız kardeş</span></p>
+</td></tr><tr class="row-Table2_1"><td style="text-align:left;width:0.8681in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Nisâ 176</span></p>
+</td><td style="text-align:left;width:1.4229in; " class="cell-Table2_A3">
+<p class="paragraph-P17"><span class="text-T9">ذَكَرِ</span></p>
+</td><td style="text-align:left;width:1.3194in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">zeker</span></p>
+</td><td style="text-align:left;width:2.6569in; " class="cell-Table2_A3">
+<p class="paragraph-Standard"><span class="text-T15">Bir erkek</span></p>
+</td></tr></table>
+
+<p class="paragraph-P21"> </p>
+<p class="paragraph-P13"><span class="text-T7">Olumlu şartlarda tekil niteliğini koruyarak kullanılan kelimeler, bir kişilik veya bir çocukluk durumu bildiren tekil kategoriler olarak değerlendirilir.</span></p>
+
+<p class="paragraph-P9">Bu yaklaşım yalnızca وَلَدٌ kelimesine dayanmamaktadır. Aynı ayetlerde kullanılan bir erkek, bir kadın, bir erkek kardeş, bir kız kardeş ve bir kişi bildiren kelimeler de aynı yöntemle incelenmektedir. Böylece tekil kelimelerin kapsamı belirlenirken bütün ayetlere aynı ölçüt uygulanmaktadır.</p>
+
+<p class="paragraph-P9">Nisâ 176’da وَلَدٌ kelimesi de tekil biçimde geçmektedir. Ancak ilgili kullanımlar olumsuzluk kapsamında bulunduğundan, hiçlik bildirimleri bölümünde ayrıca değerlendirilmiştir.</p>
+
+<p class="paragraph-P8"><span class="text-T3">4.  </span><span class="text-T6">OLUMSUZLUK EDATIYLA KULLANILAN TEKİL KELİMENİN HİÇLİK BİLDİRMESİ</span></p>
+
+<p class="paragraph-P9">Nisâ 11, 12 ve 176. ayetlerde tekil وَلَدٌ kelimesi olumsuzluk yapıları içerisinde de kullanılmaktadır.</p>
+
+<p class="P18_borderStart"><span class="text-T10">لَمْ يَكُنْ لَهُ وَلَدٌ</span></p>
+
+<p class="P19_borderSides"><span class="text-T13">Nisâ 11 — “O erkeğin hiçbir çocuğu olmamışsa.”</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">فَإِنْ لَمْ يَكُنْ لَكُمْ وَلَدٌ</span></p>
+
+<p class="P19_borderSides"><span class="text-T13">Nisâ 12 — “Eğer sizin hiçbir çocuğunuz olmamışsa.”</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">لَيْسَ لَهُ وَلَدٌ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 176 — “Onun hiçbir çocuğu yoksa.”</span></p>
+
+<p class="paragraph-P10">Bu ifadelerde وَلَدٌ kelimesi tekildir. Ancak olumsuzluk kapsamında bulunduğundan çocuk varlığının tamamı dışlanmaktadır; dolayısıyla sıfır çocuk durumu bildirilmektedir. Burada hiçlik anlamı yalnızca tekil kelimeden kaynaklanmamaktadır. Hiçlik, olumsuzluk yapısıyla tekil kelimenin birlikte kullanılmasından ortaya çıkmaktadır.</p>
+
+<p class="P14_borderStart"><span class="text-T7">Bu ayrım son derece önemlidir.</span></p>
+
+<p class="P15_borderSides"><span class="text-T7">Olumsuzluk altında tekil kelimenin genel yokluk bildirmesi, olumlu şartta aynı kelimenin çoğul anlam taşıdığını göstermez.</span></p>
+
+<p class="P8_borderSides"><span class="text-T3">5.  </span><span class="text-T6">OLUMLU ŞARTTA VELEDUN KELİMESİNİN BİR ÇOCUK BİLDİRMESİ</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">فَإِنْ كَانَ لَهُ وَلَدٌ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 11 — “Eğer o erkeğin bir çocuğu olmuşsa.”</span></p>
+
+<p class="paragraph-P10">Burada olumsuzluk bulunmamaktadır ve وَلَدٌ kelimesi tekil biçimdedir. Aynı ayette çocuklar genel kategorisini bildiren أَوْلَادِكُمْ kelimesi de bulunmaktadır. Bu nedenle iki farklı dilsel biçimin kullanılmış olması önemlidir: bir tarafta çocuklar genel kategorisi, diğer tarafta bir çocuk bildiren tekil kategori.</p>
+
+<p class="paragraph-P9">Arapçada belirsiz tekil kelimelerin bazı bağlamlarda genel veya cins anlamı taşıyabilmesi, olumlu şarttaki وَلَدٌ kelimesinin bu ayette mutlaka çoğul kapsamda kullanıldığını ispatlamaz. Bu nedenle çalışmada olumlu şarttaki tekil kelimenin tekil niteliğinin korunması esas alınmaktadır.</p>
+
+<p class="P13_borderStart"><span class="text-T7">Olumsuzlukla hiçlik bildiren veledun ile olumlu şartta bir çocuk bildiren veledun kullanımları birbirinden ayrılmalıdır.</span></p>
+
+<p class="P8_borderSides"><span class="text-T3">6.  </span><span class="text-T6">NİSÂ 12’DE BİR KARDEŞ VE BİRDEN FAZLA KARDEŞ AYRIMI</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">وَلَهُ أَخٌ أَوْ أُخْتٌ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 12 — “Onun bir erkek kardeşi veya bir kız kardeşi (varsa).”</span></p>
+
+<p class="paragraph-P10">Burada أَخٌ bir erkek kardeşi, أُخْتٌ ise bir kız kardeşi bildiren tekil kelimelerdir. Ardından şu ifade gelmektedir:</p>
+
+<p class="P18_borderStart"><span class="text-T10">فَإِنْ كَانُوا أَكْثَرَ مِنْ ذَٰلِكَ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 12 — “Eğer bundan daha fazla olmuşlarsa.”</span></p>
+
+<p class="paragraph-P10">Bu ifade, önceki tek kardeş durumundan daha fazla kardeş bulunmasını bildirmektedir. Birden fazla kardeşin ilk sayısal karşılığı ikidir; dolayısıyla iki veya daha fazla kardeş bu ifadenin kapsamına girmektedir. Burada bir kardeş ile birden fazla kardeş ayrı şartlarla düzenlenmiştir.</p>
+
+<p class="P13_borderStart"><span class="text-T7">Bir kardeş ve birden fazla kardeş ifadeleri, araştırmacının oluşturduğu kategoriler değil, doğrudan ayet metnindeki bildirimlerdir.</span></p>
+
+<p class="P8_borderSides"><span class="text-T3">7.  </span><span class="text-T6">NİSÂ 11’DE İKİDEN FAZLA KIZ ŞARTI</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">فَوْقَ اثْنَتَيْنِ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 11 — “İkiden fazla.”</span></p>
+
+<p class="paragraph-P10">Bu ifade ikiden fazla olma durumunu bildirmektedir; dolayısıyla üç veya daha fazla kız söz konusudur. Nisâ 12’deki أَكْثَرَ مِنْ ذَٰلِكَ ifadesiyle karşılaştırıldığında önemli bir fark ortaya çıkmaktadır.</p>
+
+<p class="P14_borderStart"><span class="text-T7">Nisâ 12’de birden fazla kardeş bildirilmektedir. Nisâ 11’de ise ikiden fazla kız bildirilmektedir.</span></p>
+
+<p class="P16_borderSides"><span class="text-T7">Birden fazla, ikiden başlar.  ·  İkiden fazla, üçten başlar.</span></p>
+
+<p class="P15_borderEnd"><span class="text-T7">Bu iki ifade birbirinin yerine kullanılamaz.</span></p>
+
+<p class="paragraph-P9">Ayetlerde birden fazla ile ikiden fazla olma durumlarının ayrı ayrı belirtilmesi, sayısal şartların belirgin biçimde ayrıştırıldığını göstermektedir.</p>
+
+<p class="P8_borderStart"><span class="text-T3">8.  </span><span class="text-T6">NİSÂ 176’DA İKİL FİİL VE İKİ SAYISI</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">فَإِنْ كَانَتَا اثْنَتَيْنِ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 176 — “Eğer o ikisi iki olmuşsa.”</span></p>
+
+<p class="paragraph-P10">Burada كَانَتَا dişil ikil fiil biçimidir; اثْنَتَيْنِ ise iki dişiyi bildiren sayı ifadesidir. Böylece iki olma durumu hem fiil çekimiyle hem de sayı kelimesiyle belirtilmiştir.</p>
+
+<p class="P18_borderStart"><span class="text-T10">وَإِنْ كَانُوا إِخْوَةً رِجَالًا وَنِسَاءً</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 176 — “Eğer erkekler ve kadınlar olan kardeşler olmuşlarsa.”</span></p>
+
+<p class="paragraph-P10">Burada erkek ve kadın kardeşlerden oluşan çoğul kategori yer almaktadır. Bu ifadelerin Nisâ 7’deki erkekler ve kadınlar genel kategorileriyle birlikte değerlendirilmesi önemlidir; çünkü dört ayetteki çoğul kelimeler aynı dilsel ölçüt üzerinden karşılaştırılabilmektedir.</p>
+
+<p class="P8_borderStart"><span class="text-T3">9.  </span><span class="text-T6">NİSÂ 176’DA TEKİL KATEGORİLER, HİÇLİK VE ZAMİRLER</span></p>
+
+<p class="P18_borderSides"><span class="text-T10">إِنِ امْرُؤٌ هَلَكَ لَيْسَ لَهُ وَلَدٌ وَلَهُ أُخْتٌ</span></p>
+
+<p class="P19_borderEnd"><span class="text-T13">Nisâ 176 — “Eğer bir erkek helak olmuş, onun hiçbir çocuğu yoktur ve onun bir kız kardeşi vardır.”</span></p>
+
+<p class="paragraph-P10">Burada امْرُؤٌ bir erkek ya da bir kişi bildiren tekil kelimedir; لَيْسَ لَهُ وَلَدٌ hiçbir çocuğun bulunmamasını, وَلَهُ أُخْتٌ ise bir kız kardeşin bulunmasını bildirmektedir. Aynı ayette şu ifade de bulunmaktadır:</p>
+
+<p class="P18_borderStart"><span class="text-T10">وَهُوَ يَرِثُهَا إِنْ لَمْ يَكُنْ لَهَا وَلَدٌ</span></p>
+
+<p class="P19_borderSides"><span class="text-T13">Nisâ 176 — “O erkek, o dişinin mirasını alır; eğer o dişinin hiçbir çocuğu olmamışsa.”</span></p>
+
+<p class="P14_borderSides"><span class="text-T7">Buradaki لَهَا dişil zamiriyle kadın için çocuk bulunmaması şartı belirtilmektedir.</span></p>
+
+<p class="P15_borderSides"><span class="text-T7">Bu yapı, miras hükümlerinde yalnızca kelimelerin tekil veya çoğul olmasının değil, zamirlerin hangi kişiye gönderimde bulunduğunun da belirleyici olduğunu göstermektedir.</span></p>
+
+<p class="P8_borderEnd"><span class="text-T3">10.  </span><span class="text-T6">GENEL ÇOĞUL KATEGORİLER, TEKİL KATEGORİLER VE ÖZEL SAYISAL ŞARTLAR</span></p>
+
+<p class="paragraph-P9">Dört ayetteki bütün bu unsurlar birlikte değerlendirildiğinde şu sınıflandırma ortaya çıkmaktadır:</p>
+
+
+<table border="0" cellspacing="0" cellpadding="0" class="table-Table3"><colgroup><col width="262"/><col width="434"/></colgroup><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A1">
+<p class="paragraph-Standard"><span class="text-T8">Dilsel yapı</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A1">
+<p class="paragraph-Standard"><span class="text-T8">Bildirilen durum</span></p>
+</td></tr><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A2">
+<p class="paragraph-Standard"><span class="text-T15">Genel çoğul kategoriler</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A2">
+<p class="paragraph-Standard"><span class="text-T15">Erkekler, kadınlar, çocuklar, kardeşler, eşler</span></p>
+</td></tr><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A3">
+<p class="paragraph-Standard"><span class="text-T15">Tekil kategoriler</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A3">
+<p class="paragraph-Standard"><span class="text-T15">Bir erkek, bir kadın, bir çocuk, bir erkek kardeş, bir kız kardeş</span></p>
+</td></tr><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A2">
+<p class="paragraph-Standard"><span class="text-T15">İkil bildirim</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A2">
+<p class="paragraph-Standard"><span class="text-T15">İki kız kardeş</span></p>
+</td></tr><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A3">
+<p class="paragraph-Standard"><span class="text-T15">Birden fazla</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A3">
+<p class="paragraph-Standard"><span class="text-T15">İki veya daha fazla</span></p>
+</td></tr><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A2">
+<p class="paragraph-Standard"><span class="text-T15">İkiden fazla</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A2">
+<p class="paragraph-Standard"><span class="text-T15">Üç veya daha fazla</span></p>
+</td></tr><tr class="row-Table3_1"><td style="text-align:left;width:2.3611in; " class="cell-Table3_A3">
+<p class="paragraph-Standard"><span class="text-T15">Olumsuzluk + tekil</span></p>
+</td><td style="text-align:left;width:3.9063in; " class="cell-Table3_A3">
+<p class="paragraph-Standard"><span class="text-T15">Hiçlik: hiçbir çocuk bulunmaması</span></p>
+</td></tr></table>
+
+<p class="paragraph-P21"> </p>
+<p class="paragraph-P9">Bu sınıflandırma, ayetlerdeki farklı dilsel yapıların birbirleriyle karşılaştırılmasını sağlamaktadır. Genel çoğul kategorilerin bir, iki ve ikiden fazla üyeli durumları kapsadığı kabul edilmektedir. Tekil kategoriler olumlu şartlarda bir kişilik veya bir çocukluk durumları olarak değerlendirilmekte, ikil yapılar iki kişilik durumları bildirmekte, olumsuzluk yapılarıyla kullanılan tekil kelimeler ise hiçlik bildirimini oluşturmaktadır.</p>
+
+<p class="P13_borderStart"><span class="text-T7">Bu sistemde tekil, ikil, çoğul ve hiçlik bildirimleri birbirine karıştırılmadan ayrı ayrı değerlendirilmektedir.</span></p>
+
+<p class="P8_borderEnd"><span class="text-T3">11.  </span><span class="text-T6">DİLSEL VE MATEMATİKSEL VERİLERİN BİRBİRİNİ DENETLEMESİ</span></p>
+
+<p class="paragraph-P9">Nisâ 11, 12 ve 176. ayetlerde çok sayıda dilsel ve matematiksel unsur bulunmaktadır: tekil, ikil ve çoğul kelimeler; eril ve dişil isimler; fiil çekimleri; zamirler; şart ifadeleri; olumsuzluk yapıları ve miras payları. Bu unsurların birbirleriyle ilişkileri incelendiğinde, bir hükmün kapsamı diğer hükümler üzerinden sınanabilmektedir.</p>
+
+<p class="paragraph-P9">Bir şartın yanlış genişletilmesi başka bir sayısal şartla çakışabilir. Bir zamirin yanlış kişiye bağlanması mirasçının kimliğini değiştirebilir. Bir miras payının yanlış şartta uygulanması diğer paylarla matematiksel uyumsuzluk oluşturabilir.</p>
+
+<p class="paragraph-P9">Bilal Aksoy’un yıllara yayılan çalışmasında bu ilişkiler çok sayıda senaryoyla incelenmiş ve kurulan hesap sisteminde somut bir çelişki tespit edilemediği bildirilmiştir. Bu sonuç, çalışmanın iç tutarlılığı açısından önemlidir.</p>
+
+<p class="paragraph-P9">Ancak çok sayıda unsur bulunması, matematiksel olarak mutlaka hata olması gerektiği anlamına gelmez. Sıfır hata iddiasının kesinliği, yapılan incelemelerin kapsamına ve bütün olası durumların denetlenmesine bağlıdır. Bununla birlikte farklı dilsel ve matematiksel unsurların aynı çözüm içerisinde uyumlu sonuçlar vermesi, dikkatle değerlendirilmesi gereken bir bulgudur.</p>
+
+<p class="paragraph-P8"><span class="text-T3">12.  </span><span class="text-T6">ARAŞTIRMACININ YORUMU DEĞİL, AYET METNİNDE BULUNAN VERİLER</span></p>
+
+<p class="paragraph-P9">Bu çalışmanın değerlendirilmesinde önemli bir yöntem ilkesi bulunmaktadır: araştırmacı ayetlerdeki kelimeleri oluşturmuş değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">وَلَدٌ  </span>kelimesini tekil yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">أَوْلَادِكُمْ  </span>kelimesini çoğul yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">إِخْوَةٌ  </span>kelimesini çoğul yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">أَزْوَاجُكُمْ  </span>kelimesini çoğul yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">أَخٌ  ·  أُخْتٌ  </span>kelimelerini tekil yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">رَجُلٌ  ·  امْرَأَةٌ  </span>kelimelerini tekil yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P22"><span class="text-T4">▪  </span><span class="text-T11">امْرُؤٌ  </span>kelimesini tekil yapan araştırmacı değildir.</p>
+
+<p class="paragraph-P11">Nisâ 176’da iki kız kardeş için ikil fiil ve iki sayısını birlikte kullanan araştırmacı değildir. Bir kardeş ile birden fazla kardeşi ayıran araştırmacı değildir. İkiden fazla kız şartını belirleyen araştırmacı değildir. Olumsuzluk edatlarını, zamirleri ve miras paylarını belirleyen de araştırmacı değildir. Bunların tamamı ayet metninde bulunmaktadır.</p>
+
+<p class="paragraph-P9">Araştırmacının yaptığı, bu unsurlara dikkat çekmek ve aralarındaki ilişkileri incelemektir. Dolayısıyla metinsel verilerin varlığını kişisel yorum olarak nitelendirmek doğru değildir. Bu verilerden çıkarılan sonuçlar ise somut dilsel ve matematiksel gerekçeler üzerinden değerlendirilebilir.</p>
+
+<p class="P13_borderStart"><span class="text-T7">Bir çalışmaya itiraz edilecekse; hangi kelimenin, hangi şartın, hangi zamirin veya hangi hesabın hatalı değerlendirildiği açıkça gösterilmelidir.</span></p>
+
+<p class="P8_borderEnd"><span class="text-T3">13.  </span><span class="text-T6">GELENEKSEL MİRAS YORUMLARININ METİNLE KARŞILAŞTIRILMASI</span></p>
+
+<p class="paragraph-P9">Geleneksel miras hesaplarının uzun bir geçmişe sahip olması, bu hesapların ayetlerdeki bütün şartlara uygun olduğunu tek başına kanıtlamaz. Aynı şekilde yeni bir çözümün geleneksel hesaplardan farklı olması da onun yanlış olduğunu göstermez.</p>
+
+<p class="paragraph-P13"><span class="text-T7">Değerlendirme ölçütü ayet metni olmalıdır.</span></p>
+
+<p class="paragraph-P9">Bu nedenle dört ayetteki genel çoğul kategoriler, tekil ve ikil biçimler, sayı şartları, zamirler ve miras payları birlikte incelenmelidir. Geleneksel yorum ile Bilal Aksoy’un çözümü arasındaki fark, somut miras senaryoları üzerinden karşılaştırılmalıdır.</p>
+
+<p class="paragraph-P9">Bir çözümün metne uygunluğu, yalnızca matematiksel toplamın bire eşit olmasına değil, her mirasçının payının ayetteki doğru şartla ilişkilendirilmesine de bağlıdır. Asıl ölçüt, dilsel şartlarla matematiksel sonuçların birlikte uyumlu olmasıdır.</p>
+
+<p class="paragraph-P8"><span class="text-T3">14.  </span><span class="text-T6">GENEL SONUÇ</span></p>
+
+<p class="paragraph-P9">Nisâ 7, 11, 12 ve 176. ayetlerde erkekler, kadınlar, çocuklar, kardeşler ve eşler için genel çoğul kategoriler bulunmaktadır. Nisâ 11, 12 ve 176’da ayrıca bir erkek, bir kadın, bir çocuk, bir erkek kardeş, bir kız kardeş ve bir kişi bildiren tekil kategoriler bulunmaktadır. İki kız kardeşin durumu ikil fiil ve sayı ifadesiyle belirtilmiştir. Hiçlik, bir, iki, birden fazla ve ikiden fazla olma durumları farklı dilsel yapılarla ifade edilmiştir.</p>
+
+<p class="paragraph-P9">Bütün bu unsurların birlikte bulunması, ayetlerin kendi içerisinde kapsamlı karşılaştırmalar yapılmasına imkân vermektedir. Bilal Aksoy’un çalışması, bu karşılaştırmalar üzerinden miras hükümlerinin dilsel ve matematiksel düzenini ortaya çıkarmaya yönelmiştir.</p>
+
+<p class="P14_borderStart"><span class="text-T7">Kur’an’ın miras ayetlerinde kullanılan kelimeler, şartlar ve sayısal ayrımlar araştırmacı tarafından oluşturulmuş değildir. Bunların tamamı ayet metninde bulunmaktadır.</span></p>
+
+<p class="P15_borderEnd"><span class="text-T7">Araştırmacının yaptığı, mevcut düzeni görünür hâle getirmektir.</span></p>
+
+<p class="paragraph-P9">Bu nedenle değerlendirme, araştırmacının kişisel görüşüne değil, ayetlerdeki somut verilere dayanmalıdır. Dört ayetteki genel kategorilerin aynı ilkeyle değerlendirilmesi, tekil ve ikil şartların korunması, olumsuzluk yapılarının doğru anlaşılması ve miras paylarının ilgili şartlarla birlikte hesaplanması, metne bağlı bir incelemenin temelini oluşturmaktadır.</p>
+
+<p class="P20_borderStart"><span class="text-T16">SONUÇ OLARAK TEMEL SORU ŞUDUR</span></p>
+
+<p class="P23_borderEnd"><span class="text-T17">“Nisâ 7, 11, 12 ve 176. ayetlerde genel çoğul kategoriler; bir erkek, bir kadın, bir çocuk, bir erkek kardeş ve bir kız kardeş bildiren tekil kategoriler; ikil yapılar; hiçlik, bir, iki, birden fazla ve ikiden fazla olma şartları; eril ve dişil fiiller, zamirler ve miras payları bu kadar ayrıntılı biçimde belirtilmişken, bütün bu unsurların birlikte değerlendirilmesiyle ortaya çıkan dilsel ve matematiksel düzenin hangi somut unsuru hatalıdır?”</span></p>
+
+<p class="paragraph-P12">Bu soruya verilecek cevap, varsayımlara veya geleneksel kabullere değil, ayet metnindeki açık verilere ve denetlenebilir hesaplamalara dayanmalıdır. Çünkü araştırmanın merkezinde bir kişinin oluşturduğu bağımsız bir sistem değil, Kur’an’ın miras ayetlerinde zaten bulunan dilsel ve matematiksel yapı bulunmaktadır.</p>
+</body>
+
+</html>
