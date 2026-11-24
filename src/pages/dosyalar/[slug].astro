@@ -1,0 +1,414 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { documents, documentFiles, documentFileName, type SiteDocument } from "../../data/documents";
+
+export function getStaticPaths() {
+  return documents.map((doc) => ({ params: { slug: doc.slug }, props: { doc } }));
+}
+
+interface Props {
+  doc: SiteDocument;
+}
+
+const { doc } = Astro.props;
+const files = documentFiles(doc.slug);
+const fullTitle = `${doc.author} · ${doc.title}`;
+---
+
+<Layout title={fullTitle} description={doc.description}>
+  <article class="doc">
+    <header class="doc__topbar">
+      <a class="doc__back" href="/dosyalar">
+        <span data-copy-lang="tr">Tüm dosyalar</span>
+        <span data-copy-lang="en">All files</span>
+      </a>
+    </header>
+
+    <p class="doc__eyebrow">{doc.author}</p>
+    <h1 class="doc__title">{doc.title}</h1>
+    <p class="doc__lead">{doc.description}</p>
+
+    <div class="doc__actions">
+      <a class="doc__button doc__button--primary" href={files.docx} download={documentFileName(doc, "docx")}>
+        <span data-copy-lang="tr">Word olarak indir</span>
+        <span data-copy-lang="en">Download Word</span>
+        <small>.docx</small>
+      </a>
+      <a class="doc__button" href={files.pdf} download={documentFileName(doc, "pdf")}>
+        <span data-copy-lang="tr">PDF olarak indir</span>
+        <span data-copy-lang="en">Download PDF</span>
+        <small>.pdf</small>
+      </a>
+      <a class="doc__button doc__button--ghost" href={files.pdf} target="_blank" rel="noopener">
+        <span data-copy-lang="tr">Yeni sekmede aç</span>
+        <span data-copy-lang="en">Open in new tab</span>
+      </a>
+      <span class="doc__pages">
+        {doc.pages} <span data-copy-lang="tr">sayfa</span><span data-copy-lang="en">pages</span>
+      </span>
+    </div>
+
+    <div class="doc__viewer" data-pdf-viewer data-src={files.pdf} aria-label={fullTitle}>
+      <p class="doc__status" data-pdf-status>
+        <span data-copy-lang="tr">Belge yükleniyor…</span>
+        <span data-copy-lang="en">Loading document…</span>
+      </p>
+      <noscript>
+        <p class="doc__status">
+          <a href={files.pdf}>PDF</a>
+        </p>
+      </noscript>
+    </div>
+
+    <div class="doc__pager" data-pdf-pager hidden>
+      <span data-pdf-current>1</span> / <span data-pdf-total>{doc.pages}</span>
+    </div>
+  </article>
+</Layout>
+
+<script>
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+  import workerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
+
+  pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+
+  type PageSlot = {
+    index: number;
+    el: HTMLDivElement;
+    canvas: HTMLCanvasElement | null;
+    renderedWidth: number;
+    task: { cancel: () => void; promise: Promise<unknown> } | null;
+    visible: boolean;
+  };
+
+  const MAX_PIXEL_RATIO = 2;
+
+  const setupViewer = async (root: HTMLElement) => {
+    const src = root.dataset.src;
+    const status = root.querySelector<HTMLElement>("[data-pdf-status]");
+    const pager = document.querySelector<HTMLElement>("[data-pdf-pager]");
+    const currentLabel = pager?.querySelector<HTMLElement>("[data-pdf-current]");
+    const totalLabel = pager?.querySelector<HTMLElement>("[data-pdf-total]");
+    if (!src) return;
+
+    let pdf: Awaited<ReturnType<typeof pdfjs.getDocument>["promise"]>;
+    try {
+      pdf = await pdfjs.getDocument({ url: src }).promise;
+    } catch {
+      if (status) {
+        status.innerHTML =
+          '<span data-copy-lang="tr">Belge görüntülenemedi. Yukarıdaki düğmelerle indirebilirsiniz.</span>' +
+          '<span data-copy-lang="en">The document could not be displayed. Use the buttons above to download it.</span>';
+      }
+      return;
+    }
+
+    const first = await pdf.getPage(1);
+    const baseViewport = first.getViewport({ scale: 1 });
+    const defaultRatio = baseViewport.height / baseViewport.width;
+
+    status?.remove();
+    if (totalLabel) totalLabel.textContent = String(pdf.numPages);
+    if (pager) pager.hidden = false;
+
+    const slots: PageSlot[] = [];
+    for (let index = 1; index <= pdf.numPages; index += 1) {
+      const el = document.createElement("div");
+      el.className = "doc__page";
+      el.dataset.page = String(index);
+      el.style.aspectRatio = `1 / ${defaultRatio}`;
+      root.appendChild(el);
+      slots.push({ index, el, canvas: null, renderedWidth: 0, task: null, visible: false });
+    }
+
+    const release = (slot: PageSlot) => {
+      slot.task?.cancel();
+      slot.task = null;
+      if (slot.canvas) {
+        slot.canvas.width = 0;
+        slot.canvas.height = 0;
+        slot.canvas.remove();
+        slot.canvas = null;
+      }
+      slot.renderedWidth = 0;
+    };
+
+    const render = async (slot: PageSlot) => {
+      const width = slot.el.clientWidth;
+      if (!width || slot.task || (slot.canvas && slot.renderedWidth === width)) return;
+
+      const page = await pdf.getPage(slot.index);
+      if (!slot.visible) return;
+
+      const unscaled = page.getViewport({ scale: 1 });
+      slot.el.style.aspectRatio = `${unscaled.width} / ${unscaled.height}`;
+
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+      const viewport = page.getViewport({ scale: (width / unscaled.width) * pixelRatio });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      const task = page.render({ canvasContext: context, viewport });
+      slot.task = task;
+      try {
+        await task.promise;
+      } catch {
+        slot.task = null;
+        return;
+      }
+      slot.task = null;
+
+      if (!slot.visible) {
+        canvas.width = 0;
+        canvas.height = 0;
+        return;
+      }
+
+      slot.canvas?.remove();
+      slot.canvas = canvas;
+      slot.renderedWidth = width;
+      slot.el.appendChild(canvas);
+    };
+
+    // Ekrana yaklaşan sayfalar çizilir, uzaklaşanların belleği boşaltılır.
+    const renderObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const slot = slots[Number((entry.target as HTMLElement).dataset.page) - 1];
+          slot.visible = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            void render(slot);
+          } else {
+            release(slot);
+          }
+        });
+      },
+      { rootMargin: "150% 0px" }
+    );
+
+    // Sayfa sayacı: ekranın ortasındaki sayfa.
+    const pageObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && currentLabel) {
+            currentLabel.textContent = (entry.target as HTMLElement).dataset.page ?? "1";
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+
+    slots.forEach((slot) => {
+      renderObserver.observe(slot.el);
+      pageObserver.observe(slot.el);
+    });
+
+    let resizeTimer = 0;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        slots.filter((slot) => slot.visible).forEach((slot) => void render(slot));
+      }, 200);
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-pdf-viewer]").forEach((root) => {
+    void setupViewer(root);
+  });
+</script>
+
+<style>
+  .doc {
+    width: min(1120px, calc(100vw - 2rem));
+    margin: 0 auto;
+    padding: 2rem 0 4.2rem;
+    color: var(--theme-ink);
+  }
+
+  .doc__topbar {
+    margin-bottom: 3rem;
+  }
+
+  .doc__back {
+    color: var(--theme-muted);
+    font-size: 0.84rem;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .doc__back:hover {
+    color: var(--theme-ink-strong);
+  }
+
+  .doc__eyebrow {
+    margin: 0 0 0.7rem;
+    color: var(--theme-muted);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .doc__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    color: var(--theme-ink-strong);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .doc__lead {
+    max-width: 68ch;
+    margin: 1rem 0 0;
+    color: var(--theme-ink-soft);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .doc__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.6rem 0 1.8rem;
+  }
+
+  .doc__button {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.62rem 1rem;
+    border: 1px solid var(--theme-border-strong);
+    border-radius: 999px;
+    color: var(--theme-ink-strong);
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .doc__button small {
+    color: var(--theme-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+
+  .doc__button:hover,
+  .doc__button:focus-visible {
+    border-color: var(--theme-link);
+    color: var(--theme-link);
+    outline: none;
+  }
+
+  .doc__button--primary {
+    background: var(--theme-link);
+    border-color: var(--theme-link);
+    color: var(--theme-surface);
+  }
+
+  .doc__button--primary small {
+    color: inherit;
+    opacity: 0.75;
+  }
+
+  .doc__button--primary:hover,
+  .doc__button--primary:focus-visible {
+    background: transparent;
+  }
+
+  .doc__button--ghost {
+    border-color: transparent;
+    color: var(--theme-muted);
+  }
+
+  .doc__pages {
+    margin-left: auto;
+    color: var(--theme-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .doc__viewer {
+    display: grid;
+    gap: 1rem;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--theme-surface-muted);
+  }
+
+  .doc__status {
+    margin: 0;
+    padding: 4rem 1rem;
+    color: var(--theme-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .doc__viewer :global(.doc__page) {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+    box-shadow:
+      0 1px 2px rgba(15, 20, 25, 0.12),
+      0 6px 18px rgba(15, 20, 25, 0.08);
+  }
+
+  .doc__viewer :global(.doc__page canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .doc__pager {
+    position: sticky;
+    bottom: 1rem;
+    width: fit-content;
+    margin: 1rem auto 0;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: var(--theme-ink-strong);
+    color: var(--theme-surface);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.88;
+  }
+
+  .doc__pager[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 760px) {
+    .doc {
+      width: min(100vw - 1rem, 100%);
+      padding-bottom: 3rem;
+    }
+
+    .doc__topbar {
+      margin-bottom: 2.2rem;
+    }
+
+    .doc__pages {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .doc__viewer {
+      gap: 0.6rem;
+      padding: 0.5rem;
+    }
+  }
+</style>
