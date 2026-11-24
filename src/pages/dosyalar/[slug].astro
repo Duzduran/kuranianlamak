@@ -39,7 +39,7 @@ const fullTitle = `${doc.author} · ${doc.title}`;
         <span data-copy-lang="en">Download PDF</span>
         <small>.pdf</small>
       </a>
-      <a class="doc__button doc__button--ghost" href={files.preview} target="_blank" rel="noopener">
+      <a class="doc__button doc__button--ghost" href={files.pdf} target="_blank" rel="noopener">
         <span data-copy-lang="tr">Yeni sekmede aç</span>
         <span data-copy-lang="en">Open in new tab</span>
       </a>
@@ -48,41 +48,176 @@ const fullTitle = `${doc.author} · ${doc.title}`;
       </span>
     </div>
 
-    <div class="doc__paper">
-      <iframe
-        class="doc__frame"
-        src={files.preview}
-        title={fullTitle}
-        loading="eager"
-        data-doc-frame
-      ></iframe>
+    <div class="doc__viewer" data-pdf-viewer data-src={files.pdf} aria-label={fullTitle}>
+      <p class="doc__status" data-pdf-status>
+        <span data-copy-lang="tr">Belge yükleniyor…</span>
+        <span data-copy-lang="en">Loading document…</span>
+      </p>
+      <noscript>
+        <p class="doc__status">
+          <a href={files.pdf}>PDF</a>
+        </p>
+      </noscript>
+    </div>
+
+    <div class="doc__pager" data-pdf-pager hidden>
+      <span data-pdf-current>1</span> / <span data-pdf-total>{doc.pages}</span>
     </div>
   </article>
 </Layout>
 
 <script>
-  // Önizleme aynı kaynaktan geldiği için iframe yüksekliği içeriğe göre ayarlanır;
-  // böylece belge, sayfanın kendi kaydırmasıyla okunur.
-  const fitFrame = (frame: HTMLIFrameElement) => {
-    const docEl = frame.contentDocument?.documentElement;
-    if (!docEl) return;
-    frame.style.height = `${docEl.scrollHeight}px`;
+  import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";
+  import workerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
+
+  pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+
+  type PageSlot = {
+    index: number;
+    el: HTMLDivElement;
+    canvas: HTMLCanvasElement | null;
+    renderedWidth: number;
+    task: { cancel: () => void; promise: Promise<unknown> } | null;
+    visible: boolean;
   };
 
-  document.querySelectorAll<HTMLIFrameElement>("[data-doc-frame]").forEach((frame) => {
-    const attach = () => {
-      fitFrame(frame);
-      const body = frame.contentDocument?.body;
-      if (body && "ResizeObserver" in window) {
-        new ResizeObserver(() => fitFrame(frame)).observe(body);
+  const MAX_PIXEL_RATIO = 2;
+
+  const setupViewer = async (root: HTMLElement) => {
+    const src = root.dataset.src;
+    const status = root.querySelector<HTMLElement>("[data-pdf-status]");
+    const pager = document.querySelector<HTMLElement>("[data-pdf-pager]");
+    const currentLabel = pager?.querySelector<HTMLElement>("[data-pdf-current]");
+    const totalLabel = pager?.querySelector<HTMLElement>("[data-pdf-total]");
+    if (!src) return;
+
+    let pdf: Awaited<ReturnType<typeof pdfjs.getDocument>["promise"]>;
+    try {
+      pdf = await pdfjs.getDocument({ url: src }).promise;
+    } catch {
+      if (status) {
+        status.innerHTML =
+          '<span data-copy-lang="tr">Belge görüntülenemedi. Yukarıdaki düğmelerle indirebilirsiniz.</span>' +
+          '<span data-copy-lang="en">The document could not be displayed. Use the buttons above to download it.</span>';
       }
+      return;
+    }
+
+    const first = await pdf.getPage(1);
+    const baseViewport = first.getViewport({ scale: 1 });
+    const defaultRatio = baseViewport.height / baseViewport.width;
+
+    status?.remove();
+    if (totalLabel) totalLabel.textContent = String(pdf.numPages);
+    if (pager) pager.hidden = false;
+
+    const slots: PageSlot[] = [];
+    for (let index = 1; index <= pdf.numPages; index += 1) {
+      const el = document.createElement("div");
+      el.className = "doc__page";
+      el.dataset.page = String(index);
+      el.style.aspectRatio = `1 / ${defaultRatio}`;
+      root.appendChild(el);
+      slots.push({ index, el, canvas: null, renderedWidth: 0, task: null, visible: false });
+    }
+
+    const release = (slot: PageSlot) => {
+      slot.task?.cancel();
+      slot.task = null;
+      if (slot.canvas) {
+        slot.canvas.width = 0;
+        slot.canvas.height = 0;
+        slot.canvas.remove();
+        slot.canvas = null;
+      }
+      slot.renderedWidth = 0;
     };
 
-    if (frame.contentDocument?.readyState === "complete" && frame.contentDocument.body?.childElementCount) {
-      attach();
-    }
-    frame.addEventListener("load", attach);
-    window.addEventListener("resize", () => fitFrame(frame));
+    const render = async (slot: PageSlot) => {
+      const width = slot.el.clientWidth;
+      if (!width || slot.task || (slot.canvas && slot.renderedWidth === width)) return;
+
+      const page = await pdf.getPage(slot.index);
+      if (!slot.visible) return;
+
+      const unscaled = page.getViewport({ scale: 1 });
+      slot.el.style.aspectRatio = `${unscaled.width} / ${unscaled.height}`;
+
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+      const viewport = page.getViewport({ scale: (width / unscaled.width) * pixelRatio });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      const task = page.render({ canvasContext: context, viewport });
+      slot.task = task;
+      try {
+        await task.promise;
+      } catch {
+        slot.task = null;
+        return;
+      }
+      slot.task = null;
+
+      if (!slot.visible) {
+        canvas.width = 0;
+        canvas.height = 0;
+        return;
+      }
+
+      slot.canvas?.remove();
+      slot.canvas = canvas;
+      slot.renderedWidth = width;
+      slot.el.appendChild(canvas);
+    };
+
+    // Ekrana yaklaşan sayfalar çizilir, uzaklaşanların belleği boşaltılır.
+    const renderObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const slot = slots[Number((entry.target as HTMLElement).dataset.page) - 1];
+          slot.visible = entry.isIntersecting;
+          if (entry.isIntersecting) {
+            void render(slot);
+          } else {
+            release(slot);
+          }
+        });
+      },
+      { rootMargin: "150% 0px" }
+    );
+
+    // Sayfa sayacı: ekranın ortasındaki sayfa.
+    const pageObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && currentLabel) {
+            currentLabel.textContent = (entry.target as HTMLElement).dataset.page ?? "1";
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+
+    slots.forEach((slot) => {
+      renderObserver.observe(slot.el);
+      pageObserver.observe(slot.el);
+    });
+
+    let resizeTimer = 0;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        slots.filter((slot) => slot.visible).forEach((slot) => void render(slot));
+      }, 200);
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>("[data-pdf-viewer]").forEach((root) => {
+    void setupViewer(root);
   });
 </script>
 
@@ -202,19 +337,58 @@ const fullTitle = `${doc.author} · ${doc.title}`;
     font-weight: 700;
   }
 
-  .doc__paper {
-    border: 1px solid var(--theme-border);
-    border-radius: 6px;
-    background: #ffffff;
-    overflow: hidden;
+  .doc__viewer {
+    display: grid;
+    gap: 1rem;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 8px;
+    background: var(--theme-surface-muted);
   }
 
-  .doc__frame {
+  .doc__status {
+    margin: 0;
+    padding: 4rem 1rem;
+    color: var(--theme-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .doc__viewer :global(.doc__page) {
+    position: relative;
+    width: 100%;
+    background: #ffffff;
+    box-shadow:
+      0 1px 2px rgba(15, 20, 25, 0.12),
+      0 6px 18px rgba(15, 20, 25, 0.08);
+  }
+
+  .doc__viewer :global(.doc__page canvas) {
     display: block;
     width: 100%;
-    height: 80vh;
-    border: 0;
-    background: #ffffff;
+    height: 100%;
+  }
+
+  .doc__pager {
+    position: sticky;
+    bottom: 1rem;
+    width: fit-content;
+    margin: 1rem auto 0;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: var(--theme-ink-strong);
+    color: var(--theme-surface);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.88;
+  }
+
+  .doc__pager[hidden] {
+    display: none;
   }
 
   @media (max-width: 760px) {
@@ -230,6 +404,11 @@ const fullTitle = `${doc.author} · ${doc.title}`;
     .doc__pages {
       margin-left: 0;
       width: 100%;
+    }
+
+    .doc__viewer {
+      gap: 0.6rem;
+      padding: 0.5rem;
     }
   }
 </style>

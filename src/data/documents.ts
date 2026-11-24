@@ -48,8 +48,7 @@ export const documents: SiteDocument[] = [
 
 export const documentFiles = (slug: string) => ({
   docx: `/dosyalar/${slug}.docx`,
-  pdf: `/dosyalar/${slug}.pdf`,
-  preview: `/dosyalar/onizleme/${slug}.html`
+  pdf: `/dosyalar/${slug}.pdf`
 });
 
 export const documentFileName = (doc: SiteDocument, ext: "docx" | "pdf") =>

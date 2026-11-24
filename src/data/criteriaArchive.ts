@@ -960,14 +960,6 @@ export const criteriaGroups: CriterionGroup[] = [
       "Sure numarası ile ayet sayısı toplamı 19'un katı olan kayıtlar üzerinde kurulan ikinci grup kodlamalar.",
       "Second-group codings built on records where the surah number plus verse count is a multiple of 19."
     )
-  },
-  {
-    id: "experimental-archive",
-    title: l("Deneysel", "Experimental"),
-    intro: l(
-      "Bu bölüm iki ayrı hatta ayrılır: daha bütünsel ana omurga araştırması ve kapsamı daraltan tek-harf deneysel hatlar. Lam ve Sad kayıtları ana omurga yerine geçmez; seçilmiş alt-küme incelemeleri olarak burada tutulur.",
-      "This section is split into two lines: the search for a more holistic main spine and the scope-narrowing single-letter experimental lines. Lam and Sad records do not replace the main spine; they are kept here as selected subset analyses."
-    )
   }
 ];
 
@@ -3627,10 +3619,6 @@ const almsExperimentalCriteria: CriterionEntry[] = [
 ];
 
 export const criteriaArchive: CriterionEntry[] = [
-  ...spineExperimentalCriteria,
-  ...almsExperimentalCriteria,
-  ...lamExperimentalCriteria,
-  ...sadExperimentalCriteria,
   ...basmalaCriteria,
   ...earlyHaMimCriteria
     .filter((entry) => allowedHaMimCodes.has(entry.code))
@@ -4764,62 +4752,6 @@ export const criteriaArchive: CriterionEntry[] = [
       }
     ],
     tags: ["kümülatif", "ayet sayıları", "kayan pencere", "7"]
-  },
-  {
-    id: "criterion-32-4-b",
-    code: "32.4B",
-    groupId: "experimental-archive",
-    bucket: "experimental",
-    title: l("Tek sure satırlarının üçlü fihrist dizilimi"),
-    summary: l(
-      "Tek numaralı surelerde sure numarası, ayet sayısı ve kümülatif ayet bitişi satır satır doğal sırada yazıldığında oluşan dizilim 19 modunda doğrulanır.",
-      "For the odd-numbered surahs, the row-by-row sequence formed by surah number, verse count, and cumulative verse endpoint verifies modulo 19."
-    ),
-    sourceLabel: sourceWithin19Research.label,
-    sourceUrl: sourceWithin19Research.url,
-    discovery: discovery("Ahmet Düzduran", "14.04.2026", "Türkiye/İstanbul"),
-    facts: [
-      { label: l("Kolon yapısı"), value: l("Sure no + ayet sayısı + kümülatif ayet bitişi") },
-      { label: l("İlk satırlar"), value: l(sequenceFrom(oddSurahCountEndpointRows.slice(0, 15))) },
-      { label: l("Basamak uzunluğu"), value: l(String(sequenceFrom(oddSurahCountEndpointRows).replace(/\s+/g, "").length)) }
-    ],
-    tests: [
-      {
-        id: "criterion-32-4-b-sequence",
-        label: l("Tek sure satırları"),
-        sequence: sequenceFrom(oddSurahCountEndpointRows),
-        mods: [19]
-      }
-    ],
-    tags: ["tek sure", "kümülatif", "19", "deneysel"]
-  },
-  {
-    id: "criterion-32-4-c",
-    code: "32.4C",
-    groupId: "experimental-archive",
-    bucket: "experimental",
-    title: l("Çift sure satırlarının üçlü fihrist dizilimi"),
-    summary: l(
-      "Çift numaralı surelerde sure numarası, ayet sayısı ve kümülatif ayet bitişi satır satır doğal sırada yazıldığında oluşan dizilim 19 modunda doğrulanır.",
-      "For the even-numbered surahs, the row-by-row sequence formed by surah number, verse count, and cumulative verse endpoint verifies modulo 19."
-    ),
-    sourceLabel: sourceWithin19Research.label,
-    sourceUrl: sourceWithin19Research.url,
-    discovery: discovery("Ahmet Düzduran", "14.04.2026", "Türkiye/İstanbul"),
-    facts: [
-      { label: l("Kolon yapısı"), value: l("Sure no + ayet sayısı + kümülatif ayet bitişi") },
-      { label: l("İlk satırlar"), value: l(sequenceFrom(evenSurahCountEndpointRows.slice(0, 15))) },
-      { label: l("Basamak uzunluğu"), value: l(String(sequenceFrom(evenSurahCountEndpointRows).replace(/\s+/g, "").length)) }
-    ],
-    tests: [
-      {
-        id: "criterion-32-4-c-sequence",
-        label: l("Çift sure satırları"),
-        sequence: sequenceFrom(evenSurahCountEndpointRows),
-        mods: [19]
-      }
-    ],
-    tags: ["çift sure", "kümülatif", "19", "deneysel"]
   },
   {
     id: "criterion-32-5",
