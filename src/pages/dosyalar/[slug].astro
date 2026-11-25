@@ -29,12 +29,12 @@ const fullTitle = `${doc.author} · ${doc.title}`;
     <p class="doc__lead">{doc.description}</p>
 
     <div class="doc__actions">
-      <a class="doc__button doc__button--primary" href={files.docx} download={documentFileName(doc, "docx")}>
+      <a class="doc__button doc__button--primary" href={files.docx} download={documentFileName(doc, "docx")} data-named-download>
         <span data-copy-lang="tr">Word olarak indir</span>
         <span data-copy-lang="en">Download Word</span>
         <small>.docx</small>
       </a>
-      <a class="doc__button" href={files.pdf} download={documentFileName(doc, "pdf")}>
+      <a class="doc__button" href={files.pdf} download={documentFileName(doc, "pdf")} data-named-download>
         <span data-copy-lang="tr">PDF olarak indir</span>
         <span data-copy-lang="en">Download PDF</span>
         <small>.pdf</small>
@@ -65,6 +65,12 @@ const fullTitle = `${doc.author} · ${doc.title}`;
     </div>
   </article>
 </Layout>
+
+<script>
+  import { enableNamedDownloads } from "../../scripts/namedDownload";
+
+  enableNamedDownloads();
+</script>
 
 <script>
   import * as pdfjs from "pdfjs-dist/legacy/build/pdf.mjs";

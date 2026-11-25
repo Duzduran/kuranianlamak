@@ -41,8 +41,8 @@ import { documents, documentFiles, documentFileName } from "../../data/documents
                   <span>
                     {doc.pages} <span data-copy-lang="tr">sayfa</span><span data-copy-lang="en">pages</span>
                   </span>
-                  <a href={files.docx} download={documentFileName(doc, "docx")}>Word</a>
-                  <a href={files.pdf} download={documentFileName(doc, "pdf")}>PDF</a>
+                  <a href={files.docx} download={documentFileName(doc, "docx")} data-named-download>Word</a>
+                  <a href={files.pdf} download={documentFileName(doc, "pdf")} data-named-download>PDF</a>
                 </p>
               </div>
             </li>
@@ -52,6 +52,12 @@ import { documents, documentFiles, documentFileName } from "../../data/documents
     </ul>
   </section>
 </Layout>
+
+<script>
+  import { enableNamedDownloads } from "../../scripts/namedDownload";
+
+  enableNamedDownloads();
+</script>
 
 <style>
   .files {
