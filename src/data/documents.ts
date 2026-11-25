@@ -45,7 +45,7 @@ export const documents: SiteDocument[] = [
     sourceUrl: "https://docs.google.com/document/d/1wIQXsZ2pv7VPFmsg8XbNKQA0DXHjjIAd/edit"
   },
   {
-    slug: "bilal-aksoy-miras-matematiksel-hata",
+    slug: "bilal-aksoy-miras-delil",
     title: "Kur'an'da Miras Araştırması",
     author: "Bilal Aksoy",
     description:

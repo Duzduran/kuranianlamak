@@ -1,0 +1,19 @@
+{
+  "redirects": [
+    {
+      "source": "/dosyalar/bilal-aksoy-miras-matematiksel-hata",
+      "destination": "/dosyalar/bilal-aksoy-miras-delil",
+      "permanent": true
+    },
+    {
+      "source": "/dosyalar/bilal-aksoy-miras-matematiksel-hata.docx",
+      "destination": "/dosyalar/bilal-aksoy-miras-delil.docx",
+      "permanent": true
+    },
+    {
+      "source": "/dosyalar/bilal-aksoy-miras-matematiksel-hata.pdf",
+      "destination": "/dosyalar/bilal-aksoy-miras-delil.pdf",
+      "permanent": true
+    }
+  ]
+}
