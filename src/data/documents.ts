@@ -46,7 +46,7 @@ export const documents: SiteDocument[] = [
   },
   {
     slug: "bilal-aksoy-miras-matematiksel-hata",
-    title: "Kur'an'da Miras: Matematiksel Hata mı, Ayetlerin Okunmasında Yapılan Hata mı?",
+    title: "Kur'an'da Miras Araştırması",
     author: "Bilal Aksoy",
     description:
       "Miras ayetlerindeki 27/24 sorununun kaynağı: Nisâ 11 ve 12'deki şart kategorileri, tekil-çoğul ayrımları ve iki hesaplama yönteminin karşılaştırılması.",
