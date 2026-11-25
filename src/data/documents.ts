@@ -53,6 +53,16 @@ export const documents: SiteDocument[] = [
     pages: 9,
     addedAt: "2026-11-25",
     sourceUrl: "https://docs.google.com/document/d/1juJnjI6I2VMUY2zOH5cg3eULouJ9DVyb/edit"
+  },
+  {
+    slug: "bilal-aksoy-miras-son-makale",
+    title: "Kur'an'da Miras Araştırması — Son Makale",
+    author: "Bilal Aksoy",
+    description:
+      "Matematiksel hata mı, ayetlerin okunmasında yapılan hata mı? 27/24 sorununun kaynağı, tekil-çoğul kelimelere ilişkin 27 dilsel delil ve şart kategorilerine bağlı miras hesaplamaları.",
+    pages: 9,
+    addedAt: "2026-11-25",
+    sourceUrl: "https://docs.google.com/document/d/1UCVxLXZVOhe97VRBSukOjsVjKgmhJMtY/edit"
   }
 ];
 
